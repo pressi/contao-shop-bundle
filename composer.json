@@ -1,0 +1,54 @@
+{
+    "name"          : "2do/contao-shop-bundle",
+    "type"          : "contao-bundle",
+    "description"   : "Contao 4 IIDO Shop Bundle",
+    "homepage"      : "http://www.iido.at",
+    "license"       : "MIT",
+    "authors"       :
+    [
+        {
+            "name"      : "Stephan Preßl",
+            "email"     : "development@prestep.at",
+            "homepage"  : "http://www.prestep.at",
+            "role"      : "Developer"
+        }
+    ],
+    "require":
+    {
+        "php"                       : ">=5.5.0",
+        "symfony/framework-bundle"  : "~2.8|~3.0",
+        "contao/core-bundle"        : "~4"
+    },
+    "require-dev":
+    {
+        "contao/manager-plugin"     : "^2.0",
+        "friendsofphp/php-cs-fixer" : "^2.0",
+        "phpunit/phpunit"           : "~4.5",
+        "satooshi/php-coveralls"    : "~1.0",
+        "symfony/phpunit-bridge"    : "~2.8|~3.0"
+    },
+    "conflict":
+    {
+        "contao/core"               : "*",
+        "contao/manager-plugin"     : "<2.0 || >=3.0"
+    },
+    "autoload":
+    {
+        "psr-4":
+        {
+            "IIDO\\ShopBundle\\"   : "src/"
+        }
+    },
+    "config":
+    {
+        "preferred-install"         : "dist"
+    },
+    "extra":
+    {
+        "branch-alias":
+        {
+            "dev-develop" : "4.4.x-dev"
+        },
+        "contao-manager-plugin" : "IIDO\\ShopBundle\\ContaoManager\\Plugin"
+    }
+}
