@@ -1,0 +1,13 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content") ?>
+
+<div class="product-list-container">
+    <? foreach( $this->products as $product ): ?>
+        <div class="product-item">
+            <div class="name"><?= $product['name'] ?></div>
+        </div>
+    <? endforeach; ?>
+</div>
+
+<? $this->endblock() ?>

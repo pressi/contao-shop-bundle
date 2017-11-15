@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/modules.php" source-language="en">
+        <body>
+
+<!-- ### MODULES ############################################################################################################ -->
+
+            <trans-unit id="MOD.iidoShop">
+                <source>Shop</source>
+                <target>Shop</target>
+            </trans-unit>
+
+            <trans-unit id="MOD.iidoShopAPI.0">
+                <source>API</source>
+                <target>API</target>
+            </trans-unit>
+
+            <trans-unit id="MOD.iidoShopProducts.0">
+                <source>Products</source>
+                <target>Produkte</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

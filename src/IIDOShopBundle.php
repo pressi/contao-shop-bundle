@@ -13,7 +13,7 @@
 namespace IIDO\ShopBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use IIDO\ShopBundle\DependencyInjection\IIDOBasicExtension;
+use IIDO\ShopBundle\DependencyInjection\IIDOShopExtension;
 
 /**
  * Configures the Contao IIDO Shop Bundle.
@@ -25,7 +25,8 @@ class IIDOShopBundle extends Bundle
 
     /**
      * Register extension
-     * @return \IIDO\ShopBundle\DependencyInjection\IIDOShopExtension
+     *
+     * @return IIDOShopExtension
      */
     public function getContainerExtension()
     {

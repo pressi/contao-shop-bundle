@@ -15,6 +15,27 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 
 $assetsPath = \IIDO\ShopBundle\Config\BundleConfig::getBundlePath(true, false);
 $ns         = $namespace . '\\' . $subNamespace;
+$modPrefix  = ucfirst( $subName );
+
+
+// Load icon in Contao 4.2+ backend
+if ('BE' === TL_MODE)
+{
+    $GLOBALS['TL_CSS'][] = $assetsPath . '/css/backend/contao-shop.css';
+}
+
+
+
+/**
+ * API's
+ */
+
+$GLOBALS['IIDO']['SHOP']['API'] = array
+(
+    'weclapp'
+);
+
+
 
 /**
  * Backend modules
@@ -25,25 +46,41 @@ array_insert($GLOBALS['BE_MOD'], 3, array
 
     $prefix . 'Shop' => array
    (
-        $prefix . 'Products' => array
-        (
-            'callback'      => $ns . '\Backend\Module\ProductModule',
-            'tables'        => array($tablePrefix . 'product', $tablePrefix . 'category', 'tl_content'),
-//            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
-        ),
-
-        $prefix . 'API' => array
-        (
-//            'callback'      => $ns . '\Backend\Module\APIModul',
-            'tables'        => array($tablePrefix . 'api'),
-//            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
-        ),
-
-//        $prefix . 'ConfigContao' => array
+//        $prefix . 'Products' => array
 //        (
-//            'callback'      => $ns . '\BackendModule\ConfigClientModule',
-//            'stylesheet'    => $assetsPath . 'css/backend/config-contao.css'
-//        )
-   )
+//            'callback'      => $ns . '\Backend\Module\ProductModule',
+//            'tables'        => array($tablePrefix . 'product', $tablePrefix . 'category', 'tl_content'),
+////            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
+//        ),
+
+        $prefix . $modPrefix . 'Products' => array
+        (
+            'tables'        => array($tablePrefix . 'archive', $tablePrefix . 'product', $tablePrefix . 'product_category')
+        ),
+
+
+        $prefix . $modPrefix . 'API' => array
+        (
+            'tables'        => array($tablePrefix . 'api')
+        ),
+
+   ),
 
 ));
+
+
+
+/**
+ * Content elements
+ */
+
+$GLOBALS['TL_CTE']['iido_shop']['productList'] = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+
+
+
+/**
+ * Add permissions
+ */
+
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopArchives';
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopArchivep';

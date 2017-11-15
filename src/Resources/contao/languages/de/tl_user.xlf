@@ -1,0 +1,32 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="tl_user.news.0">
+        <source>Allowed archives</source>
+        <target>Erlaubte Archive</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news.1">
+        <source>Here you can grant access to one or more news archives.</source>
+        <target>Hier können Sie den Zugriff auf ein oder mehrere Shop-Archive erlauben.</target>
+      </trans-unit>
+
+
+      <trans-unit id="tl_user.newp.0">
+        <source>News permissions</source>
+        <target>Archivrechte</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.1">
+        <source>Here you can define the news permissions.</source>
+        <target>Hier können Sie die Archivrechte festlegen.</target>
+      </trans-unit>
+
+
+
+
+      <trans-unit id="tl_user.iido_shopArchive_legend">
+        <source>Shop permissions</source>
+        <target>Shoprechte</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
