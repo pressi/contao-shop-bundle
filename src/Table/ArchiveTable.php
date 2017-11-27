@@ -31,6 +31,14 @@ class ArchiveTable extends \Backend
 
 
 
+    public static function getTable()
+    {
+        $_self = new self();
+        return $_self->strTable;
+    }
+
+
+
     /**
      * Check permissions to edit table
      *
@@ -90,15 +98,15 @@ class ArchiveTable extends \Backend
 
                             while ($objGroup->next())
                             {
-                                $arrNewp = \StringUtil::deserialize($objGroup->iidoShopArchivep);
+                                $arrProductp = \StringUtil::deserialize($objGroup->iidoShopArchivep);
 
-                                if (is_array($arrNewp) && in_array('create', $arrNewp))
+                                if (is_array($arrProductp) && in_array('create', $arrProductp))
                                 {
-                                    $arrNews = \StringUtil::deserialize($objGroup->iidoShopArchives, true);
-                                    $arrNews[] = \Input::get('id');
+                                    $arrProducts = \StringUtil::deserialize($objGroup->iidoShopArchives, true);
+                                    $arrProducts[] = \Input::get('id');
 
                                     $this->Database->prepare("UPDATE tl_user_group SET iidoShopArchives=? WHERE id=?")
-                                        ->execute(serialize($arrNews), $objGroup->id);
+                                        ->execute(serialize($arrProducts), $objGroup->id);
                                 }
                             }
                         }
@@ -110,21 +118,21 @@ class ArchiveTable extends \Backend
                                 ->limit(1)
                                 ->execute($this->User->id);
 
-                            $arrNewp = \StringUtil::deserialize($objUser->iidoShopArchivep);
+                            $arrProductp = \StringUtil::deserialize($objUser->iidoShopArchivep);
 
-                            if (is_array($arrNewp) && in_array('create', $arrNewp))
+                            if (is_array($arrProductp) && in_array('create', $arrProductp))
                             {
-                                $arrNews = \StringUtil::deserialize($objUser->iidoShopArchives, true);
-                                $arrNews[] = \Input::get('id');
+                                $arrProducts = \StringUtil::deserialize($objUser->iidoShopArchives, true);
+                                $arrProducts[] = \Input::get('id');
 
                                 $this->Database->prepare("UPDATE tl_user SET iidoShopArchives=? WHERE id=?")
-                                    ->execute(serialize($arrNews), $this->User->id);
+                                    ->execute(serialize($arrProducts), $this->User->id);
                             }
                         }
 
                         // Add the new element to the user object
                         $root[] = \Input::get('id');
-                        $this->User->news = $root;
+                        $this->User->iidoShopArchives = $root;
                     }
                 }
             // No break;
@@ -217,5 +225,45 @@ class ArchiveTable extends \Backend
     public function deleteArchive($row, $href, $label, $title, $icon, $attributes)
     {
         return $this->User->hasAccess('delete', 'iidoShopArchivep') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($icon, $label).'</a> ' : \Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+    }
+
+
+
+    /**
+     * Adjust the palette
+     */
+    public function adjustPalette( $dc=null )
+    {
+        if( !$dc->id )
+        {
+            return;
+        }
+
+        $objArchive = $this->Database->prepare("SELECT limitCategories FROM " . $this->strTable . " WHERE id=?")
+            ->limit(1)
+            ->execute($dc->id);
+
+        if (!$objArchive->numRows || !$objArchive->limitCategories)
+        {
+            return;
+        }
+
+        $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['default'] = str_replace('limitCategories;', 'limitCategories,categories;', $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['default']);
+
+    }
+
+
+
+    /**
+     * Check the permission
+     */
+    public function checkCategoryPermission()
+    {
+//        $this->import('BackendUser', 'User');
+
+        if (!$this->User->isAdmin && !$this->User->hasAccess('manage', 'iidoShopProductCategories'))
+        {
+            unset($GLOBALS['TL_DCA'][ $this->strTable ]['list']['global_operations']['categories']);
+        }
     }
 }

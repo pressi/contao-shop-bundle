@@ -12,8 +12,13 @@
 
 $strTable       = 'tl_iido_shop_archive';
 $productTable   = 'tl_iido_shop_product';
+$categoryTable  = 'tl_iido_shop_product_category';
 
 $tableClass     = 'IIDO\ShopBundle\Table\ArchiveTable';
+$categoryClass  = 'IIDO\ShopBundle\Table\ProductCategoryTable';
+
+$bundlePath     = \IIDO\ShopBundle\Config\BundleConfig::getBundlePath( true, false );
+
 
 $GLOBALS['TL_DCA'][ $strTable ] = array
 (
@@ -27,7 +32,10 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         'enableVersioning'            => true,
         'onload_callback' => array
         (
-            array($tableClass, 'checkPermission')
+            array($tableClass, 'checkPermission'),
+
+            array($tableClass, 'checkCategoryPermission'),
+            array($tableClass, 'adjustPalette')
         ),
         'sql' => array
         (
@@ -57,6 +65,15 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         ),
         'global_operations' => array
         (
+            'categories' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['categories'],
+                'href'                => 'table=' . $categoryTable,
+                'icon'                => $bundlePath . '/images/icons/categories.png',
+                'class'               => 'header_shop_product_categories',
+                'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"'
+            ),
+
             'all' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
@@ -111,9 +128,10 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
     (
         '__selector__'      => array
         (
+//            'limitCategories'
         ),
 
-        'default'           => '{title_legend},title;'
+        'default'           => '{title_legend},title;{categories_legend},limitCategories;'
     ),
 
 
@@ -121,6 +139,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
     // Subpalettes
     'subpalettes' => array
     (
+//        'limitCategories'   => 'categories'
     ),
 
 
@@ -146,13 +165,53 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'inputType'               => 'text',
             'eval'                    => array
             (
-                'mandatory'     => true,
-                'maxlength'     => 255,
-                'tl_class'      => 'w50'
+                'mandatory'         => true,
+                'maxlength'         => 255,
+                'tl_class'          => 'w50'
             ),
             'sql'                     => "varchar(255) NOT NULL default ''"
         ),
+
+
+
+        'limitCategories' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['limitCategories'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => array
+            (
+                'submitOnChange'    => true
+            ),
+            'sql'                     => "char(1) NOT NULL default ''"
+        ),
+
+        'categories' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['categories'],
+            'exclude'                 => true,
+            'inputType'               => 'treePicker',
+            'foreignKey'              => $categoryTable . '.title',
+            'eval'                    => array
+            (
+                'mandatory'         => true,
+                'multiple'          => true,
+                'fieldType'         => 'checkbox',
+                'foreignTable'      => $categoryTable,
+                'titleField'        => 'title',
+                'searchField'       => 'title',
+                'managerHref'       => 'do=iidoShopProducts&table=' . $categoryTable
+            ),
+            'sql'                     => "blob NULL"
+        )
     )
 );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addProtectedFieldsToTable($strTable);
+
+//$objArchive = \Database::getInstance()->prepare("SELECT limitCategories FROM " . $strTable . " WHERE id=?")->limit(1)->execute(\Input::get("id"));
+
+//if( $objArchive && $objArchive->limitCategories )
+//{
+//    $GLOBALS['TL_DCA'][ $strTable ]['palettes']['default'] = str_replace('limitCategories;', 'limitCategories,categories;', $GLOBALS['TL_DCA'][ $strTable ]['palettes']['default']);
+//}

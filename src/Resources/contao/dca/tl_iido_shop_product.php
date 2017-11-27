@@ -12,8 +12,16 @@
 
 $strTable       = 'tl_iido_shop_product';
 $archiveTable   = 'tl_iido_shop_archive';
+$categoryTable  = 'tl_iido_shop_product_category';
 
 $tableClass     = 'IIDO\ShopBundle\Table\ProductTable';
+$categoryClass  = 'IIDO\ShopBundle\Table\ProductCategoryTable';
+$objElement     = false;
+
+if( \Input::get("act") === "edit" )
+{
+    $objElement = \IIDO\ShopBundle\Model\IidoShopProductModel::findByPk( \Input::get("id") );
+}
 
 $GLOBALS['TL_DCA'][ $strTable ] = array
 (
@@ -26,9 +34,18 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
 //        'ctable'                      => array('tl_content'),
         'switchToEdit'                => true,
         'enableVersioning'            => true,
-        'onload_callback' => array
+        'onload_callback'             => array
         (
-            array($tableClass, 'checkPermission')
+            array($tableClass, 'checkPermission'),
+            array($categoryClass, 'setAllowedCategories')
+        ),
+        'onsubmit_callback'             => array
+        (
+            array($categoryClass, 'updateCategories')
+        ),
+        'ondelete_callback'             => array
+        (
+            array($categoryClass, 'deleteCategories')
         ),
         'sql' => array
         (
@@ -57,6 +74,14 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         ),
         'global_operations' => array
         (
+            'import' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['import'],
+                'href'                => 'key=import',
+                'class'               => 'header_shop_products_import',
+                'button_callback'     => array($tableClass, 'importProducts')
+            ),
+
             'all' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
@@ -130,7 +155,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         (
         ),
 
-        'default'           => '{name_legend},name,alias,itemNumber;'
+        'default'           => 'importedExplanation;{name_legend},name,alias,itemNumber;{category_legend},categories;{overview_legend},overviewSRC;{detail_legend},detailFrontSRC,detailBackSRC;'
     ),
 
 
@@ -149,19 +174,46 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         (
             'sql'                     => "int(10) unsigned NOT NULL auto_increment"
         ),
-
         'pid' => array
         (
             'foreignKey'              => $archiveTable . '.title',
             'sql'                     => "int(10) unsigned NOT NULL default '0'",
             'relation'                => array('type'=>'belongsTo', 'load'=>'eager')
         ),
-
         'tstamp' => array
         (
             'sql'                     => "int(10) unsigned NOT NULL default '0'"
         ),
 
+
+
+        // IMPORT
+        'imported' => array
+        (
+            'sql'                     => "char(1) NOT NULL default ''"
+        ),
+        'importDate' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL default '0'"
+        ),
+        'importUser' => array
+        (
+            'sql'                     => "int(10) unsigned NOT NULL"
+        ),
+        'importedExplanation' => array
+        (
+            'inputType'               => 'explanation',
+            'eval'                    => array
+            (
+                'text'              => '',
+                'class'             => 'tl_info',
+                'tl_class'          => 'long'
+            )
+        ),
+
+
+
+        // NAME
         'name' => array
         (
             'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['name'],
@@ -211,10 +263,33 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'eval'                    => array
             (
                 'mandatory'         => true,
+                'doNotCopy'         => true,
+                'unique'            => true,
                 'maxlength'         => 255,
                 'tl_class'          => 'w50'
             ),
             'sql'                     => "varchar(255) NOT NULL default ''"
+        ),
+
+
+
+        'categories' => array
+        (
+            'label'                 => &$GLOBALS['TL_LANG'][ $strTable ]['categories'],
+            'exclude'               => true,
+            'filter'                => true,
+            'inputType'             => 'treePicker',
+            'foreignKey'            => $categoryTable . '.title',
+            'eval'                  => array
+            (
+                'multiple'              => true,
+                'fieldType'             => 'checkbox',
+                'foreignTable'          => $categoryTable,
+                'titleField'            => 'title',
+                'searchField'           => 'title',
+                'managerHref'           => 'do=iidoShopProducts&table=' . $categoryTable
+            ),
+            'sql'        => "blob NULL",
         ),
 
 
@@ -235,3 +310,20 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
 );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPublishedFieldsToTable( $strTable );
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("overviewSRC", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("detailFrontSRC", $strTable, array(), 'w50 hauto');
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("detailBackSRC", $strTable, array(), 'w50 hauto', true);
+
+
+if( $objElement )
+{
+    if( $objElement->imported )
+    {
+        $objUser = \UserModel::findByPk( $objElement->importUser );
+        $GLOBALS['TL_DCA'][ $strTable ]['fields']['importedExplanation']['eval']['text'] = '<strong>INFO:</strong> Das Produkt wurde am ' . date('d.m.Y', $objElement->importDate) . ' um ' . date('H:i', $objElement->importDate) . ' Uhr von ' . $objUser->name . ' importiert.';
+    }
+    else
+    {
+        unset( $GLOBALS['TL_DCA'][ $strTable ]['fields']['importedExplanation'] );
+    }
+}

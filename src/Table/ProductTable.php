@@ -13,7 +13,15 @@
 namespace IIDO\ShopBundle\Table;
 
 
+use IIDO\ShopBundle\Config\ApiConfig;
+use IIDO\ShopBundle\Model\IidoShopProductCategoryModel;
 
+
+/**
+ * Class ProductTable
+ *
+ * @package IIDO\ShopBundle\Table
+ */
 class ProductTable extends \Backend
 {
     /**
@@ -36,6 +44,14 @@ class ProductTable extends \Backend
 
 
 
+    public static function getTable()
+    {
+        $_self = new self();
+        return $_self->strTable;
+    }
+
+
+
     /**
      * Check permissions to edit shop product table
      *
@@ -46,6 +62,24 @@ class ProductTable extends \Backend
         if ($this->User->isAdmin)
         {
             return;
+        }
+
+        // Check the theme import and export permissions (see #5835)
+        switch (\Input::get('key'))
+        {
+            case 'import':
+                if (!$this->User->hasAccess('import', 'iidoShopProducts'))
+                {
+                    throw new \Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to import products.');
+                }
+                break;
+
+            case 'export':
+                if (!$this->User->hasAccess('export', 'iidoShopProducts'))
+                {
+                    throw new \Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to export products.');
+                }
+                break;
         }
 
         // Set the root IDs
@@ -122,7 +156,7 @@ class ProductTable extends \Backend
                 }
 
                 /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-                $objSession = System::getContainer()->get('session');
+                $objSession = \System::getContainer()->get('session');
 
                 $session = $objSession->all();
                 $session['CURRENT']['IDS'] = array_intersect($session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
@@ -193,7 +227,23 @@ class ProductTable extends \Backend
      */
     public function listProductArticles($arrRow)
     {
-        return '<div class="tl_content_left">' . $arrRow['name'] . ' <span style="color:#999;padding-left:3px">[' . $arrRow['itemNumber'] . ']</span></div>';
+        $arrCategories  = array();
+        $arrItemCats    = \StringUtil::deserialize($arrRow['categories'], TRUE);
+
+        if( count($arrItemCats) )
+        {
+            foreach( $arrItemCats as $categoryID)
+            {
+                $objCategory = IidoShopProductCategoryModel::findByPk($categoryID);
+
+                if( $objCategory )
+                {
+                    $arrCategories[] = $objCategory->title;
+                }
+            }
+        }
+
+        return '<div class="tl_content_left"><span class="product-name">' . $arrRow['name'] . '</span> <span class="product-item-number" style="color:#999;padding-left:3px">[' . $arrRow['itemNumber'] . ']</span><span class="product-categories" style="color:#999;padding-left:3px">' . (count($arrCategories) ? ' - ' : '') . implode(",", $arrCategories) . '</span></div>';
     }
 
 
@@ -233,6 +283,7 @@ class ProductTable extends \Backend
 
         return '<a href="'.$this->addToUrl($href).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($icon, $label, 'data-state="' . ($row['featured'] ? 1 : 0) . '"').'</a> ';
     }
+
 
 
     /**
@@ -285,6 +336,7 @@ class ProductTable extends \Backend
     }
 
 
+
     /**
      * Return the "toggle visibility" button
      *
@@ -320,6 +372,7 @@ class ProductTable extends \Backend
 
         return '<a href="'.$this->addToUrl($href).'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
     }
+
 
 
     /**
@@ -426,5 +479,93 @@ class ProductTable extends \Backend
         }
 
         $objVersions->create();
+    }
+
+
+
+    /**
+     * Return the "import products" link
+     *
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $class
+     * @param string $attributes
+     *
+     * @return string
+     */
+    public function importProducts($href, $label, $title, $class, $attributes)
+    {
+        return $this->User->hasAccess('import', 'iidoShopProducts') ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+    }
+
+
+
+    public function renderProductImporter()
+    {
+        /** @var \FileUpload $objUploader */
+        $objUploader = new \FileUpload();
+
+        $objTemplate = $this->manageUploader( $objUploader );
+
+        // Return the form
+        return \Message::generate() . $objTemplate->parse();
+    }
+
+
+
+    protected function manageUploader( $objUploader )
+    {
+        $beTemplate = 'be_product_import_overview';
+        $importMode = \Input::get("importMode");
+
+        if( strlen($importMode) )
+        {
+            $beTemplate = 'be_product_import_' . $importMode;
+        }
+
+        $objTemplate = new \BackendTemplate( $beTemplate );
+        $objTemplate->objUploader   = $objUploader;
+        $objTemplate->lang          = $GLOBALS['TL_LANG'][ $this->strTable ];
+
+        if( !strlen($importMode) )
+        {
+            $objTemplate = $this->renderOverviewTemplate( $objTemplate );
+        }
+        else
+        {
+            if( $importMode !== "csv" )
+            {
+                $objImporter    = ApiConfig::getImporter( $importMode );
+                $objTemplate    = $objImporter->renderTemplate( $objTemplate );
+            }
+        }
+
+        return $objTemplate;
+    }
+
+
+
+    protected function renderOverviewTemplate( $objTemplate )
+    {
+        $arrImporter = array();
+
+        foreach( $GLOBALS['IIDO']['SHOP']['API'] as $strApi )
+        {
+            if( ApiConfig::isActive( $strApi ) )
+            {
+                $apiClass   = ApiConfig::getClass( $strApi );
+                $objApi     = new $apiClass();
+
+                if( $objApi->hasImporter() )
+                {
+                    $arrImporter[ $strApi ] = $objApi->getImporter( true );
+                }
+            }
+        }
+
+        $objTemplate->importer = $arrImporter;
+
+        return $objTemplate;
     }
 }
