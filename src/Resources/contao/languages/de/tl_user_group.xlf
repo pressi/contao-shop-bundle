@@ -1,10 +1,27 @@
 <?xml version="1.0" ?><xliff version="1.1">
-  <file datatype="php" original="src/Resources/contao/languages/en/tl_user_group.php" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="tl_user_group.iido_shopArchive_legend">
-        <source>News permissions</source>
-        <target>Shoprechte</target>
-      </trans-unit>
-    </body>
-  </file>
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_user_group.php" source-language="en" target-language="de">
+        <body>
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_user_group.iido_shopArchive_legend">
+                <source>product permissions</source>
+                <target>Shoprechte</target>
+            </trans-unit>
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_user_group.options.iidoShopProducts.import">
+                <source>produc importer</source>
+                <target>Produkt Importer</target>
+            </trans-unit>
+            <trans-unit id="tl_user_group.options.iidoShopProducts.export">
+                <source>product exporter</source>
+                <target>Produkt Exporter</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
 </xliff>

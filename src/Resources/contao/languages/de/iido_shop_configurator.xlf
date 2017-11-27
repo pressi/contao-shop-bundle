@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="system/modules/ziido_customize/languages/en/iido_shop_configurator.php" source-language="en">
+        <body>
+
+<!-- ### LABELS ############################################################################################################# -->
+
+            <trans-unit id="iido_shop_configurator.label.design">
+                <source>Design</source>
+                <target>Design</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.binding">
+                <source>Binding</source>
+                <target>Bindung</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.length">
+                <source>Length</source>
+                <target>Länge</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.flex">
+                <source>Flex</source>
+                <target>Flex</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.tuning">
+                <source>Tuning</source>
+                <target>Tuning</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.buy">
+                <source>Buy</source>
+                <target>Kaufen</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.notice">
+                <source>Notice</source>
+                <target>Merken</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.price">
+                <source>Your price</source>
+                <target>Dein Preis</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.cart">
+                <source>Cart</source>
+                <target>Cart</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.detail">
+                <source>Detail</source>
+                <target>Detail</target>
+            </trans-unit>
+
+
+
+        </body>
+    </file>
+</xliff>

@@ -5,7 +5,7 @@
 
             <trans-unit id="tl_iido_shop_archive.title.0">
                 <source>title</source>
-                <target>Title</target>
+                <target>Titel</target>
             </trans-unit>
 
 
@@ -29,6 +29,7 @@
                 <target>Diese Mitgliedergruppen können die Produkte des Archivs sehen.</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_archive.tstamp.0">
                 <source>Revision date</source>
                 <target>Änderungsdatum</target>
@@ -36,6 +37,26 @@
             <trans-unit id="tl_iido_shop_archive.tstamp.1">
                 <source>Date and time of the latest revision</source>
                 <target>Datum und Uhrzeit der letzten Änderung</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_archive.limitCategories.0">
+                <source>limit categories</source>
+                <target>Kategorien-Auswahl einschränken</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_archive.limitCategories.1">
+                <source>Verfügbare Kategorien für dieses Archiv einstellen.</source>
+                <target>Verfügbare Kategorien für dieses Archiv einstellen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_archive.categories.0">
+                <source>categories</source>
+                <target>Nachrichten-Kategorien</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_archive.categories.1">
+                <source>Bitte wähle eine oder mehrere Produkt-Kategorien.</source>
+                <target>Bitte wähle eine oder mehrere Produkt-Kategorien.</target>
             </trans-unit>
 
 
@@ -47,10 +68,14 @@
                 <target>Titel-Einstellungen</target>
             </trans-unit>
 
-
             <trans-unit id="tl_iido_shop_archive.protected_legend">
                 <source>Access protection</source>
                 <target>Zugriffsschutz</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_archive.categories_legend">
+                <source>Category-Settings</source>
+                <target>Kategorien-Einstellungen</target>
             </trans-unit>
 
 
@@ -114,6 +139,16 @@
             <trans-unit id="tl_iido_shop_archive.delete.1">
                 <source>Delete archive ID %s</source>
                 <target>Archiv ID %s löschen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_archive.categories.0">
+                <source>categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_archive.categories.1">
+                <source>add and edit product category</source>
+                <target>Produkt-Kategorien hinzufügen und bearbeiten.</target>
             </trans-unit>
 
 

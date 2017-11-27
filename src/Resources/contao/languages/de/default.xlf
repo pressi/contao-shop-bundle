@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="system/modules/ziido_customize/languages/en/default.php" source-language="en">
+        <body>
+
+<!-- ### CONTENT ELEMENTS ################################################################################################### -->
+
+            <trans-unit id="CTE.iido_shop.0">
+                <source>Shop</source>
+                <target>Shop</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_productList.0">
+                <source>Productlist</source>
+                <target>Shop: Produktliste</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_configurator.0">
+                <source>Configurator</source>
+                <target>Shop: Konfigurator</target>
+            </trans-unit>
+
+
+
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,226 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_product.php" source-language="en">
+        <body>
+
+            <trans-unit id="tl_iido_shop_product_category.title.0">
+                <source>title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.title.1">
+                <source>add product title</source>
+                <target>Bitte Produkt-Titel eingeben.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.frontendTitle.0">
+                <source>frontend title</source>
+                <target>Frontend Titel</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.frontendTitle.1">
+                <source>add product frontend title</source>
+                <target>Titel der im Frontend angezeigt wird.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.alias.0">
+                <source>Product-Category-Alias</source>
+                <target>Produkt-Kategorie-Alias</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.alias.1">
+                <source>add product alias</source>
+                <target>Der Produkt-Alias ist eine eindeutige Referenz, die anstelle der numerischen ID aufgerufen werden kann.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.cssClass.0">
+                <source>CSS-Class</source>
+                <target>CSS-Klasse</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.cssClass.1">
+                <source>css class</source>
+                <target>Hier kann eine CSS-Klasse vergeben werden, welche zur Kategorie im Front-End hinzugefügt wird.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.hideInList.0">
+                <source>hide in list</source>
+                <target>Im Listen/Archiv-Modul verstecken</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.hideInList.1">
+                <source>hide in list</source>
+                <target>Zeigt diese Kategorie nicht im Produktlisten oder -archiv Modul an (wirkt sich nur auf die <em>iid_shop_product_</em> Templates aus).</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.hideInReader.0">
+                <source>hide in reader</source>
+                <target>Im Leser-Modul verstecken</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.hideInReader.1">
+                <source>hide in reader</source>
+                <target>Zeigt diese Kategorie nicht im Produktleser-Modul an (wirkt sich nur auf die <em>iido_shop_product_</em> Templates aus).</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.excludeInRelated.0">
+                <source>exclude in related</source>
+                <target>Aus ähnlicher Produktliste ausschließen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.excludeInRelated.1">
+                <source>exclude in related</source>
+                <target>Schließt die Produkte dieser Kategorie in der Produkt-Liste der ähnlichen Produkt aus.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.jumpTo.0">
+                <source>redirect page</source>
+                <target>Weiterleitungsseite</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.jumpTo.1">
+                <source>redirect page</source>
+                <target>Hier kann eine Seite ausgewählt werden, auf diese ein Besucher weitergeleitet wird wenn ein Kategorielink im Produkttemplate angeklickt wird.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.published.0">
+                <source>publish category</source>
+                <target>Kategorie veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.published.1">
+                <source>publish product category</source>
+                <target>Produkt-Kategorie veröffentlichen.</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_shop_product_category.title_legend">
+                <source>Title und Alias</source>
+                <target>Titel und Alias</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product_category.modules_legend">
+                <source>Modul-Settings</source>
+                <target>Modul-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product_category.redirect_legend">
+                <source>Redirect-Settings</source>
+                <target>Weiterleitungs-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product_category.publish_legend">
+                <source>Publishing</source>
+                <target>Veröffentlichung</target>
+            </trans-unit>
+
+
+
+<!-- ### BUTTONS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_shop_product_category.new.0">
+                <source>Product-Category</source>
+                <target>Produkt-Kategorie</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.new.1">
+                <source>create Product-Category</source>
+                <target>Produkt-Kategorie erstellen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.show.0">
+                <source>category details</source>
+                <target>Details der Kategorie</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.show.1">
+                <source>show category ID %s details</source>
+                <target>Zeigt die Details der Kategorie ID %s</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.edit.0">
+                <source>edit category</source>
+                <target>Kategorie bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.edit.1">
+                <source>edit category ID %s</source>
+                <target>Kategorie ID %s bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.cut.0">
+                <source>cut category</source>
+                <target>Kategorie verschieben</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.cut.1">
+                <source>cut category ID %s</source>
+                <target>Kategorie ID %s verschieben</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.copy.0">
+                <source>copy category</source>
+                <target>Kategorie kopieren</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.copy.1">
+                <source>copy category ID %s</source>
+                <target>Kopiert die Kategorie ID %s</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.copyChilds.0">
+                <source>copy category childs</source>
+                <target>Unterkategorien kopieren</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.copyChilds.1">
+                <source>copy category ID %s and childs</source>
+                <target>Kopiert die Kategorie ID %s mit den Unterkatehgorien</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.delete.0">
+                <source>delete category</source>
+                <target>Kategorie löschen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.delete.1">
+                <source>delete category ID %s</source>
+                <target>Löscht die Kategorie ID %s</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.toggle.0">
+                <source>publish/unpublish category</source>
+                <target>Kategorie veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.toggle.1">
+                <source>publish/unpublish category ID %s</source>
+                <target>Kategorie ID %s veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.pasteafter.0">
+                <source>paste after</source>
+                <target>Einfügen nach</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.pasteafter.1">
+                <source>paste after category ID %s</source>
+                <target>Nach Kategorie ID %s einfügen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.pasteinto.0">
+                <source>paste into</source>
+                <target>Einfügen in</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.pasteinto.1">
+                <source>paste into category ID %s</source>
+                <target>In Kategorie ID %s einfügen</target>
+            </trans-unit>
+
+
+
+        </body>
+    </file>
+</xliff>

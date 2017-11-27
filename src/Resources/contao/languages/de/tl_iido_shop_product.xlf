@@ -8,24 +8,32 @@
                 <target>Name</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product.alias.0">
+                <source>alias</source>
+                <target>Alias</target>
+            </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product.itemNumber.0">
+                <source>item number</source>
+                <target>Artikelnummer</target>
+            </trans-unit>
 
             <trans-unit id="tl_iido_shop_product.featured.0">
                 <source>Feature item</source>
-                <target>Beitrag hervorheben</target>
+                <target>Produkt hervorheben</target>
             </trans-unit>
             <trans-unit id="tl_iido_shop_product.featured.1">
-                <source>Show the news item in a featured news list.</source>
-                <target>Den Beitrag in einer Liste hervorgehobener Produkte anzeigen.</target>
+                <source>Show the product item in a featured product list.</source>
+                <target>Das Produkt in einer Liste hervorgehobener Produkte anzeigen.</target>
             </trans-unit>
 
             <trans-unit id="tl_iido_shop_product.published.0">
                 <source>Publish item</source>
-                <target>Beitrag veröffentlichen</target>
+                <target>Produkt veröffentlichen</target>
             </trans-unit>
             <trans-unit id="tl_iido_shop_product.published.1">
                 <source>Make the product publicly visible on the website.</source>
-                <target>Den Beitrag auf der Webseite anzeigen.</target>
+                <target>Das Produkt auf der Webseite anzeigen.</target>
             </trans-unit>
 
             <trans-unit id="tl_iido_shop_product.start.0">
@@ -34,7 +42,7 @@
             </trans-unit>
             <trans-unit id="tl_iido_shop_product.start.1">
                 <source>Do not show the product on the website before this day.</source>
-                <target>Den Beitrag erst ab diesem Tag auf der Webseite anzeigen.</target>
+                <target>Das Produkt erst ab diesem Tag auf der Webseite anzeigen.</target>
             </trans-unit>
 
             <trans-unit id="tl_iido_shop_product.stop.0">
@@ -43,7 +51,7 @@
             </trans-unit>
             <trans-unit id="tl_iido_shop_product.stop.1">
                 <source>Do not show the product on the website on and after this day.</source>
-                <target>Den Beitrag nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+                <target>Das Produkt nur bis zu diesem Tag auf der Webseite anzeigen.</target>
             </trans-unit>
 
             <trans-unit id="tl_iido_shop_product.tstamp.0">
@@ -55,6 +63,14 @@
                 <target>Datum und Uhrzeit der letzten Änderung</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product.categories.0">
+                <source>Categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product.categories.1">
+                <source>Eine oder mehrere Kategorien auswählen.</source>
+                <target>Eine oder mehrere Kategorien auswählen.</target>
+            </trans-unit>
 
 
 
@@ -68,6 +84,24 @@
             <trans-unit id="tl_iido_shop_product.publish_legend">
                 <source>Publish settings</source>
                 <target>Veröffentlichung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product.category_legend">
+                <source>Product-Kategorien</source>
+                <target>Produkt-Kategorien</target>
+            </trans-unit>
+
+
+
+<!-- ### IMPORT FORM ######################################################################################################## -->
+
+            <trans-unit id="tl_iido_shop_product.source.0">
+                <source>Source files</source>
+                <target>Quelldateien</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product.source.1">
+                <source>Here you can upload one or more .csv files to be imported.</source>
+                <target>Hier können Sie eine oder mehrere .csv-Dateien für den Import hochladen.</target>
             </trans-unit>
 
 
@@ -171,6 +205,15 @@
             <trans-unit id="tl_iido_shop_product.pasteafter.1">
                 <source>Paste after product ID %s</source>
                 <target>Nach dem Produkt ID %s einfügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product.import.0">
+                <source>Produkt import</source>
+                <target>Produkt-Import</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product.import.1">
+                <source>Import new products</source>
+                <target>Neue Produkte importieren</target>
             </trans-unit>
 
 
