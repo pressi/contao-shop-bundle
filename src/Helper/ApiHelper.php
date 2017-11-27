@@ -13,6 +13,7 @@
 namespace IIDO\ShopBundle\Helper;
 
 
+use IIDO\ShopBundle\Config\ApiConfig;
 use IIDO\ShopBundle\Config\BundleConfig;
 
 
@@ -35,5 +36,24 @@ class ApiHelper
         }
 
         return false;
+    }
+
+
+
+    public static function getApiObject()
+    {
+        $arrApis = $GLOBALS['IIDO']['SHOP']['API'];
+
+        foreach($arrApis as $apiName)
+        {
+            if( self::isApiEnabled( $apiName) )
+            {
+                $apiClass = ApiConfig::getClass( $apiName );
+
+                return new $apiClass();
+            }
+        }
+
+        return null;
     }
 }
