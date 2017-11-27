@@ -35,11 +35,11 @@ class ProductListElement extends \ContentElement
             /** @var \BackendTemplate|object $objTemplate */
             $objTemplate = new \BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard = '### PRODUKT LISTE ###';
-            $objTemplate->title = $this->headline;
-            $objTemplate->id = $this->id;
-            $objTemplate->link = $this->name;
-            $objTemplate->href = '';
+            $objTemplate->wildcard  = '### PRODUKT LISTE ###';
+            $objTemplate->title     = $this->headline;
+            $objTemplate->id        = $this->id;
+            $objTemplate->link      = $this->name;
+            $objTemplate->href      = '';
 
             return $objTemplate->parse();
         }
