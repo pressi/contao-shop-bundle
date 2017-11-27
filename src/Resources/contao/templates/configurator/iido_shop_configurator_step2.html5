@@ -1,0 +1,118 @@
+<div class="configurator-container" data-item-number="<?= $this->skiNumber ?>" data-color="<?= $this->catColor ?>" id="configuratorCont_<?= $this->id ?>" style="background:<?= $this->catColor ?>;">
+    <input type="hidden" name="ARTICLE_NUMBER[range]" value="<?= $this->itemNumberRange . '.' . $this->skiNumber ?>">
+
+    <div class="name"><?= $this->productName ?></div>
+
+    <div class="configurator-infos">
+
+        <div class="design" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="label"><?= $this->designLabel ?></div>
+
+            <div class="chooser">
+                <? foreach($this->designs as $design): ?>
+                    <div class="choose-item color-picker" data-number="<?= $design['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)" data-alias="<?= $design['alias'] ?>">
+                        <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[design]" value="<?= $design['articleNumber'] ?>"></div>
+                        <div class="color_circle cc-<?= $design['alias'] ?>">
+                        </div>
+                    </div>
+                <? endforeach ?>
+            </div>
+            <div class="chooser-value"></div>
+        </div>
+
+        <div class="binding" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="label"><?= $this->bindingLabel ?></div>
+
+            <div class="chooser">
+                <? foreach($this->bindings as $binding): ?>
+                    <div class="choose-item" data-number="<?= $binding['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)">
+                        <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[binding]" value="<?= $binding['articleNumber'] ?>"></div>
+                        <div class="name"><?= $binding['title'] ?></div>
+                        <div class="description"><?= $binding['description'] ?></div>
+                    </div>
+                <? endforeach ?>
+            </div>
+            <div class="chooser-value"></div>
+        </div>
+
+        <div class="length" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="label"><?= $this->lengthLabel ?></div>
+
+            <div class="chooser">
+                <? foreach($this->lengths as $length): ?>
+                    <div class="choose-item" data-number="<?= $length['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)">
+                        <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[length]" value="<?= $length['articleNumber'] ?>"></div>
+                        <div class="name"><?= $length['articleNumber'] ?></div>
+                    </div>
+                <? endforeach ?>
+            </div>
+            <div class="chooser-value"></div>
+        </div>
+
+        <div class="flex" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="label"><?= $this->flexLabel ?></div>
+
+            <div class="chooser">
+                <? foreach($this->flexs as $flex): ?>
+                    <div class="choose-item" data-number="<?= $flex['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)">
+                        <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[flex]" value="<?= $flex['articleNumber'] ?>"></div>
+                        <div class="name"><?= $flex['title'] ?></div>
+                    </div>
+                <? endforeach ?>
+            </div>
+            <div class="chooser-value"></div>
+        </div>
+
+        <div class="tuning" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="label"><?= $this->tuningLabel ?></div>
+
+            <div class="chooser"></div>
+        </div>
+    </div>
+
+
+    <div class="product-image">
+        <?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $this->productImage ) ?>
+    </div>
+
+    <div class="price-cart">
+
+        <div class="price">
+            <div class="label"><?= $this->priceLabel ?></div>
+            <div class="num"><span class="unit"><?= $this->priceUnit ?></span><span class="price-num"><?= $this->productPrice ?></span></div>
+        </div>
+
+        <div class="cart">
+            <div class="label"><?= $this->cartLabel ?></div>
+            <div class="num"><?= $this->cartNum ?></div>
+        </div>
+
+    </div>
+
+    <div class="settings">
+
+        <div class="buy">
+            <a href="javascript:void(0)" onclick="IIDO.Shop.Configurator.addProductToCart()">
+                <?= $this->buyLabel ?>
+            </a>
+        </div>
+        <div class="notice">
+            <a href="javascript:void(0)" onclick="IIDO.Shop.Configurator.addProductToNotice()">
+                <?= $this->noticeLabel ?>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="details">
+        <div class="label"><?= $this->detailLabel ?></div>
+        <canvas id="canvasDetail"></canvas>
+    </div>
+
+
+    <script>
+        IIDO.Shop.Configurator.init(<?= $this->id ?>);
+        IIDO.Shop.Configurator.initConfig(<?= json_encode($this->arrConfig) ?>);
+    </script>
+
+</div>

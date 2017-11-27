@@ -1,0 +1,18 @@
+<div class="category-container">
+    <input type="hidden" name="category" value="">
+    <input type="hidden" name="skiNumber" value="">
+
+    <? foreach($this->arrCategories as $category): ?>
+
+        <div class="category-item" data-color="<?= \IIDO\BasicBundle\Helper\ColorHelper::compileColor( \StringUtil::deserialize($category['color'], TRUE) ) ?>" onclick="IIDO.Shop.Configurator.checkAndSubmitForm(this, '<?= $this->id ?>')">
+            <div class="hidden">
+                <input type="checkbox" name="category" value="<?= $category['id'] ?>">
+                <input type="checkbox" name="skiNumber" value="<?= $category['itemNumberRange'] ?>">
+            </div>
+            <div class="item-name"><?= $category['title'] ?></div>
+            <div class="item-image"><?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $category['singleSRC'] ) ?></div>
+        </div>
+
+    <? endforeach ?>
+
+</div>

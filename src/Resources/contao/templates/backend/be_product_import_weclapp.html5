@@ -1,0 +1,77 @@
+<?= $this->filterContent ?>
+
+<div id="tl_buttons">
+    <a href="<?= ampersand(str_replace('&key=import&importMode=weclapp', '&key=import', \Environment::get('request'))) ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+</div>
+
+<div class="tl_message tl_info">
+    <strong>HINWEIS:</strong> Ein Import kann immer nur pro angezeigter Seite durchgeführt werden!
+</div>
+
+<form action="<?= ampersand(\Environment::get('request'), true) ?>" id="tl_shop_products_weclapp_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+    <div class="tl_formbody_edit">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_shop_products_import">
+        <input type="hidden" name="IMPORT_MODE" value="weclapp">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+    </div>
+
+    <? if($this->error): ?>
+        <div class="tl_message tl_error">
+            <strong>Fehler:</strong> <?= $this->error ?>
+        </div>
+    <? endif ?>
+
+    <? if($this->message): ?>
+        <div class="tl_message tl_confirm">
+            <strong>Importer:</strong> <?= $this->message ?>
+        </div>
+    <? endif ?>
+
+    <div class="tl_listing_container list_view" id="tl_listing">
+        <div class="tl_select_trigger">
+            <label for="tl_select_trigger" class="tl_select_label">Alle auswählen</label>
+            <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
+        </div>
+        <table class="tl_listing">
+            <tbody>
+<!--            <tr>-->
+<!--                <td colspan="2" class="tl_folder_tlist">N</td>-->
+<!--            </tr>-->
+            <? foreach($this->products as $product):
+                $product = (object) $product;
+                $inUse = false;
+
+                foreach($this->internProducts as $objProduct)
+                {
+                    if( $product->articleNumber === $objProduct->itemNumber )
+                    {
+                        $inUse = true;
+                        break;
+                    }
+                }
+                ?>
+                <tr class="even click2edit toggle_select hover-row<? if($inUse): ?> in-use<? endif ?>">
+                    <td class="tl_file_list">
+                        <? if($inUse): ?><span class="tl_gray in-use"><? endif ?><?= $product->name ?> <span class="tl_gray">[<?= $product->articleNumber ?>]</span><? if($inUse): ?></span><? endif ?>
+                        <? if($inUse && 1 == 2): ?><span class="tl_orange is-imported">Produkt bereits importiert</span><? endif ?>
+                    </td>
+                    <td class="tl_file_list tl_right_nowrap">
+                        <? if(!$inUse): ?>
+                            <input type="checkbox" class="tl_tree_checkbox" name="products[]" value="<?= $product->id ?>" id="ctrl_product_<?= $product->id ?>">
+                        <? else: ?>
+                            <span class="tl_orange is-imported">Produkt bereits importiert</span>
+                        <? endif ?>
+                    </td>
+                </tr>
+            <? endforeach ?>
+            </tbody></table>
+    </div>
+
+    <div class="tl_formbody_submit">
+
+        <div class="tl_submit_container">
+            <button type="submit" name="save" id="save" class="tl_submit" accesskey="s"><?= $this->lang['import'][0] ?></button>
+        </div>
+
+    </div>
+</form>

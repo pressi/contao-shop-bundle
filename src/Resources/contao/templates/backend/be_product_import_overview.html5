@@ -1,0 +1,19 @@
+<div id="tl_buttons">
+    <a href="<?= ampersand(str_replace('&key=import', '', \Environment::get('request'))) ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+</div>
+
+<div class="import-choose tl_tbox">
+
+    <div class="csv-button widget">
+        <a href="<?= ampersand(str_replace('&key=import', '&key=import&importMode=csv', \Environment::get('request'))) ?>" class="tl_submit">CSV-Importer</a>
+    </div>
+
+    <? foreach($this->importer as $strImporter): ?>
+
+        <div class="<?= $strImporter->name ?>-button widget">
+            <a href="<?= ampersand(str_replace('&key=import', '&key=import&importMode=' . $strImporter->name, \Environment::get('request'))) ?>" class="tl_submit"><?= $strImporter->label ?></a>
+        </div>
+
+    <? endforeach ?>
+
+</div>

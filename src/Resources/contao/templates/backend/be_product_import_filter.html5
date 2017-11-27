@@ -1,0 +1,95 @@
+<form action="<?= ampersand(\Environment::get('request'), true) ?>" class="tl_form" method="post">
+    <div class="tl_formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+        <!--        <div class="tl_panel cf">-->
+        <!--            <div class="tl_filter tl_subpanel">-->
+        <!--                <strong>Filtern:</strong>-->
+        <!--                <select name="author" id="author" class="tl_select">-->
+        <!--                    <option value="tl_author">Autor</option>-->
+        <!--                    <option value="tl_author">---</option>-->
+        <!--                    <option value="2">Development</option>-->
+        <!--                </select>-->
+        <!--                <select name="date" id="date" class="tl_select">-->
+        <!--                    <option value="tl_date">Datum</option>-->
+        <!--                    <option value="tl_date">---</option>-->
+        <!--                    <option value="1509490800">November 2017</option>-->
+        <!--                </select>-->
+        <!--                <select name="source" id="source" class="tl_select">-->
+        <!--                    <option value="tl_source">Weiterleitungsziel</option>-->
+        <!--                    <option value="tl_source">---</option>-->
+        <!--                    <option value="default">Standard</option>-->
+        <!--                </select>-->
+        <!--                <select name="noComments" id="noComments" class="tl_select">-->
+        <!--                    <option value="tl_noComments">Kommentare deaktivieren</option>-->
+        <!--                    <option value="tl_noComments">---</option>-->
+        <!--                    <option value="">Nein</option>-->
+        <!--                </select>-->
+        <!--                <select name="featured" id="featured" class="tl_select">-->
+        <!--                    <option value="tl_featured">Beitrag hervorheben</option>-->
+        <!--                    <option value="tl_featured">---</option>-->
+        <!--                    <option value="">Nein</option>-->
+        <!--                </select>-->
+        <!--                <select name="published" id="published" class="tl_select">-->
+        <!--                    <option value="tl_published">Beitrag veröffentlichen</option>-->
+        <!--                    <option value="tl_published">---</option>-->
+        <!--                    <option value="">Nein</option>-->
+        <!--                </select> <br>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <div class="tl_panel cf">
+            <div class="tl_submit_panel tl_subpanel">
+                <button name="filter" id="filter" class="tl_img_submit filter_apply" title="">Anwenden</button>
+                <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="">Zurücksetzen</button>
+            </div>
+            <div class="tl_limit tl_subpanel">
+                <strong>Anzeigen:</strong>
+                <select name="tl_limit" class="tl_select" onchange="this.form.submit()">
+                    <option value="tl_limit">Datensätze</option>
+                    <? for($num=0,$pageNum=1;$num<=$this->productsCount;$num+=$this->pageSteps,$pageNum++):
+                        $selected = '';
+
+                        $startNum   = ($num === 0) ? $num : ($num+1);
+                        $endNum     = ($num + $this->pageSteps);
+                        $strValue   = (int) $pageNum; //$startNum . ',' . $endNum;
+
+                        if( ($num === 0 && !$this->activePage) || (int) $this->activePage === $strValue)
+                        {
+                            $selected = ' selected="selected"';
+                        }
+
+                        if( $endNum > $this->productsCount )
+                        {
+                            $endNum = $this->productsCount;
+                        }
+
+                        ?>
+                        <option value="<?= $strValue ?>"<?= $selected ?>><?= (($startNum === 0) ? '1' : $startNum) ?> - <?= $endNum ?></option>
+                    <? endfor ?>
+                </select>
+            </div>
+            <? if( count($this->searchFields) ): ?>
+                <div class="tl_search tl_subpanel">
+                    <strong>Suchen:</strong>
+                    <select name="tl_field" class="tl_select">
+                        <? foreach($this->searchFields as $strValue => $strLabel): ?>
+                            <option value="<?= $strValue ?>"<? if($strValue === \Input::post('tl_field')): ?> selected="selected"<? endif ?>><?= $strLabel ?></option>
+                        <? endforeach ?>
+                    </select>
+                    <span>=</span>
+                    <input type="search" name="tl_value" class="tl_text" value="<?= \Input::post("tl_value") ?>">
+                </div>
+            <? endif ?>
+            <? if( count($this->sortFields) ): ?>
+                <div class="tl_sorting tl_subpanel">
+                    <strong>Sortieren:</strong>
+                    <select name="tl_sort" id="tl_sort" class="tl_select">
+                        <? foreach($this->sortFields as $strValue => $strLabel): ?>
+                            <option value="<?= $strValue ?>"<? if($strValue === \Input::post('tl_sort')): ?> selected="selected"<? endif ?>><?= $strLabel ?></option>
+                        <? endforeach ?>
+                    </select>
+                </div>
+            <? endif ?>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,40 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content") ?>
+
+<div class="step-container step-<?= $this->stepNum ?>">
+    <form action="<?= \Environment::get('request') ?>" method="post" id="shopConfigurator_<?= $this->id ?>">
+        <input type="hidden" name="FORM_SUBMIT" value="configurator_form">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+        <input type="hidden" name="STEP" value="<?= $this->stepNum ?>">
+        <input type="hidden" name="NEXT_STEP" value="<?= ($this->stepNum + 1) ?>">
+
+        <div class="form-container">
+            <?= $this->stepContent ?>
+        </div>
+
+    </form>
+
+    <? if( $this->stepNum > 1 ): ?>
+        <div class="choose-contianer choose-bottom">
+            <div class="container-inside">
+
+                <form action="<?= \Environment::get('request') ?>" method="post" id="shopConfigurator_<?= $this->id ?>_1">
+                    <input type="hidden" name="FORM_SUBMIT" value="configurator_form">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <input type="hidden" name="STEP" value="1">
+                    <input type="hidden" name="NEXT_STEP" value="2">
+
+                    <div class="form-container">
+                        <?= $this->chooseContent ?>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    <? endif ?>
+
+</div>
+
+<? $this->endblock() ?>
