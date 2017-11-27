@@ -3,3 +3,56 @@ body[class*=version_4-5] #tl_navigation .tl_level_1_group .group-iidoShop {
     background: url(../../images/icons/shop.svg) 3px 2px no-repeat;
     background-size: 14px 14px;
 }
+
+.header_shop_products_import,
+.header_shop_product_categories {
+    padding: 3px 0 3px 21px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    margin-left: 15px;
+
+    background-image: url(/system/themes/flexible/icons/theme_import.svg);
+}
+.header_shop_product_categories {
+    background-image: url(../../images/icons/categories.png);
+}
+
+tr.in-use > td.tl_file_list > span.in-use {
+    text-decoration: line-through;
+}
+
+.import-choose:after {
+    content: '';
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.import-choose > .widget {
+    float: left;
+    clear: none !important;
+    width: auto !important;
+}
+
+.widget > div.be_explanation {
+    font-size: 0.875rem;
+}
+
+.tl_content_left:after {
+    content: '';
+    display: table;
+    clear: both;
+    float: none;
+}
+.tl_content_left > span {
+    float: left;
+    display: block;
+}
+.tl_content_left > span.product-name {
+    width: 300px;
+}
+.tl_content_left > span.product-item-number {
+    width: 210px;
+}
+.tl_content_left > span.product-categories {
+}
