@@ -55,7 +55,8 @@ array_insert($GLOBALS['BE_MOD'], 3, array
 
         $prefix . $modPrefix . 'Products' => array
         (
-            'tables'        => array($tablePrefix . 'archive', $tablePrefix . 'product', $tablePrefix . 'product_category')
+            'tables'        => array($tablePrefix . 'archive', $tablePrefix . 'product', $tablePrefix . 'product_category'),
+            'import'        => array($ns . '\Table\ProductTable', 'renderProductImporter')
         ),
 
 
@@ -74,7 +75,8 @@ array_insert($GLOBALS['BE_MOD'], 3, array
  * Content elements
  */
 
-$GLOBALS['TL_CTE']['iido_shop']['productList'] = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList']      = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator']     = 'IIDO\ShopBundle\ContentElement\ConfiguratorElement';
 
 
 
@@ -84,3 +86,16 @@ $GLOBALS['TL_CTE']['iido_shop']['productList'] = 'IIDO\ShopBundle\ContentElement
 
 $GLOBALS['TL_PERMISSIONS'][] = 'iidoShopArchives';
 $GLOBALS['TL_PERMISSIONS'][] = 'iidoShopArchivep';
+
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopProductCategories';
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopProductCategories_default';
+
+
+
+/**
+ * Add model
+ */
+
+$GLOBALS['TL_MODELS']['tl_iido_shop_product']           = 'IIDO\ShopBundle\Model\IidoShopProductModel';
+$GLOBALS['TL_MODELS']['tl_iido_shop_product_category']  = 'IIDO\ShopBundle\Model\IidoShopProductCategoryModel';
+$GLOBALS['TL_MODELS']['tl_iido_shop_archive']           = 'IIDO\ShopBundle\Model\IidoShopArchiveModel';
