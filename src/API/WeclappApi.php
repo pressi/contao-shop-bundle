@@ -19,16 +19,75 @@ use IIDO\ShopBundle\Config\BundleConfig;
  *
  * @author Stephan Preßl <development@prestep.at>
  */
-class WeclappApi
+class WeclappApi extends DefaultApi
 {
     /**
-     * Version
+     * API Name
+     * @var string
+     */
+    protected $apiName = 'weclapp';
+
+
+    /**
+     * Active Importer
+     *
+     * @var boolean
+     */
+    protected $activeImporter = true;
+
+
+    /**
+     * Color Codes
+     *
+     * @var array
+     */
+    protected $colorCodes = array
+    (
+        'AB'    => 'aqua_black',
+        'BA'    => 'black_aqua',
+
+        'BB'    => 'black_black',
+
+        'BW'    => 'black_white',
+        'WB'    => 'white_black',
+
+        'BCB'   => 'black_cblue',
+        'CBB'   => 'cblue_black',
+
+        'BY'    => 'black_yellow',
+        'YB'    => 'yellow_black',
+
+        'MB'    => 'magenta_black',
+        'BM'    => 'black_magenta',
+    );
+
+
+    /**
+     * Flex Codes
+     *
+     * @var array
+     */
+    protected $flexCode = array
+    (
+        'XXX'   => 'Weich',
+        'YYY'   => 'Normal',
+        'ZZZ'   => 'Hart'
+    );
+
+
+    /**
+     * API URL Version
      *
      * @var string
      */
     var $version = 'v1';
 
 
+    /**
+     * API Url
+     *
+     * @var string
+     */
     protected $apiUrl;
 
 
@@ -42,12 +101,12 @@ class WeclappApi
     public function getProductList()
     {
         $arrProducts = array();
-        $productCount   = json_decode($this->runApiUrl( 'article/count' ), TRUE);
-        $apiProducts    = json_decode($this->runApiUrl( 'article/?pageSize=1000' ), TRUE);
+        $productCount   = $this->runApiUrl( 'article/count' );
+        $apiProducts    = $this->runApiUrl( 'article/?pageSize=1000' );
 echo "<pre>"; print_r( $productCount );
 echo "<br>";
 print_r( $apiProducts ); exit;
-        foreach($apiProducts['result'] as $arrProduct)
+        foreach($apiProducts as $arrProduct)
         {
             if( $arrProduct['active'] === "1" || $arrProduct['active'] === 1 || $arrProduct['active'] )
             {
@@ -60,7 +119,21 @@ print_r( $apiProducts ); exit;
 
 
 
-    public function runApiUrl( $urlParams )
+    public function getColorCode( $colorKey )
+    {
+        return $this->colorCodes[ $colorKey ];
+    }
+
+
+
+    public function getFlexName( $flexKey )
+    {
+        return $this->flexCode[ $flexKey ];
+    }
+
+
+
+    public function runApiUrl( $urlParams, $returnVar = '' )
     {
         $auth = [
             'Content-Type: application/json',
@@ -77,8 +150,15 @@ print_r( $apiProducts ); exit;
 
         $out = curl_exec($ch);
         curl_close($ch);
-//echo "<pre>"; print_r( $out ); exit;
-        return $out;
+
+        $arrOutput = json_decode($out, TRUE);
+
+        if( $arrOutput['error'] )
+        {
+            return $arrOutput['error'];
+        }
+
+        return $returnVar ? $arrOutput[ $returnVar ] : ((isset($arrOutput['result'])) ? $arrOutput['result'] : $arrOutput);
     }
 
 
@@ -98,5 +178,4 @@ print_r( $apiProducts ); exit;
         $prefix = BundleConfig::getTableFieldPrefix();
         return \Config::get( $prefix . 'weclappToken' );
     }
-
 }
