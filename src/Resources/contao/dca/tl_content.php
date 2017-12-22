@@ -23,7 +23,7 @@ $categoryTableClass = 'IIDO\ShopBundle\Table\ProductCategoryTable';
  * Extend the default palettes
  */
 
-\IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_configurator", '{config_legend},iidoShopCategories,iidoShopArchive;', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_configurator", '{config_legend},iidoShopCategories,iidoShopArchive,iidoShopRedirect;{link_legend},iidoShopCart,iidoShopWatchlist;', $strTable);
 //Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 //    ->addLegend('iido_shopCategories_legend', 'title_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 //    ->addField(array('iidoShopCategories'), 'iido_shopCategories_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
@@ -57,6 +57,25 @@ $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopArchive'] = array
     'inputType'               => 'radio',
     'foreignKey'              => $archiveTable . '.title',
 //    'options_callback'        => array($categoryTableClass, 'getShopCategories'),
+    'eval'                    => array
+    (
+        'multiple'              => false,
+        'tl_class'              => 'w50 hauto'
+    ),
+    'sql'                     => "blob NULL"
+);
+
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('iidoShopRedirect', $strTable, 'jumpTo', 'tl_module');
+
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('iidoShopCart', $strTable, 'jumpTo', 'tl_module', true, 'w50 hauto');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('iidoShopWatchlist', $strTable, 'jumpTo', 'tl_module', true, 'w50 hauto');
+
+
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopArchive'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['iidoShopArchive'],
+    'exclude'                 => true,
+    'inputType'               => 'multiColumnWizard',
     'eval'                    => array
     (
         'multiple'              => false,
