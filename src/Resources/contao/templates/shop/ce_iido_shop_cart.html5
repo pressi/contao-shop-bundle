@@ -1,0 +1,51 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content") ?>
+
+<? if(!$this->count): ?>
+    <?= $this->empty ?>
+<? else: ?>
+
+    <div class="cart-container">
+        <div class="cart-container-inside">
+            <? foreach($this->items as $item):
+                $strClass = ($item['class'] ? ' ' . $item['class'] : '');
+
+            if( count($item['categories']) )
+            {
+                foreach($item['categories'] as $objCategory)
+                {
+                    $strClass .= ' cat-' . $objCategory->alias;
+                }
+            }
+
+                ?>
+                <div class="cart-item<?= $strClass ?>" id="cartItem_<?= $item['id'] ?>">
+                    <div class="top-infos">
+                        <div class="desc-infos">
+                            <div class="label"><?= $item['label'] ?></div>
+                            <div class="name"><?= $item['name'] ?></div>
+                        </div>
+                        <div class="detail-infos">
+                            <?= $item['detailInfos'] ?>
+                        </div>
+                    </div>
+                    <div class="image">
+                        <?= $item['imageTag'] ?>
+                    </div>
+                    <div class="bottom-infos">
+                        <div class="action-cont">
+                            <a class="edit-link" onclick="IIDO.Shop.Cart.editItem(<?= $item['id'] ?>)" href="javascript:void(0)"><?= $this->editLabel ?></a>
+                            <a class="watchlist-link" onclick="IIDO.Shop.Cart.moveItemToWatchlist(<?= $item['id'] ?>)" href="javascript:void(0)"><?= $this->toWatchlistLabel ?></a>
+                            <a class="remove-link" onclick="IIDO.Shop.Cart.removeItem(<?= $item['id'] ?>)" href="javascript:void(0)"><?= $this->removeLabel ?></a>
+                        </div>
+                        <div class="price"><?= $item['price'] ?></div>
+                    </div>
+                </div>
+            <? endforeach ?>
+        </div>
+    </div>
+
+<? endif ?>
+
+<? $this->endblock() ?>
