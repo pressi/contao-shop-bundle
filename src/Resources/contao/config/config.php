@@ -19,9 +19,14 @@ $modPrefix  = ucfirst( $subName );
 
 
 // Load icon in Contao 4.2+ backend
-if ('BE' === TL_MODE)
+if( 'BE' === TL_MODE )
 {
     $GLOBALS['TL_CSS'][] = $assetsPath . '/css/backend/contao-shop.css';
+}
+elseif( 'FE' === TL_MODE )
+{
+    $GLOBALS['TL_JAVASCRIPT'][] = \IIDO\ShopBundle\Config\BundleConfig::getBundlePath( true ) . '/javascript/IIDO.Shop.js|static';
+    $GLOBALS['TL_JAVASCRIPT']['cookie'] = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true ) . '/javascript/jquery/jquery.cookie.min.js|static';
 }
 
 
@@ -75,8 +80,10 @@ array_insert($GLOBALS['BE_MOD'], 3, array
  * Content elements
  */
 
-$GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList']      = 'IIDO\ShopBundle\ContentElement\ProductListElement';
-$GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator']     = 'IIDO\ShopBundle\ContentElement\ConfiguratorElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList']        = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator']       = 'IIDO\ShopBundle\ContentElement\ConfiguratorElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_cart']               = 'IIDO\ShopBundle\ContentElement\ShopCartElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_watchlist']          = 'IIDO\ShopBundle\ContentElement\WatchlistElement';
 
 
 
