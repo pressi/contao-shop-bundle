@@ -158,7 +158,14 @@ print_r( $apiProducts ); exit;
             return $arrOutput['error'];
         }
 
-        return $returnVar ? $arrOutput[ $returnVar ] : ((isset($arrOutput['result'])) ? $arrOutput['result'] : $arrOutput);
+        $arrReturn = $returnVar ? $arrOutput[ $returnVar ] : ((isset($arrOutput['result'])) ? $arrOutput['result'] : $arrOutput);
+
+        if( count($arrReturn) === 1 && preg_match('/\-eq/', $urlParams) )
+        {
+            $arrReturn = $arrReturn[0];
+        }
+
+        return $arrReturn;
     }
 
 
