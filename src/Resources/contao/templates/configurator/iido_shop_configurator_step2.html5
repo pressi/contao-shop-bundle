@@ -1,5 +1,6 @@
 <div class="configurator-container" data-item-number="<?= $this->skiNumber ?>" data-color="<?= $this->catColor ?>" id="configuratorCont_<?= $this->id ?>" style="background:<?= $this->catColor ?>;">
     <input type="hidden" name="ARTICLE_NUMBER[range]" value="<?= $this->itemNumberRange . '.' . $this->skiNumber ?>">
+    <input type="hidden" name="name" value="<?= $this->productName ?>">
 
     <div class="name"><?= $this->productName ?></div>
 
@@ -10,14 +11,14 @@
 
             <div class="chooser">
                 <? foreach($this->designs as $design): ?>
-                    <div class="choose-item color-picker" data-number="<?= $design['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)" data-alias="<?= $design['alias'] ?>">
+                    <div class="choose-item color-picker" data-number="<?= $design['articleNumber'] ?>" data-image="<?= $design['image'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'color')" data-alias="<?= $design['alias'] ?>">
                         <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[design]" value="<?= $design['articleNumber'] ?>"></div>
                         <div class="color_circle cc-<?= $design['alias'] ?>">
                         </div>
                     </div>
                 <? endforeach ?>
             </div>
-            <div class="chooser-value"></div>
+            <div class="chooser-value"><?= $this->chooserValue['design'] ?></div>
         </div>
 
         <div class="binding" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
@@ -25,14 +26,14 @@
 
             <div class="chooser">
                 <? foreach($this->bindings as $binding): ?>
-                    <div class="choose-item" data-number="<?= $binding['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)">
+                    <div class="choose-item" data-number="<?= $binding['articleNumber'] ?>" data-image="<?= $binding['image'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'binding')">
                         <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[binding]" value="<?= $binding['articleNumber'] ?>"></div>
                         <div class="name"><?= $binding['title'] ?></div>
                         <div class="description"><?= $binding['description'] ?></div>
                     </div>
                 <? endforeach ?>
             </div>
-            <div class="chooser-value"></div>
+            <div class="chooser-value"><?= $this->chooserValue['binding'] ?></div>
         </div>
 
         <div class="length" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
@@ -46,7 +47,7 @@
                     </div>
                 <? endforeach ?>
             </div>
-            <div class="chooser-value"></div>
+            <div class="chooser-value"><?= $this->chooserValue['length'] ?></div>
         </div>
 
         <div class="flex" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
@@ -60,19 +61,25 @@
                     </div>
                 <? endforeach ?>
             </div>
-            <div class="chooser-value"></div>
+            <div class="chooser-value"><?= $this->chooserValue['flex'] ?></div>
         </div>
 
         <div class="tuning" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
             <div class="label"><?= $this->tuningLabel ?></div>
 
-            <div class="chooser"></div>
+            <div class="chooser">
+                <div class="msg not-availabel">Derzeit nicht verfügbar</div>
+            </div>
+            <div class="chooser-value"><?= $this->chooserValue['tuning'] ?></div>
         </div>
     </div>
 
 
-    <div class="product-image">
-        <?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $this->productImage ) ?>
+    <div class="product-image" id="productImage_<?= $this->id ?>">
+        <figure class="image_container">
+            <?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $this->productImage, array(), true ) ?>
+            <div class="binding-image"></div>
+        </figure>
     </div>
 
     <div class="price-cart">
@@ -84,7 +91,16 @@
 
         <div class="cart">
             <div class="label"><?= $this->cartLabel ?></div>
-            <div class="num"><?= $this->cartNum ?></div>
+            <div class="num<? if( $this->cartLink ): ?> has-link<? endif ?>">
+                <? if( $this->cartLink ): ?>
+                    <a href="<?= $this->cartLink ?>">
+                <? endif ?>
+                    <?= $this->cartNum ?>
+                <? if( $this->cartLink ): ?>
+                    </a>
+                <? endif ?>
+            </div>
+            <div class="watchlist-num<? if($this->watchlistNum === 0): ?> is-hidden<? endif ?>"><?= $this->watchlistNum ?></div>
         </div>
 
     </div>
@@ -96,15 +112,15 @@
                 <?= $this->buyLabel ?>
             </a>
         </div>
-        <div class="notice">
-            <a href="javascript:void(0)" onclick="IIDO.Shop.Configurator.addProductToNotice()">
-                <?= $this->noticeLabel ?>
+        <div class="watchlist">
+            <a href="javascript:void(0)" onclick="IIDO.Shop.Configurator.addProductToWatchlist()">
+                <?= $this->watchlistLabel ?>
             </a>
         </div>
 
     </div>
 
-    <div class="details">
+    <div class="details" onclick="IIDO.Shop.Configurator.openProductDetails(this)">
         <div class="label"><?= $this->detailLabel ?></div>
         <canvas id="canvasDetail"></canvas>
     </div>

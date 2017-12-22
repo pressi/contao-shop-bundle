@@ -9,20 +9,40 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
 (function(window, $, configurator)
 {
-    var $configurator, $config = {};
+    var $configurator, $configID, $config = {},
+        $langKey = 'de',
+
+        $errorMessage = {
+            'de' : {
+                'design'    : 'Das Design gehört ausgewählt.',
+                'binding'   : 'Wählen Sie eine Bindung aus.',
+                'length'    : 'Geben Sie Ihre Skilänge an.',
+                'flex'      : 'Wählen Sie den Härtebereich Ihres Skis aus.',
+                'tuning'    : 'Wählen Sie Ihr gewünschtes Tuning aus.',
+
+                'addToCart'         : 'Der Artikel wurde in den Warenkorb gelegt.',
+                'addToWatchlist'    : 'Der Artikel wurde in die Merklsite eingetragen.'
+            }
+        },
+
+    $fieldNames = ['design', 'binding', 'length', 'flex'],
+    $formFields = ['name', 'ARTICLE_NUMBER[range]', 'ARTICLE_NUMBER[design]', 'ARTICLE_NUMBER[binding]', 'ARTICLE_NUMBER[length]', 'ARTICLE_NUMBER[flex]'],
+
+    $itemNumber = '##RANGE##.##DESIGN##.##LENGTH##.##FLEX##.##BINDING##';
 
 
 
     configurator.init = function( contID )
     {
-        $configurator = document.getElementById('configuratorCont_' + contID);
+        $configID       = contID;
+        $configurator   = document.getElementById('configuratorCont_' + contID);
 
         var canvasDetail    = document.getElementById("canvasDetail"),
             // ctx             = canvasDetail.getContext("2d"),
 
             color           = $configurator.getAttribute("data-color"),
 
-            canvasWidth     = ((window.innerWidth * 0.86) + 10),
+            canvasWidth     = ((window.innerWidth * 0.96) + 10),
             canvasHeight    = window.innerHeight;
 
         // $configurator.style.background = color;
@@ -30,12 +50,19 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
         if( window.innerWidth <= respWidth )
         {
             canvasWidth   = window.innerWidth;
-            canvasHeight  = (window.innerHeight * 0.86);
+            canvasHeight  = (window.innerHeight * 0.96);
         }
 
         var arrCanvas = runCanvasFactor(canvasDetail, canvasWidth, canvasHeight);
 
         this.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
+    };
+
+
+
+    configurator.setLanguage = function( langKey )
+    {
+        $langKey = langKey;
     };
 
 
@@ -91,8 +118,13 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
 
 
-    configurator.checkItem = function( itemTag )
+    configurator.checkItem = function( itemTag, mode )
     {
+        if( mode === undefined || mode === "undefined" || mode === null )
+        {
+            mode = 'default';
+        }
+
         this.uncheckItems( itemTag.parentNode.childNodes );
 
         itemTag.classList.add("is-checked");
@@ -107,6 +139,39 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
         else
         {
             itemTag.parentNode.nextElementSibling.innerHTML = itemTag.querySelector(".name").innerHTML;
+        }
+
+        var dataImage   = itemTag.getAttribute( "data-image" ),
+            imageCont   = document.getElementById("productImage_" + $configID);
+
+        if( dataImage !== null && dataImage !== undefined && dataImage !== "undefined" && dataImage.length )
+        {
+            if( mode === "binding" )
+            {
+                var imageTag = document.createElement("img");
+
+                imageTag.src = dataImage;
+
+                imageCont.querySelector(".binding-image").innerHTML = "";
+                imageCont.querySelector(".binding-image").append( imageTag );
+            }
+            else if( mode === "color" )
+            {
+                var imageTagColor = imageCont.querySelector(".image_container > img");
+
+                imageTagColor.src = dataImage;
+            }
+        }
+        else
+        {
+            if( mode === "binding" )
+            {
+                imageCont.querySelector(".binding-image").innerHTML = "";
+            }
+            else if( mode === "color" )
+            {
+                imageCont.querySelector(".image_container > img").src = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+            }
         }
 
         this.calculateNewPrice();
@@ -147,7 +212,7 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
     configurator.calculateNewPrice = function()
     {
         var price       = 0,
-            itemNumber  = '##RANGE##.##DESIGN##.##LENGTH##.##FLEX##.##BINDING##',
+            itemNumber  = $itemNumber,
             inputs      = document.querySelector(".configurator-container").querySelectorAll("input"),
 
             useRange    = false, useDesign = false, useBinding = false, useLength = false, useFlex = false;
@@ -259,6 +324,199 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
     configurator.initConfig = function( arrConfig )
     {
         $config = arrConfig;
+    };
+
+
+
+    configurator.getProduct = function()
+    {
+        var itemNumber = $itemNumber, product = {};
+
+        for(var i=0; i<$formFields.length; i++)
+        {
+            var fieldName   = $formFields[ i ],
+                fieldTag    = document.querySelector(".configurator-container").querySelector( 'input[name="' + fieldName + '"]' );
+
+            if( fieldName.indexOf("ARTICLE_NUMBER") !== -1 )
+            {
+                var upperFieldName  = (fieldName.replace(/^ARTICLE_NUMBER\[/, '').replace(/\]$/, '')).toUpperCase();
+
+                if( fieldName !== 'ARTICLE_NUMBER[range]' )
+                {
+                    fieldTag        = document.querySelector(".configurator-container").querySelector( 'input[name="' + fieldName + '"]:checked' );
+                }
+
+                itemNumber = itemNumber.replace("##" + upperFieldName + '##', fieldTag.value);
+            }
+            else
+            {
+                product[ fieldName ] = fieldTag.value;
+            }
+        }
+
+        product.itemNumber  = itemNumber;
+        product.quantity    = 1;
+
+        return product;
+    };
+
+
+
+    configurator.addProductToCart = function()
+    {
+        if( this.checkForm() )
+        {
+            var product = this.getProduct();
+
+            IIDO.Shop.Cart.addProductToCart( product );
+            this.showMessage("confirm", "addToCart", "center");
+
+            this.updateCartNum()
+        }
+    };
+
+
+
+    configurator.addProductToWatchlist = function()
+    {
+        if( this.checkForm() )
+        {
+            var product = this.getProduct();
+
+            IIDO.Shop.Watchlist.addProductToWatchlist( product );
+            this.showMessage("confirm", "addToWatchlist", "center");
+
+            this.updateWatchlistNum()
+        }
+    };
+
+
+
+    configurator.updateCartNum = function()
+    {
+        var numTag      = $configurator.querySelector(".price-cart .cart .num"),
+            numValue    = parseInt(numTag.innerHTML);
+
+        numTag.innerHTML = (numValue + 1);
+    };
+
+
+
+    configurator.updateWatchlistNum = function()
+    {
+        var numTag      = $configurator.querySelector(".price-cart .cart .watchlist-num"),
+            numValue    = parseInt(numTag.innerHTML);
+
+        numTag.innerHTML = (numValue + 1);
+
+        if( numTag.classList.contains("is-hidden") )
+        {
+            numTag.classList.remove("is-hidden");
+        }
+    };
+
+
+
+    configurator.checkForm = function()
+    {
+        for(var num=0; num < $fieldNames.length; num++)
+        {
+            var fieldTagName    = $fieldNames[ num ],
+                fieldTag        = document.querySelector( 'input[name="ARTICLE_NUMBER[' + fieldTagName + ']"]:checked' );
+
+            if( fieldTag === null )
+            {
+                this.showMessage( "error", fieldTagName, $configurator.querySelector(".configurator-infos > ." + fieldTagName) );
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+
+
+    configurator.showMessage = function( messageType, messageName, messageParent )
+    {
+        var messageContainer = document.getElementById( "shopMessage" );
+
+        if( !messageContainer )
+        {
+            messageContainer = document.createElement("div");
+            messageContainer.classList.add("message-container");
+            messageContainer.setAttribute("id", "shopMessage");
+
+            var messageTag = document.createElement("div");
+
+            messageTag.classList.add("message-inside");
+            messageTag.innerHTML = this.getMessageText( messageName );
+
+            messageContainer.append( messageTag );
+
+            $configurator.append( messageContainer );
+        }
+        else
+        {
+            messageContainer.querySelector(".message-inside").innerHTML = this.getMessageText( messageName );
+        }
+
+
+        messageContainer.classList.remove("error-message");
+        messageContainer.classList.remove("confirm-message");
+        messageContainer.classList.remove("pos-not-center");
+
+        messageContainer.classList.add(messageType + "-message");
+        messageContainer.classList.add("shown");
+
+        if( messageParent !== undefined && messageParent !== "undefined" && messageParent !== null)
+        {
+            var posTop = '50%', posLeft = '50%';
+
+            if( messageParent !== "center" )
+            {
+                messageContainer.classList.add("pos-not-center");
+
+                var position        = $(messageParent).offset(),
+                    parentHeight    = messageParent.clientHeight,
+                    parentWidth     = messageParent.clientWidth;
+
+                posTop = (position.top + 10 - (parentHeight/2)) + 'px';
+                posLeft = (position.left + parentWidth - 35) + 'px';
+            }
+
+            messageContainer.style.position = "absolute";
+            messageContainer.style.top      = posTop;
+            messageContainer.style.left     = posLeft;
+        }
+
+        document.addEventListener("click", IIDO.Shop.Configurator.hideMessage, true);
+    };
+
+
+
+    configurator.hideMessage = function()
+    {
+        var messageCont = document.getElementById( "shopMessage" );
+
+        if( messageCont )
+        {
+            messageCont.classList.remove("shown");
+        }
+
+        document.removeEventListener("click", IIDO.Shop.Configurator.hideMessage, true);
+    };
+
+
+
+    configurator.getMessageText = function( messageKey )
+    {
+        return $errorMessage[ $langKey ][ messageKey ];
+    };
+
+
+
+    configurator.openProductDetails = function( detailTag )
+    {
     };
 
 
