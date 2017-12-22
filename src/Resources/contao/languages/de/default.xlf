@@ -20,6 +20,16 @@
                 <target>Shop: Konfigurator</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_shop_cart.0">
+                <source>Cart</source>
+                <target>Shop: Warenkorb</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_watchlist.0">
+                <source>Watchlist</source>
+                <target>Shop: Merkliste</target>
+            </trans-unit>
+
 
 
         </body>

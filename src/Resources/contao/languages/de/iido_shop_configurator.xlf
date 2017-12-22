@@ -35,7 +35,7 @@
                 <target>Kaufen</target>
             </trans-unit>
 
-            <trans-unit id="iido_shop_configurator.label.notice">
+            <trans-unit id="iido_shop_configurator.label.watchlist">
                 <source>Notice</source>
                 <target>Merken</target>
             </trans-unit>

@@ -6,6 +6,16 @@
                 <target>Kategorien</target>
             </trans-unit>
 
+            <trans-unit id="tl_content.iidoShopCart.0">
+                <source>cart page</source>
+                <target>Warenkorb-Seite</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopWatchlist.0">
+                <source>watchlist page</source>
+                <target>Merkliste-Seite</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -13,6 +23,11 @@
             <trans-unit id="tl_user.iido_shopArchive_legend">
                 <source>Shop permissions</source>
                 <target>Shoprechte</target>
+            </trans-unit>
+
+            <trans-unit id="tl_user.link_legend">
+                <source>link settings</source>
+                <target>Shop Verlinkungs-Einstellungen</target>
             </trans-unit>
 
 
