@@ -1,0 +1,23 @@
+{
+    "creditcard" :
+    {
+        "name"      : "Kreditkarte",
+        "active"    : false
+    },
+
+    "paypal" :
+    {
+        "name"      : "PayPal",
+        "active"    : true,
+        "fields"    :
+        [
+            "app_id", "secret"
+        ]
+    },
+
+    "prepaied" :
+    {
+        "name"      : "Vorkasse",
+        "active"    : true
+    }
+}
