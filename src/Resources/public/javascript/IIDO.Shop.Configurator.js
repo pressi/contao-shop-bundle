@@ -9,31 +9,49 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
 (function(window, $, configurator)
 {
-    var $configurator, $configID, $config = {},
+    var $configurator, $shopConfigurator, $configID, $config = {},
         $langKey = 'de',
 
-        $errorMessage = {
-            'de' : {
-                'design'    : 'Das Design gehört ausgewählt.',
-                'binding'   : 'Wählen Sie eine Bindung aus.',
-                'length'    : 'Geben Sie Ihre Skilänge an.',
-                'flex'      : 'Wählen Sie den Härtebereich Ihres Skis aus.',
-                'tuning'    : 'Wählen Sie Ihr gewünschtes Tuning aus.',
-
-                'addToCart'         : 'Der Artikel wurde in den Warenkorb gelegt.',
-                'addToWatchlist'    : 'Der Artikel wurde in die Merklsite eingetragen.'
-            }
-        },
+        // $errorMessage = {
+        //     'de' : {
+        //         'design'    : 'Das Design gehört ausgewählt.',
+        //         'binding'   : 'Wählen Sie eine Bindung aus.',
+        //         'length'    : 'Geben Sie Ihre Skilänge an.',
+        //         'flex'      : 'Wählen Sie den Härtebereich Ihres Skis aus.',
+        //         'tuning'    : 'Wählen Sie Ihr gewünschtes Tuning aus.',
+        //
+        //         'addToCart'         : 'Der Artikel wurde in den Warenkorb gelegt.',
+        //         'addToWatchlist'    : 'Der Artikel wurde in die Merklsite eingetragen.'
+        //     }
+        // },
 
     $fieldNames = ['design', 'binding', 'length', 'flex'],
-    $formFields = ['name', 'ARTICLE_NUMBER[range]', 'ARTICLE_NUMBER[design]', 'ARTICLE_NUMBER[binding]', 'ARTICLE_NUMBER[length]', 'ARTICLE_NUMBER[flex]'],
+    $formFields = ['name', 'ARTICLE_NUMBER[range]', 'ARTICLE_NUMBER[design]', 'ARTICLE_NUMBER[binding]', 'ARTICLE_NUMBER[length]', 'ARTICLE_NUMBER[flex]', 'tuning'],
 
-    $itemNumber = '##RANGE##.##DESIGN##.##LENGTH##.##FLEX##.##BINDING##';
+    $itemNumber = '##RANGE##.##DESIGN##.##LENGTH##.##FLEX##.##BINDING##',
+
+        $flexSoft = 35, $flexStiff = 75;
+
+
+    configurator.initContainer = function( contID )
+    {
+        $configID           = contID;
+        $shopConfigurator   = document.getElementById('shopConfigurator_' + contID);
+
+        var shopCont = document.getElementById('shopConfigurator_' + contID + '_1');
+
+        if( shopCont )
+        {
+            $shopConfigurator = shopCont;
+        }
+    };
 
 
 
     configurator.init = function( contID )
     {
+        // this.initContainer( contID );
+
         $configID       = contID;
         $configurator   = document.getElementById('configuratorCont_' + contID);
 
@@ -55,7 +73,45 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
         var arrCanvas = runCanvasFactor(canvasDetail, canvasWidth, canvasHeight);
 
-        this.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
+        IIDO.Shop.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
+    };
+
+
+
+    configurator.initCatHover = function()
+    {
+        var catCont     = $shopConfigurator.querySelector(".category-container"),
+            catItems    = catCont.querySelectorAll(".category-item");
+
+        if( catItems.length )
+        {
+            for(var i=0; i<catItems.length; i++)
+            {
+                catItems[ i ].addEventListener("mouseenter", function()
+                {
+                    var catID           = this.getAttribute("data-id"),
+                        catHoverCont    = document.getElementById("catHoverCont_" + catID),
+                        catHoverConts   = IIDO.Base.getSiblings( catHoverCont );
+
+                    for(var num=0; num<catHoverConts.length; num++)
+                    {
+                        catHoverConts[ num ].classList.remove("shown");
+                    }
+
+                    catHoverCont.classList.add("shown");
+                    catCont.classList.add("is-shown");
+                });
+
+                catItems[ i ].addEventListener("mouseleave", function()
+                {
+                    var catID           = this.getAttribute("data-id"),
+                        catHoverCont    = document.getElementById("catHoverCont_" + catID);
+
+                    catHoverCont.classList.remove("shown");
+                    catCont.classList.remove("is-shown");
+                })
+            }
+        }
     };
 
 
@@ -67,54 +123,54 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
 
 
-    configurator.generateCanvas = function( ctx, color, width, height )
-    {
-        var headerW2    = (width / 2),
-            headerH2    = (height / 2),
-
-            roundW      = 120,
-
-            bgStart     = 0, //(roundW + 10),
-            bgStartY    = 0,
-            bgWidth     = (width - (roundW - 20)),
-            bgHeight    = height,
-
-            bgCircleX   = (height * 2),
-            bgCircleY   = headerH2,
-            bgCircleW   = (height * 2);
-
-        if( window.innerWidth <= 700 )
-        {
-            bgWidth     = width;
-            bgHeight    = (height - (roundW - 20));
-
-            if( document.body.classList.contains("mobile") && document.body.classList.contains("sfari") )
-            {
-                bgHeight = bgHeight + 600;
-            }
-
-            bgCircleW   = height;
-            bgCircleX   = (width / 2);
-            bgCircleY   = (height - bgCircleW - 3);
-
-            bgStart     = 0;
-        }
-
-        bgCircleX = bgCircleX + 20;
-
-        ctx.globalCompositeOperation = "source-over";
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = color;
-        ctx.fillRect(bgStart, bgStartY, bgWidth, bgHeight);
-
-        ctx.beginPath();
-        ctx.arc(bgCircleX + 0.5, bgCircleY + 0.5, bgCircleW, 0, Math.PI*2, false);
-        ctx.closePath();
-        ctx.shadowColor = "rgba(100, 100, 100, .35)";
-        ctx.shadowOffsetX = ctx.shadowOffsetY = 0;
-        ctx.shadowBlur = 25;
-        ctx.fill();
-    };
+    // configurator.generateCanvas = function( ctx, color, width, height )
+    // {
+    //     var headerW2    = (width / 2),
+    //         headerH2    = (height / 2),
+    //
+    //         roundW      = 120,
+    //
+    //         bgStart     = 0, //(roundW + 10),
+    //         bgStartY    = 0,
+    //         bgWidth     = (width - (roundW - 20)),
+    //         bgHeight    = height,
+    //
+    //         bgCircleX   = (height * 2),
+    //         bgCircleY   = headerH2,
+    //         bgCircleW   = (height * 2);
+    //
+    //     if( window.innerWidth <= 700 )
+    //     {
+    //         bgWidth     = width;
+    //         bgHeight    = (height - (roundW - 20));
+    //
+    //         if( document.body.classList.contains("mobile") && document.body.classList.contains("sfari") )
+    //         {
+    //             bgHeight = bgHeight + 600;
+    //         }
+    //
+    //         bgCircleW   = height;
+    //         bgCircleX   = (width / 2);
+    //         bgCircleY   = (height - bgCircleW - 3);
+    //
+    //         bgStart     = 0;
+    //     }
+    //
+    //     bgCircleX = bgCircleX + 20;
+    //
+    //     ctx.globalCompositeOperation = "source-over";
+    //     ctx.clearRect(0, 0, width, height);
+    //     ctx.fillStyle = color;
+    //     ctx.fillRect(bgStart, bgStartY, bgWidth, bgHeight);
+    //
+    //     ctx.beginPath();
+    //     ctx.arc(bgCircleX + 0.5, bgCircleY + 0.5, bgCircleW, 0, Math.PI*2, false);
+    //     ctx.closePath();
+    //     ctx.shadowColor = "rgba(100, 100, 100, .35)";
+    //     ctx.shadowOffsetX = ctx.shadowOffsetY = 0;
+    //     ctx.shadowBlur = 25;
+    //     ctx.fill();
+    // };
 
 
 
@@ -124,11 +180,13 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
         {
             mode = 'default';
         }
+        // var calculatePrice = true;
 
         this.uncheckItems( itemTag.parentNode.childNodes );
 
         itemTag.classList.add("is-checked");
         itemTag.querySelector("input").checked = true;
+        itemTag.querySelector("input").setAttribute("checked", "checked");
 
         if( itemTag.classList.contains("color-picker") )
         {
@@ -172,9 +230,16 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
             {
                 imageCont.querySelector(".image_container > img").src = imageCont.querySelector(".image_container > img").getAttribute("data-default");
             }
+            // else if( mode === "tuning" )
+            // {
+            //     calculatePrice = false;
+            // }
         }
 
-        this.calculateNewPrice();
+        // if( calculatePrice )
+        // {
+            this.calculateNewPrice();
+        // }
     };
 
 
@@ -203,6 +268,7 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
             {
                 item.classList.remove("is-checked");
                 item.querySelector("input").checked = false;
+                item.querySelector("input").removeAttribute("checked");
             }
         }
     };
@@ -252,7 +318,41 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                 {
                     useFlex = true;
 
-                    itemNumber = itemNumber.replace('##FLEX##', inputTag.value);
+                    var flexConfig      = JSON.parse( inputTag.parentNode.parentNode.getAttribute("data-config") ),
+                        flexInputValue  = parseInt( inputTag.value ),
+                        flexValue       = 'YYY';
+
+                    if( flexInputValue < $flexSoft )
+                    {
+                        flexValue = IIDO.Shop.Configurator.getFlex('XXX', flexConfig).articleNumber;
+                    }
+                    else if( flexInputValue > $flexStiff )
+                    {
+                        flexValue = IIDO.Shop.Configurator.getFlex('ZZZ', flexConfig).articleNumber;
+                    }
+                    else
+                    {
+                        flexValue = IIDO.Shop.Configurator.getFlex('YYY', flexConfig).articleNumber;
+                    }
+
+                    itemNumber = itemNumber.replace('##FLEX##', flexValue);
+                }
+                else if( inputName === "tuning" )
+                {
+                    var tuningNumber = inputTag.parentNode.parentNode.getAttribute("data-number");
+
+                    if( tuningNumber !== 0 && tuningNumber !== "0" )
+                    {
+                        for(var intNum in $config.products)
+                        {
+                            var tuningProduct = $config.products[ intNum ];
+
+                            if( tuningProduct.articleNumber === itemNumber )
+                            {
+                                price = (price + tuningProduct.price);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -283,7 +383,7 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
             if( configLine.articleNumber === itemNumber )
             {
-                price = configLine.price;
+                price = (price + parseInt(configLine.price));
             }
         }
 
@@ -343,7 +443,12 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
                 if( fieldName !== 'ARTICLE_NUMBER[range]' )
                 {
-                    fieldTag        = document.querySelector(".configurator-container").querySelector( 'input[name="' + fieldName + '"]:checked' );
+                    fieldTag = document.querySelector(".configurator-container").querySelector( 'input[name="' + fieldName + '"]:checked' );
+
+                    if( fieldName === "ARTICLE_NUMBER[flex]" )
+                    {
+                        fieldTag = document.querySelector(".configurator-container").querySelector( 'input[name="' + fieldName + '"]' );
+                    }
                 }
 
                 itemNumber = itemNumber.replace("##" + upperFieldName + '##', fieldTag.value);
@@ -366,12 +471,32 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
     {
         if( this.checkForm() )
         {
-            var product = this.getProduct();
+            var product = this.getProduct(),
+                objData = [],
+                url     = location.href + '?as=ajax&ag=iidoShop&aa=getConfiguratorAddToCartMessage';
 
-            IIDO.Shop.Cart.addProductToCart( product );
-            this.showMessage("confirm", "addToCart", "center");
+            objData.push( {'name' : 'productName', 'value' : product.name} );
 
-            this.updateCartNum()
+            $.ajax({
+                type: 'post',
+                url: url,
+                dataType: 'json',
+                data: objData,
+                success: function (response, textStatus, jqXHR)
+                {
+                    if( response.result.html.content )
+                    {
+                        IIDO.Shop.showMessage("confirm", response.result.html.content, "center", "own-text", true);
+                    }
+                    else
+                    {
+                        IIDO.Shop.showMessage("confirm", "addToCartMessage", "center");
+                    }
+
+                    IIDO.Shop.Cart.addProductToCart( product );
+                    IIDO.Shop.Configurator.updateCartNum();
+                }
+            });
         }
     };
 
@@ -381,12 +506,32 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
     {
         if( this.checkForm() )
         {
-            var product = this.getProduct();
+            var product = this.getProduct(),
+                objData = [],
+                url     = location.href + '?as=ajax&ag=iidoShop&aa=getConfiguratorAddToWatchlistMessage';
 
-            IIDO.Shop.Watchlist.addProductToWatchlist( product );
-            this.showMessage("confirm", "addToWatchlist", "center");
+            objData.push( {'name' : 'productName', 'value' : product.name} );
 
-            this.updateWatchlistNum()
+            $.ajax({
+                type: 'post',
+                url: url,
+                dataType: 'json',
+                data: objData,
+                success: function (response, textStatus, jqXHR)
+                {
+                    if( response.result.html.content )
+                    {
+                        IIDO.Shop.showMessage("confirm", response.result.html.content, "center", "own-text", true);
+                    }
+                    else
+                    {
+                        IIDO.Shop.showMessage("confirm", "addToWatchlistMessage", "center");
+                    }
+
+                    IIDO.Shop.Cart.addProductToWatchlist( product );
+                    IIDO.Shop.Configurator.updateWatchlistNum();
+                }
+            });
         }
     };
 
@@ -394,8 +539,14 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
     configurator.updateCartNum = function()
     {
-        var numTag      = $configurator.querySelector(".price-cart .cart .num"),
-            numValue    = parseInt(numTag.innerHTML);
+        var numTag = $configurator.querySelector(".price-cart .cart .num");
+
+        if( numTag.classList.contains("has-link") )
+        {
+            numTag = numTag.querySelector("a");
+        }
+
+        var numValue = parseInt( numTag.innerHTML );
 
         numTag.innerHTML = (numValue + 1);
     };
@@ -424,9 +575,9 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
             var fieldTagName    = $fieldNames[ num ],
                 fieldTag        = document.querySelector( 'input[name="ARTICLE_NUMBER[' + fieldTagName + ']"]:checked' );
 
-            if( fieldTag === null )
+            if( fieldTag === null && fieldTagName !== "flex" )
             {
-                this.showMessage( "error", fieldTagName, $configurator.querySelector(".configurator-infos > ." + fieldTagName) );
+                IIDO.Shop.showMessage( "error", fieldTagName, $configurator.querySelector(".configurator-infos > ." + fieldTagName) );
                 return false;
             }
         }
@@ -515,9 +666,117 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
 
 
+    configurator.updateFlex = function( flexInput )
+    {
+        var flexValue   = parseInt( flexInput.value ),
+            flexConfig  = JSON.parse( flexInput.parentNode.parentNode.getAttribute("data-config") ),
+            flexChooser = flexInput.parentNode.parentNode.nextElementSibling;
+
+        if( flexValue < $flexSoft )
+        {
+            flexValue = IIDO.Shop.Configurator.getFlex('XXX', flexConfig).title;
+        }
+        else if( flexValue > $flexStiff )
+        {
+            flexValue = IIDO.Shop.Configurator.getFlex('ZZZ', flexConfig).title;
+        }
+        else
+        {
+            flexValue = IIDO.Shop.Configurator.getFlex('YYY', flexConfig).title;
+        }
+
+        flexChooser.innerHTML = flexValue;
+    };
+
+
+
+    configurator.updateFlexDesc = function( flexRange, flexDescTag )
+    {
+        var flexInput = flexDescTag.parentNode.previousElementSibling.querySelector("input");
+
+        flexInput.value = flexRange;
+
+        this.updateFlex( flexInput );
+    };
+
+
+
     configurator.openProductDetails = function( detailTag )
     {
+        IIDO.Shop.openProductDetails( detailTag );
+    };
+
+
+
+    configurator.getFlex = function( flexNum, flexConfig )
+    {
+        var flex = {};
+
+        for(var i=0; i<flexConfig.length; i++)
+        {
+            if( flexConfig[ i ].articleNumber === flexNum )
+            {
+                flex = flexConfig[ i ];
+            }
+        }
+
+        return flex;
+    };
+
+
+
+    configurator.updateProduct = function( mode )
+    {
+        var currentItemNumber   = document.querySelector('input[name="CURRENT_ARTICLE_NUMBER"]').value,
+            itemName            = document.querySelector('input[name="name"]').value,
+            error               = false,
+            product             = this.getProduct();
+
+        if( currentItemNumber )
+        {
+            if( mode === "cart" )
+            {
+                var cartlist = IIDO.Shop.Cart.getList();
+
+                for(var ci=0; ci<cartlist.length; ci++)
+                {
+                    var cartlistItem = cartlist[ ci ];
+
+                    if( cartlistItem.itemNumber === currentItemNumber && cartlistItem.name === itemName)
+                    {
+                        cartlist[ ci ].itemNumber  = product.itemNumber;
+                        cartlist[ ci ].tuning      = product.tuning;
+                    }
+                }
+
+                IIDO.Shop.Cart.updateList( cartlist );
+            }
+            else
+            {
+                var watchlist = IIDO.Shop.Watchlist.getList();
+
+                for(var wi=0; wi<watchlist.length; wi++)
+                {
+                    var watchlistItem = watchlist[ wi ];
+
+                    if( watchlistItem.itemNumber === currentItemNumber && watchlistItem.name === itemName)
+                    {
+                        watchlist[ wi ].itemNumber  = product.itemNumber;
+                        watchlist[ wi ].tuning      = product.tuning;
+                    }
+                }
+
+                IIDO.Shop.Watchlist.updateList( watchlist );
+            }
+        }
+
+        IIDO.Shop.showMessage((error ? "error" : "confirm"), "updateProduct" + (error ? 'Error' : ''), "center");
     };
 
 
 })(window, jQuery, IIDO.Shop.Configurator);
+
+document.addEventListener("DOMContentLoaded", function()
+{
+    IIDO.Shop.Configurator.initCatHover();
+});

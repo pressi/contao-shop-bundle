@@ -24,6 +24,7 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
         $maxPages = parseInt($questionnaire.getAttribute("data-max-pages"));
 
         this.initProgressSteps();
+        this.initImageMap();
     };
 
 
@@ -34,15 +35,24 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
         {
             $activePage = ($activePage + 1);
 
-            this.checkPageStatus();
+            this.checkPageStatus( "next" );
             this.checkPageAnimation();
             this.updateOverviewPageAnswers();
         }
     };
 
+    questionnaire.prevPage = function()
+    {
+        $activePage = ($activePage - 1);
+
+        this.checkPageStatus( "prev" );
+        this.checkPageAnimation();
+        this.updateOverviewPageAnswers();
+    };
 
 
-    questionnaire.checkPageStatus = function()
+
+    questionnaire.checkPageStatus = function( mode )
     {
         if( $activePage >= 1 )
         {
@@ -61,15 +71,23 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
         var pageItem    = $questionnaire.querySelector(".page-item.is-active"),
             nextPage    = pageItem.nextElementSibling;
 
-        pageItem.classList.remove("is-active");
-
-        if( nextPage.classList.contains("page-" + $activePage) )
+        if( mode === "prev" )
         {
-            nextPage.classList.add("is-active");
+            nextPage = pageItem.previousElementSibling;
         }
-        else
+
+        if( nextPage )
         {
-            $questionnaire.querySelector("page-item.page-" + $activePage).classList.add("is-active");
+            pageItem.classList.remove("is-active");
+
+            if( nextPage.classList.contains("page-" + $activePage) )
+            {
+                nextPage.classList.add("is-active");
+            }
+            else
+            {
+                $questionnaire.querySelector(".page-item.page-" + $activePage).classList.add("is-active");
+            }
         }
 
         // this.checkProgressBar();
@@ -124,8 +142,14 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
     questionnaire.toggleAnswer = function( answerContainer )
     {
         var answerItem      = answerContainer.parentNode.parentNode,
-            configContainer = answerItem.parentNode.parentNode,
-            inputTag        = answerContainer.querySelector("input"),
+            configContainer = answerItem.parentNode.parentNode;
+
+        if( answerItem.classList.contains("image-map-point") )
+        {
+            configContainer = answerItem.parentNode.parentNode.parentNode;
+        }
+
+        var inputTag        = answerContainer.querySelector("input"),
 
             minAnswers      = parseInt(configContainer.getAttribute("data-min-answers")),
             maxAnswers      = parseInt(configContainer.getAttribute("data-max-answers")),
@@ -176,8 +200,46 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
             {
                 $(answerItem).siblings().removeClass("is-checked");
                 $(answerItem).siblings().find("input").checked = false;
+
+                if( $hasOverview && ovAnswerItem )
+                {
+                    $(ovAnswerItem).siblings().removeClass("is-checked");
+                    // $(ovAnswerItem).siblings().find("input").checked = false;
+                }
             }
 
+        }
+
+        if( maxAnswers === 1 )
+        {
+            this.goToNextPage();
+        }
+    };
+
+
+
+    questionnaire.toggleAnswerSelect = function( answerSelectTagOption )
+    {
+        var answerItem      = answerSelectTagOption.parentNode.parentNode.parentNode.parentNode,
+            configContainer = answerItem.parentNode.parentNode,
+            inputTag        = answerSelectTagOption.querySelector("input");
+
+        inputTag.checked = true;
+        answerSelectTagOption.classList.add("is-active");
+
+        $(answerSelectTagOption).siblings().removeClass("is-active");
+        $(answerSelectTagOption).siblings().find("input").checked = false;
+
+        var ovAnswerItem    = false;
+
+        if( $hasOverview )
+        {
+            ovAnswerItem = this.getOverviewAnswerItem( configContainer, answerItem );
+        }
+
+        if( $hasOverview && ovAnswerItem )
+        {
+            ovAnswerItem.querySelector(".input-container").innerHTML = inputTag.value;
         }
     };
 
@@ -214,16 +276,19 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                         answersCont     = questionItem.querySelector(".answers-container"),
                         answersItems    = answersCont.querySelectorAll(".answer-item"),
                         checkedItems    = answersCont.querySelectorAll(".answer-item.is-checked"),
-                        message         = questionItem.querySelector(".error-msg");
+                        message         = questionItem.querySelector(".error-msg"),
 
-                    if( minAnswers === undefined || minAnswers === "undefined" || minAnswers === null )
+                        questMinAns     = parseInt(answersCont.getAttribute("data-min-answers")),
+                        questMaxAns     = parseInt(answersCont.getAttribute("data-max-answers"));
+
+                    if( minAnswers !== undefined && minAnswers !== "undefined" && minAnswers !== null && minAnswers )
                     {
-                        minAnswers = parseInt(answersCont.getAttribute("data-min-answers"));
+                        questMinAns = minAnswers;
                     }
 
-                    if( maxAnswers === undefined || maxAnswers === "undefined" || maxAnswers === null )
+                    if( maxAnswers !== undefined && maxAnswers !== "undefined" && maxAnswers === null && maxAnswers )
                     {
-                        maxAnswers = parseInt(answersCont.getAttribute("data-max-answers"));
+                        questMaxAns = maxAnswers;
                     }
 
                     var hasChecked = false,strMessage = '',
@@ -235,53 +300,96 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                         {
                             var answerItem = answersItems[ num ];
 
-                            if( answerItem.classList.contains("input-answer") && minAnswers > 0 )
+                            if( answerItem.classList.contains("input-answer") && questMinAns > 0 )
                             {
                                 hasChecked = true;
 
                                 var varValue = answerItem.querySelector("input").value;
 
+                                if( answerItem.classList.contains("select-input-answer") )
+                                {
+                                    var selectTag = answerItem.querySelector(".select-tag-container");
+
+                                    if( selectTag )
+                                    {
+                                        var checkedSelectItem = selectTag.querySelector(".is-active");
+
+                                        if( checkedSelectItem )
+                                        {
+                                            varValue = checkedSelectItem.querySelector("input").value;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        selectTag = answerItem.querySelector("select");
+
+                                        varValue = selectTag.value;
+                                    }
+                                }
+
                                 if( !varValue.length )
                                 {
-                                    strMessage += 'Das Feld muss ausgefüllt werden!';
+                                    var fieldName = '';
+
+                                    if( questionItems.length > 1 )
+                                    {
+                                        fieldName = ' "' + answerItem.querySelector("label").innerHTML + '"';
+                                    }
+
+                                    strMessage += 'Das Feld' + fieldName +' muss ausgefüllt werden!';
                                 }
                             }
                         }
                     }
 
-                    if( minAnswers > 0 && checkedItems.length < minAnswers && !hasChecked )
+                    if( questMinAns > 0 && checkedItems.length < questMinAns && !hasChecked )
                     {
-                        var muss        = ((minAnswers === 1) ? 'muss' : 'müssen'),
-                            antwort     = ((minAnswers === 1) ? 'ne Antwort' : ' Antworten');
+                        var muss        = ((questMinAns === 1) ? 'muss' : 'müssen'),
+                            antwort     = ((questMinAns === 1) ? 'ne Antwort' : ' Antworten');
 
-                        message.innerHTML = 'Es ' + muss + ' mindestens ' + minAnswers + antwort  + ' ausgewählt werden.';
+                        message.innerHTML = 'Es ' + muss + ' mindestens ' + questMinAns + antwort  + ' ausgewählt werden.';
 
                         if( animateImage )
                         {
                             $(animateImage).effect("shake");
                         }
-                    }
-                    else if( maxAnswers > 0 && checkedItems.length > maxAnswers && !hasChecked )
-                    {
-                        if( maxAnswers > 1 )
-                        {
-                            var darf        = ((maxAnswers === 1) ? 'darf' : 'dürfen'),
-                                antwortMax  = ((maxAnswers === 1) ? 'ne Antwort' : ' Antworten');
 
-                            message.innerHTML = 'Es ' + darf + ' maximal nur ' + maxAnswers + antwortMax  + ' ausgewählt werden.';
+                        questionItem.classList.add("error");
+                    }
+                    else if( questMaxAns > 0 && checkedItems.length > questMaxAns && !hasChecked )
+                    {
+                        if( questMaxAns > 1 )
+                        {
+                            var darf        = ((questMaxAns === 1) ? 'darf' : 'dürfen'),
+                                antwortMax  = ((questMaxAns === 1) ? 'ne Antwort' : ' Antworten');
+
+                            message.innerHTML = 'Es ' + darf + ' maximal nur ' + questMaxAns + antwortMax  + ' ausgewählt werden.';
 
                             if( animateImage )
                             {
                                 $(animateImage).effect("shake");
                             }
+
+                            questionItem.classList.add("error");
                         }
                     }
                     else
                     {
                         if( !hasChecked )
                         {
-                            message.innerHTML = '';
-                            hasError = false;
+                            if( questionItems.length > 1 )
+                            {
+                                message.innerHTML = "";
+                                // hasError = hasError;
+                                questionItem.classList.remove("error");
+                            }
+                            else
+                            {
+                                message.innerHTML = '';
+                                hasError = false;
+
+                                questionItem.classList.remove("error");
+                            }
                         }
                         else
                         {
@@ -292,9 +400,25 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                             {
                                 $(animateImage).effect("shake");
                             }
+
+                            if( hasError )
+                            {
+                                questionItem.classList.add("error");
+                            }
+                            else
+                            {
+                                questionItem.classList.remove("error");
+                            }
+
                         }
                     }
                 }
+
+                if( !hasError)
+                {
+                    questionItem.classList.remove("error");
+                }
+
             }
         }
 
@@ -384,17 +508,104 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                     for(var answerNum=0; answerNum<answers.length; answerNum++)
                     {
                         var answer      = answers[ answerNum ],
-                            ovAnswer    = this.getOverviewAnswerItem(answersCont, answer);
+                            ovAnswer    = this.getOverviewAnswerItem(answersCont, answer),
+                            ovText      = true;
 
-                        if( ovAnswer && answer.classList.contains("input-answer") )
+                        if( ovAnswer )
                         {
-                            ovAnswer.querySelector(".input-container").innerHTML = answer.querySelector("input").value;
+                            var ovAnswerTitle   = ovAnswer.parentNode.parentNode.querySelector(".overview-title"),
+                                ovAnswerText    = ovAnswerTitle.innerHTML,
+                                ovAnswerTextLabel = '';
+
+                            if( answer.classList.contains("is-textarea") )
+                            {
+                                ovAnswerTextLabel = answer.querySelector("textarea").value;
+                            }
+                            else
+                            {
+                                ovAnswerTextLabel = answer.querySelector("input").value;
+                            }
+
+                            if( ovAnswerText === "##answer##" || ovAnswerText === ovAnswerTextLabel )
+                            {
+                                ovText = false;
+                                ovAnswerTitle.innerHTML = ovAnswerTextLabel;
+
+                                ovAnswerTitle.classList.add("normal-text");
+                            }
+                        }
+
+                        if( ovAnswer && answer.classList.contains("input-answer") && ovText)
+                        {
+                            if( answer.classList.contains("is-textarea") )
+                            {
+                                ovAnswer.querySelector(".input-container").innerHTML = answer.querySelector("textarea").value;
+                            }
+                            else if( answer.classList.contains("select-input-answer") )
+                            {
+                                ovAnswer.querySelector(".input-container").innerHTML = answer.querySelector(".select-option.is-active input").value;
+                            }
+                            else
+                            {
+                                ovAnswer.querySelector(".input-container").innerHTML = answer.querySelector("input").value;
+                            }
                         }
                     }
                 }
             }
         }
     };
+
+
+
+    questionnaire.initImageMap = function()
+    {
+        var imageMaps       = $questionnaire.querySelectorAll(".has-image-map"),
+            imagePointHover = document.getElementById("mhit");
+
+        if( imageMaps.length )
+        {
+            for(var i=0; i<imageMaps.length; i++)
+            {
+                var imageMap        = imageMaps[ i ],
+                    imagePoints     = imageMap.querySelectorAll(".answer-item.image-map-point");
+
+                if( imagePoints.length )
+                {
+                    for(var num=0; num<imagePoints.length; num++)
+                    {
+                        var imagePoint = imagePoints[ num ];
+
+                        imagePoint.addEventListener("mouseenter", function()
+                        {
+                            imagePointHover.innerHTML = this.querySelector(".answer-inside").innerHTML;
+                        });
+
+                        imagePoint.addEventListener("mouseleave", function()
+                        {
+                            imagePointHover.innerHTML = '';
+                        });
+                    }
+                }
+            }
+        }
+    };
+
+
+
+    questionnaire.changeOverviewItem = function( questionAlias )
+    {
+
+    };
+
+
+
+    questionnaire.goToNextPage = function()
+    {
+        var nextButton = document.querySelector(".page-item.is-active button.next-page");
+
+        nextButton.click();
+    }
 
 
 })(window, jQuery, IIDO.Shop.Questionnaire);
