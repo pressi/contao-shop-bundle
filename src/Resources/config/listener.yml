@@ -1,0 +1,5 @@
+services:
+    iido_shop.listener.backend_template:
+        class: IIDO\ShopBundle\EventListener\BackendTemplateListener
+        arguments:
+            - "@contao.framework"
