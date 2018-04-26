@@ -44,7 +44,9 @@ tr.in-use > td.tl_file_list > span.in-use {
     clear: both;
     float: none;
 }
-.tl_content_left > span {
+.tl_content_left > span.product-name,
+.tl_content_left > span.product-categories,
+.tl_content_left > span.product-item-number {
     float: left;
     display: block;
 }
@@ -55,4 +57,71 @@ tr.in-use > td.tl_file_list > span.in-use {
     width: 210px;
 }
 .tl_content_left > span.product-categories {
+}
+
+.backend-container.shop-settings-container {
+    padding: 40px 35px 15px;
+}
+
+.backend-container.shop-settings-container .setting-container {
+    margin: 0 0 25px;
+}
+
+.backend-container.shop-settings-container .setting-container a {
+    display: block;
+
+    width: 100%;
+    height: 95px;
+    line-height: 95px;
+
+    border: 1px solid #ddd;
+    background: #e9e9e9;
+
+    padding: 0 0 0 165px;
+
+    color: #222;
+    font-size: 18px;
+    text-transform: uppercase;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+}
+
+.backend-container.shop-settings-container .setting-container a,
+.backend-container.shop-settings-container .setting-container.payment-setting a,
+.backend-container.shop-settings-container .setting-container.shipping-setting a {
+    background-image: url("../../images/icons/settings-payment_black.png");
+    background-repeat: no-repeat;
+    background-position: 40px center;
+
+    -webkit-background-size : auto 65px;
+    background-size         : auto 65px;
+}
+
+.backend-container.shop-settings-container .setting-container.shipping-setting a {
+    background-image: url("../../images/icons/settings-shipping_black.png");
+}
+.backend-container.shop-settings-container .setting-container.configuration-setting a {
+    background-image: url("../../images/icons/configurator_black.svg");
+}
+.backend-container.shop-settings-container .setting-container.ai-setting a {
+    background-image: url("../../images/icons/settings-ai_black.png");
+}
+
+.backend-container.shop-settings-container .setting-container a:hover {
+    color: #f47c00;
+    background-color: #e0e0e0;
+}
+.backend-container.shop-settings-container .setting-container.payment-setting a:hover {
+    background-image: url("../../images/icons/settings-payment_orange.png");
+}
+.backend-container.shop-settings-container .setting-container.shipping-setting a:hover {
+    background-image: url("../../images/icons/settings-shipping_orange.png");
+}
+.backend-container.shop-settings-container .setting-container.configuration-setting a:hover {
+    background-image: url("../../images/icons/configurator_orange.svg");
+}
+.backend-container.shop-settings-container .setting-container.ai-setting a:hover {
+    background-image: url("../../images/icons/settings-ai_orange.png");
 }
