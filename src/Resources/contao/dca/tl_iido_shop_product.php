@@ -1,13 +1,10 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 $strTable       = 'tl_iido_shop_product';
@@ -155,7 +152,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         (
         ),
 
-        'default'           => 'importedExplanation;{name_legend},name,alias,itemNumber;{category_legend},categories;{overview_legend},overviewSRC;{detail_legend},detailFrontSRC,detailBackSRC;'
+        'default'           => 'importedExplanation;{name_legend},name,alias,itemNumber;{category_legend},categories;{overview_legend},overviewSRC,detailSRC;{detailFlip_legend},detailFrontSRC,detailBackSRC;{detailGallery_legend},detailGallerySRC;'
     ),
 
 
@@ -310,9 +307,13 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
 );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPublishedFieldsToTable( $strTable );
-\IIDO\BasicBundle\Helper\DcaHelper::addImageField("overviewSRC", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("overviewSRC", $strTable, array(), 'w50 auto');
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("detailSRC", $strTable, array(), 'w50 hauto', true);
+
 \IIDO\BasicBundle\Helper\DcaHelper::addImageField("detailFrontSRC", $strTable, array(), 'w50 hauto');
 \IIDO\BasicBundle\Helper\DcaHelper::addImageField("detailBackSRC", $strTable, array(), 'w50 hauto', true);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addImagesField('detailGallerySRC', $strTable, array(), 'hauto');
 
 
 if( $objElement )

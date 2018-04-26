@@ -1,13 +1,10 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 $strTable           = 'tl_iido_shop_product_category';
@@ -135,11 +132,9 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
     // Palettes
     'palettes' => array
     (
-        '__selector__'      => array
-        (
-        ),
+        '__selector__'      => array(),
 
-        'default'           => '{title_legend},title,alias,frontendTitle,cssClass;{settings_legend},color,singleSRC;{modules_legend:hide},hideInList,hideInReader,excludeInRelated;{redirect_legend:hide},jumpTo;{publish_legend},published'
+        'default'           => '{title_legend},title,alias,frontendTitle,cssClass;{settings_legend},subtitle,color,singleSRC,detailSRC;{items_legend},itemNumbers;{modules_legend:hide},noClickable,hideInList,hideInReader,excludeInRelated;{redirect_legend:hide},jumpTo;{publish_legend},published'
     ),
 
 
@@ -268,6 +263,10 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
     )
 );
 
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField("subtitle", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addColorField("color", $strTable, array(), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("singleSRC", $strTable, array(), 'clr w50 hauto');
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField("detailSRC", $strTable, array(), 'w50 hauto', true);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("noClickable", $strTable);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addColorField("color", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addImageField("singleSRC", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField("itemNumbers", $strTable);
