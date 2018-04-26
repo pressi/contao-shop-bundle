@@ -1,0 +1,217 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_shipping.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_iido_shop_shipping.name.0">
+                <source>name</source>
+                <target>Name</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.frontendTitle.0">
+                <source>frontend title</source>
+                <target>Frontend Titel</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.alias.0">
+                <source>alias</source>
+                <target>Alias</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.price.0">
+                <source>price</source>
+                <target>Preis</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.info.0">
+                <source>info</source>
+                <target>Info</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.published.0">
+                <source>Publish item</source>
+                <target>Versandoption veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.published.1">
+                <source>Make the product publicly visible on the website.</source>
+                <target>Die Versandoption auf der Webseite anzeigen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.start.0">
+                <source>Show from</source>
+                <target>Anzeigen ab</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.start.1">
+                <source>Do not show the product on the website before this day.</source>
+                <target>Die Versandoption erst ab diesem Tag auf der Webseite anzeigen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.stop.0">
+                <source>Show until</source>
+                <target>Anzeigen bis</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.stop.1">
+                <source>Do not show the product on the website on and after this day.</source>
+                <target>Die Versandoption nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.tstamp.0">
+                <source>Revision date</source>
+                <target>Änderungsdatum</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.tstamp.1">
+                <source>Date and time of the latest revision</source>
+                <target>Datum und Uhrzeit der letzten Änderung</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_shipping.type_legend">
+                <source>Standard-Settings</source>
+                <target>Standard-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.info_legend">
+                <source>Info-Settings</source>
+                <target>Info-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.price_legend">
+                <source>Price-Settings</source>
+                <target>Preis-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.publish_legend">
+                <source>Publish settings</source>
+                <target>Veröffentlichung</target>
+            </trans-unit>
+
+
+
+<!-- ### BUTTONS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_shipping.new.0">
+                <source>New item</source>
+                <target>Neue Versandoption</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.new.1">
+                <source>Create a new product</source>
+                <target>Eine neue Versandoption erstellen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.show.0">
+                <source>Item details</source>
+                <target>Versandoptiondetails</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.show.1">
+                <source>Show the details of product ID %s</source>
+                <target>Die Details der Versandoption ID %s anzeigen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.edit.0">
+                <source>Edit item</source>
+                <target>Versandoption bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.edit.1">
+                <source>Edit product ID %s</source>
+                <target>Versandoption ID %s bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.copy.0">
+                <source>Duplicate item</source>
+                <target>Versandoption duplizieren</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.copy.1">
+                <source>Duplicate product ID %s</source>
+                <target>Versandoption ID %s duplizieren</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.cut.0">
+                <source>Move item</source>
+                <target>Versandoption verschieben</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.cut.1">
+                <source>Move product ID %s</source>
+                <target>Versandoption ID %s verschieben</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.delete.0">
+                <source>Delete item</source>
+                <target>Versandoption löschen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.delete.1">
+                <source>Delete product ID %s</source>
+                <target>Versandoption ID %s löschen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.toggle.0">
+                <source>Publish/unpublish item</source>
+                <target>Versandoption veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.toggle.1">
+                <source>Publish/unpublish product ID %s</source>
+                <target>Versandoption ID %s veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.feature.0">
+                <source>Feature/unfeature item</source>
+                <target>Versandoption hervorheben/zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.feature.1">
+                <source>Feature/unfeature product ID %s</source>
+                <target>Versandoption ID %s hervorheben/zurücksetzen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.editheader.0">
+                <source>Edit archive</source>
+                <target>Versandoption bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.editheader.1">
+                <source>Edit the product archive settings</source>
+                <target>Versandoption-Einstellungen bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.editmeta.0">
+                <source>Edit item settings</source>
+                <target>Versandoptioneinstellungen bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.editmeta.1">
+                <source>Edit the product settings</source>
+                <target>Die Versandoptioneinstellungen bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.pasteafter.0">
+                <source>Paste into this product archive</source>
+                <target>In diese Versandoption einfügen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.pasteafter.1">
+                <source>Paste after product ID %s</source>
+                <target>Nach dieser Versandoption ID %s einfügen</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

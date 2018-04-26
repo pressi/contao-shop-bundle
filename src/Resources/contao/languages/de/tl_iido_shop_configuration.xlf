@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_configuration.php" source-language="en" target-language="de">
+        <body>
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_noImageSRC.0">
+                <source>no image source</source>
+                <target>"Kein Bild vorhanden" - Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_currency.0">
+                <source>currency</source>
+                <target>Währung</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartText.0">
+                <source>add to cart text</source>
+                <target>Text: Zum Warenkorb hinzugefügt</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistText.0">
+                <source>add to watchlist text</source>
+                <target>Text: Zur Merkliste hinzugefügt</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartTextConfigurator.0">
+                <source>add to cart text</source>
+                <target><![CDATA[<span style="color:red;">KONFIGURATOR</span> - Text: Zum Warenkorb hinzugefügt]]></target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartTextConfigurator.1">
+                <source>add to cart text</source>
+                <target>Wenn der Text leer ist wird der Standardtext verwendet.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistTextConfigurator.0">
+                <source>add to watchlist text</source>
+                <target><![CDATA[<span style="color:red;">KONFIGURATOR</span> - Text: Zur Merkliste hinzugefügt]]></target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistTextConfigurator.1">
+                <source>add to watchlist text</source>
+                <target>Wenn der Text leer ist wird der Standardtext verwendet.</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_aiUsername.0">
+                <source>username</source>
+                <target>Benutzer</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_aiPassword.0">
+                <source>password</source>
+                <target>Passwort</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_shop_configuration.default_legend">
+                <source>Default</source>
+                <target>Standard-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_configuration.cart_legend">
+                <source>Cart</source>
+                <target>Warenkorb-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_configuration.watchlist_legend">
+                <source>Watchlist</source>
+                <target>Merkliste-Einstellungen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_configuration.access_legend">
+                <source>Access</source>
+                <target>Zugangs-Einstellungen</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_configuration.options.iidoShop_currency.euro">
+                <source>Euro</source>
+                <target><![CDATA[&euro; (Euro)]]></target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.options.iidoShop_currency.pfund">
+                <source>Pfund</source>
+                <target><![CDATA[&pound; (Pfund)]]></target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.options.iidoShop_currency.dollar">
+                <source>Dollar</source>
+                <target><![CDATA[$ (Dollar)]]></target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

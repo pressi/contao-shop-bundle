@@ -1,6 +1,7 @@
 <?xml version="1.0" ?><xliff version="1.1">
     <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="de">
         <body>
+
             <trans-unit id="tl_user.iidoShopArchives.0">
                 <source>Allowed archives</source>
                 <target>Erlaubte Archive</target>
@@ -44,6 +45,7 @@
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
+
             <trans-unit id="tl_user.iido_shopArchive_legend">
                 <source>Shop permissions</source>
                 <target>Shoprechte</target>
@@ -54,11 +56,11 @@
 <!-- ### OPTIONS ############################################################################################################ -->
 
 
-
             <trans-unit id="tl_user.options.iidoShopProductCategories.manage">
                 <source>manage</source>
                 <target>manage</target>
             </trans-unit>
+
 
         </body>
     </file>

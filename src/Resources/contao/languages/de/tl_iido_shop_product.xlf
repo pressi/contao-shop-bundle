@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_product.php" source-language="en">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_product.php" source-language="en" target-language="de">
         <body>
 
             <trans-unit id="tl_iido_shop_product.name.0">
@@ -8,15 +8,42 @@
                 <target>Name</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.alias.0">
                 <source>alias</source>
                 <target>Alias</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.itemNumber.0">
                 <source>item number</source>
                 <target>Artikelnummer</target>
             </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product.overviewSRC.0">
+                <source>overview image</source>
+                <target>Übersichtsbild</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product.detailFrontSRC.0">
+                <source>detail front image</source>
+                <target>Detail: Vorderes Bild</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product.detailBackSRC.0">
+                <source>detail back image</source>
+                <target>Detail: Hinteres Bild</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product.detailGallerySRC.0">
+                <source>detail gallery images</source>
+                <target>Detail: Galerie Bilder</target>
+            </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.featured.0">
                 <source>Feature item</source>
@@ -27,6 +54,7 @@
                 <target>Das Produkt in einer Liste hervorgehobener Produkte anzeigen.</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.published.0">
                 <source>Publish item</source>
                 <target>Produkt veröffentlichen</target>
@@ -35,6 +63,7 @@
                 <source>Make the product publicly visible on the website.</source>
                 <target>Das Produkt auf der Webseite anzeigen.</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.start.0">
                 <source>Show from</source>
@@ -45,6 +74,7 @@
                 <target>Das Produkt erst ab diesem Tag auf der Webseite anzeigen.</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.stop.0">
                 <source>Show until</source>
                 <target>Anzeigen bis</target>
@@ -54,6 +84,7 @@
                 <target>Das Produkt nur bis zu diesem Tag auf der Webseite anzeigen.</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.tstamp.0">
                 <source>Revision date</source>
                 <target>Änderungsdatum</target>
@@ -62,6 +93,7 @@
                 <source>Date and time of the latest revision</source>
                 <target>Datum und Uhrzeit der letzten Änderung</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.categories.0">
                 <source>Categories</source>
@@ -75,6 +107,7 @@
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
+
 
             <trans-unit id="tl_iido_shop_product.name_legend">
                 <source>Standard-Settings</source>
@@ -91,9 +124,25 @@
                 <target>Produkt-Kategorien</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product.overview_legend">
+                <source>Overview-Settings</source>
+                <target>Übersicht-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product.detailFlip_legend">
+                <source>Detail Flip-Settings</source>
+                <target>Detail Flip-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_product.detailGallery_legend">
+                <source>Detail Galerie-Settings</source>
+                <target>Detail Galerie-Einstellungen</target>
+            </trans-unit>
+
 
 
 <!-- ### IMPORT FORM ######################################################################################################## -->
+
 
             <trans-unit id="tl_iido_shop_product.source.0">
                 <source>Source files</source>
@@ -108,6 +157,7 @@
 
 <!-- ### BUTTONS ############################################################################################################ -->
 
+
             <trans-unit id="tl_iido_shop_product.new.0">
                 <source>New item</source>
                 <target>Neues Produkt</target>
@@ -116,6 +166,7 @@
                 <source>Create a new product</source>
                 <target>Einen neues Produkt erstellen</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.show.0">
                 <source>Item details</source>
@@ -126,6 +177,7 @@
                 <target>Die Details des Produktes ID %s anzeigen</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.edit.0">
                 <source>Edit item</source>
                 <target>Produkt bearbeiten</target>
@@ -134,6 +186,7 @@
                 <source>Edit product ID %s</source>
                 <target>Produkt ID %s bearbeiten</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.copy.0">
                 <source>Duplicate item</source>
@@ -144,6 +197,7 @@
                 <target>Produkt ID %s duplizieren</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.cut.0">
                 <source>Move item</source>
                 <target>Produkt verschieben</target>
@@ -152,6 +206,7 @@
                 <source>Move product ID %s</source>
                 <target>Produkt ID %s verschieben</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.delete.0">
                 <source>Delete item</source>
@@ -162,6 +217,7 @@
                 <target>Produkt ID %s löschen</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.toggle.0">
                 <source>Publish/unpublish item</source>
                 <target>Produkt veröffentlichen/unveröffentlichen</target>
@@ -170,6 +226,7 @@
                 <source>Publish/unpublish product ID %s</source>
                 <target>Produkt ID %s veröffentlichen/unveröffentlichen</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.feature.0">
                 <source>Feature/unfeature item</source>
@@ -180,6 +237,7 @@
                 <target>Produkt ID %s hervorheben/zurücksetzen</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.editheader.0">
                 <source>Edit archive</source>
                 <target>Archiv bearbeiten</target>
@@ -188,6 +246,7 @@
                 <source>Edit the product archive settings</source>
                 <target>Produktarchiv-Einstellungen bearbeiten</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.editmeta.0">
                 <source>Edit item settings</source>
@@ -198,6 +257,7 @@
                 <target>Die Produkteinstellungen bearbeiten</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_product.pasteafter.0">
                 <source>Paste into this product archive</source>
                 <target>In dieses Produktarchiv einfügen</target>
@@ -206,6 +266,7 @@
                 <source>Paste after product ID %s</source>
                 <target>Nach dem Produkt ID %s einfügen</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_product.import.0">
                 <source>Produkt import</source>

@@ -1,6 +1,9 @@
-<?xml version="1.0" ?><xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="de">
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="de">
         <body>
+
+
             <trans-unit id="tl_content.iidoShopCategories.0">
                 <source>Categories</source>
                 <target>Kategorien</target>
@@ -16,18 +19,77 @@
                 <target>Merkliste-Seite</target>
             </trans-unit>
 
+            <trans-unit id="tl_content.iidoShopCartJumpTo.0">
+                <source>cart-page (back)</source>
+                <target>Warenkorb-Seite (Zurück)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopForwardJumpTo.0">
+                <source>check out-page (forward)</source>
+                <target>Check Out-Seite (Weiter)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.showErrorMessagesOnTop.0">
+                <source>show error message on top</source>
+                <target>Fehlermeldungen anzeigen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.showErrorMessagesOnTop.1">
+                <source>show error message on top</source>
+                <target>Fehlermeldungen in Textform oberhalb anzeigen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopShippings.0">
+                <source>shippings</source>
+                <target>Versandoptionen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopPayments.0">
+                <source>payments</source>
+                <target>Bezahlmethoden</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.loadProductsFrom.0">
+                <source>load products from</source>
+                <target>Produkte anzeigen von</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopProductItemNumber.0">
+                <source>prduct item number</source>
+                <target>Produkte Artikelnummernkreis</target>
+            </trans-unit>
+            <trans-unit id="tl_content.iidoShopProductItemNumber.1">
+                <source>prduct item number</source>
+                <target>z.B.: A*,A1*,A2*,B*,B0001.*,...</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopProductArchive.0">
+                <source>load products from</source>
+                <target>Produkte anzeigen von</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
-            <trans-unit id="tl_user.iido_shopArchive_legend">
-                <source>Shop permissions</source>
-                <target>Shoprechte</target>
+
+            <trans-unit id="tl_content.shipping_legend">
+                <source>shipping-settings</source>
+                <target>Versand-Einstellungen</target>
             </trans-unit>
 
-            <trans-unit id="tl_user.link_legend">
-                <source>link settings</source>
-                <target>Shop Verlinkungs-Einstellungen</target>
+            <trans-unit id="tl_content.payment_legend">
+                <source>payment-settings</source>
+                <target>Bezahl-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.error_legend">
+                <source>error-settings</source>
+                <target>Fehler-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.redirect_legend">
+                <source>redirect-settings</source>
+                <target>Weiterleitungs-Einstellungen</target>
             </trans-unit>
 
 
@@ -35,10 +97,13 @@
 <!-- ### OPTIONS ############################################################################################################ -->
 
 
-
-            <trans-unit id="tl_user.options.iidoShopProductCategories.manage">
-                <source>manage</source>
-                <target>manage</target>
+            <trans-unit id="tl_content.options.loadProductsFrom.archive">
+                <source>Product-Archiv (local)</source>
+                <target>Produkt-Archiv (Lokal)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.loadProductsFrom.weclapp">
+                <source>Weclapp (API)</source>
+                <target>Weclapp (API)</target>
             </trans-unit>
 
         </body>

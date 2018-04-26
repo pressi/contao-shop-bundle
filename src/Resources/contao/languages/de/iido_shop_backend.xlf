@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_backend.php" source-language="en" target-language="de">
+        <body>
+
+<!-- ### SETTINGS ########################################################################################################### -->
+
+
+            <trans-unit id="iido_shop_backend.settings.payment">
+                <source>Payment</source>
+                <target>Bezahlmethoden</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_backend.settings.shipping">
+                <source>Shipping</source>
+                <target>Versandoptionen</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_backend.settings.configuration">
+                <source>Configurator</source>
+                <target>Shop-/ Konfigurator-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_backend.settings.ai">
+                <source>AI</source>
+                <target>Shop AI (Fragebogen)</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

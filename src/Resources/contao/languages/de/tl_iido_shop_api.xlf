@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_api.php" source-language="en">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_api.php" source-language="en" target-language="de">
         <body>
 
             <trans-unit id="tl_iido_shop_api.enableWeclappApi.0">
@@ -8,10 +8,12 @@
                 <target>Weclapp API aktivieren</target>
             </trans-unit>
 
+
             <trans-unit id="tl_iido_shop_api.weclappToken.0">
                 <source>weclapp api Token</source>
                 <target>Token</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_shop_api.weclappTenant.0">
                 <source>tenant</source>
@@ -21,6 +23,7 @@
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
+
 
             <trans-unit id="tl_iido_shop_api.weclapp_api_legend">
                 <source>Weclapp API-Settings</source>

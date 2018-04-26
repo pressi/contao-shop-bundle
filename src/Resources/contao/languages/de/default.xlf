@@ -1,9 +1,10 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="system/modules/ziido_customize/languages/en/default.php" source-language="en">
+    <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="de">
         <body>
 
 <!-- ### CONTENT ELEMENTS ################################################################################################### -->
+
 
             <trans-unit id="CTE.iido_shop.0">
                 <source>Shop</source>
@@ -30,6 +31,10 @@
                 <target>Shop: Merkliste</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_shop_checkout.0">
+                <source>Check Out Form</source>
+                <target>Shop: Check Out (Formular)</target>
+            </trans-unit>
 
 
         </body>

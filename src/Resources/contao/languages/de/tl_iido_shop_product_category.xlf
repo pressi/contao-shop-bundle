@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_product.php" source-language="en">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_product.php" source-language="en" target-language="de">
         <body>
 
             <trans-unit id="tl_iido_shop_product_category.title.0">
@@ -10,6 +10,12 @@
             <trans-unit id="tl_iido_shop_product_category.title.1">
                 <source>add product title</source>
                 <target>Bitte Produkt-Titel eingeben.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.subtitle.0">
+                <source>subtitle</source>
+                <target>Untertitel</target>
             </trans-unit>
 
 
@@ -93,8 +99,33 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_iido_shop_product_category.color.0">
+                <source>color</source>
+                <target>Farbe</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.singleSRC.0">
+                <source>image</source>
+                <target>Bild</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.detailSRC.0">
+                <source>detail image</source>
+                <target>Detail-Bild</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.noClickable.0">
+                <source>no clickable</source>
+                <target>Nicht klickbar</target>
+            </trans-unit>
+
+
 
 <!-- ### LEGENDS ############################################################################################################ -->
+
 
             <trans-unit id="tl_iido_shop_product_category.title_legend">
                 <source>Title und Alias</source>
@@ -116,9 +147,15 @@
                 <target>Veröffentlichung</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product_category.settings_legend">
+                <source>Detail-Einstellungen</source>
+                <target>Detail-Einstellungen</target>
+            </trans-unit>
+
 
 
 <!-- ### BUTTONS ############################################################################################################ -->
+
 
             <trans-unit id="tl_iido_shop_product_category.new.0">
                 <source>Product-Category</source>
@@ -218,7 +255,6 @@
                 <source>paste into category ID %s</source>
                 <target>In Kategorie ID %s einfügen</target>
             </trans-unit>
-
 
 
         </body>

@@ -1,9 +1,10 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="system/modules/ziido_customize/languages/en/iido_shop_cart.php" source-language="en">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_cart.php" source-language="en" target-language="de">
         <body>
 
 <!-- ### LABELS ############################################################################################################# -->
+
 
             <trans-unit id="iido_shop_cart.label.edit">
                 <source>Edit</source>
@@ -15,12 +16,15 @@
                 <target>Auf die Merkliste</target>
             </trans-unit>
 
+            <trans-unit id="iido_shop_cart.label.buy">
+                <source>buy</source>
+                <target>Kaufen</target>
+            </trans-unit>
+
             <trans-unit id="iido_shop_cart.label.remove">
                 <source>Remove</source>
                 <target>Entfernen</target>
             </trans-unit>
-
-
 
             <trans-unit id="iido_shop_cart.label.size">
                 <source>size</source>
@@ -40,6 +44,20 @@
             <trans-unit id="iido_shop_cart.label.tuning">
                 <source>tuning</source>
                 <target>Tuning</target>
+            </trans-unit>
+
+
+
+<!-- ### DEFAULTS ########################################################################################################### -->
+
+            <trans-unit id="iido_shop_cart.cartEmpty">
+                <source>At this time no products in the cart.</source>
+                <target>Derzeit sind keine Produkte in deinem Warenkorb.</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.watchlistEmpty">
+                <source>At this time no products in the watchlist.</source>
+                <target>Derzeit sind keine Produkte in deiner Merkliste.</target>
             </trans-unit>
 
 
