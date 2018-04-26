@@ -1,0 +1,151 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content");
+
+$strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
+?>
+
+<div class="order-overview-container checkout-container">
+    <div class="order-overview-container-inside checkout-container-inside">
+
+        <form action="<?= $this->forwardLink ?>" method="post" id="checkoutForm" onsubmit="return IIDO.Shop.Cart.checkCheckOutForm(this);">
+            <input type="hidden" name="FORM_SUBMIT" value="orderOverview_form">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+            <? foreach($this->hiddenFields as $fieldName => $fieldValue): ?>
+                <input type="hidden" name="<?= $fieldName ?>" value="<?= $fieldValue ?>">
+            <? endforeach ?>
+
+            <div class="form-columns">
+
+                <div class="col-left">
+
+                    <div class="legend-box">
+                        <? $strLabel = 'billingAddress';
+
+                        if( $this->value['shipping_address'] === "like_billing_address" )
+                        {
+                            $strLabel = 'shippingBillingAddress';
+                        }
+
+                        ?>
+                        <div class="legend"><?= $this->label[ $strLabel ] ?></div>
+                        <div class="box-content">
+                            <?= $this->value['fullName'] ?><br>
+                            <?= $this->value['street'] ?><br>
+                            <?= $this->value['postal'] ?> <?= $this->value['city'] ?><br>
+                            <?= $this->value['country'] ?>
+                        </div>
+                    </div>
+
+                    <? if( $this->value['shipping_address'] === "other" ): ?>
+                    <div class="legend-box">
+                        <div class="legend"><?= $this->label['shippingAddress'] ?></div>
+                        <div class="box-content">
+                            <?= $this->value['shippingFullName'] ?><br>
+                            <?= $this->value['shipping_street'] ?><br>
+                            <?= $this->value['shipping_postal'] ?> <?= $this->value['shipping_city'] ?><br>
+                            <?= $this->value['shipping_country'] ?>
+                        </div>
+                    </div>
+                    <? endif ?>
+
+                    <div class="legend-box">
+                        <div class="legend"><?= $this->label['contact_data'] ?></div>
+                        <div class="box-content">
+                            <?= $this->value['phone'] ?><br>
+                            <?= $this->value['email'] ?>
+                        </div>
+                    </div>
+
+                    <div class="legend-box">
+                        <div class="legend"><?= $this->label['shippingLabel'] ?></div>
+                        <div class="box-content">
+                            <?= $this->overview['shipping'] ?>
+                        </div>
+                    </div>
+
+                    <div class="legend-box">
+                        <div class="legend"><?= $this->label['paymentMethod'] ?></div>
+                        <div class="box-content">
+                            <?= $this->overview['payment'] ?>
+                        </div>
+                    </div>
+
+                    <? if( $this->value['agb'] && $this->value['agb'] === "accept" ): ?>
+                    <div class="legend-box text-normal">
+                        <div class="legend"><?= $this->label['agbAccept'] ?></div>
+                    </div>
+                    <? endif ?>
+
+                </div>
+
+                <div class="col-right">
+
+                    <div class="legend-box product-list-container">
+                        <div class="legend"><?= $this->label['yourProducts'] ?></div>
+
+                        <div class="product-list">
+                            <? foreach($this->products as $key => $product):
+
+                                $strClass = ($product['class'] ? ' ' . $product['class'] : '');
+
+                                if( count($product['categories']) )
+                                {
+                                    foreach($product['categories'] as $objCategory)
+                                    {
+                                        $strClass .= ' cat-' . $objCategory->alias;
+                                    }
+                                }
+
+                                $objTemplate = new \FrontendTemplate("iido_shop_item");
+
+                                $objTemplate->prefix    = 'overview';
+                                $objTemplate->item      = $product;
+                                $objTemplate->class     = $strClass;
+                                $objTemplate->key       = $key;
+
+                                echo $objTemplate->parse();
+                                ?>
+                            <? endforeach ?>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-price-container">
+
+                <div class="row">
+                    <div class="name"><?= $this->label['shipping_costs'] ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( $this->shippingPrice, true) ?><?= $strUnit ?></div>
+                </div>
+
+                <div class="row row-bold">
+                    <div class="name"><?= $this->label['total_price'] ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( $this->cartPrice, true) ?><?= $strUnit ?></div>
+                </div>
+
+                <div class="row">
+                    <div class="name"><?= $this->label['vat_text'] ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( ($this->cartPrice * 0.17), true) ?><?= $strUnit ?></div>
+                </div>
+
+            </div>
+
+            <div class="action-container">
+                <div class="backlink">
+                    <a href="<?= $this->cartLink ?>"><?= $this->label['back'] ?></a>
+                </div>
+
+                <div class="forward">
+                    <button type="submit"><?= $this->label['forwardBuy'] ?></button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<? $this->endblock() ?>

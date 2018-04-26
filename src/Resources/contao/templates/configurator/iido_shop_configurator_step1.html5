@@ -2,9 +2,16 @@
     <input type="hidden" name="category" value="">
     <input type="hidden" name="skiNumber" value="">
 
-    <? foreach($this->arrCategories as $category): ?>
+    <? foreach($this->arrCategories as $category):
+        $strClass = '';
 
-        <div class="category-item" data-color="<?= \IIDO\BasicBundle\Helper\ColorHelper::compileColor( \StringUtil::deserialize($category['color'], TRUE) ) ?>" onclick="IIDO.Shop.Configurator.checkAndSubmitForm(this, '<?= $this->id ?>')">
+        if( $category['noClickable'] )
+        {
+            $strClass .= ' not-clickable';
+        }
+        ?>
+
+        <div class="category-item<?= $strClass ?>" data-id="<?= $category['id'] ?>" data-color="<?= \IIDO\BasicBundle\Helper\ColorHelper::compileColor( \StringUtil::deserialize($category['color'], TRUE) ) ?>"<? if( !$category['noClickable'] ): ?> onclick="IIDO.Shop.Configurator.checkAndSubmitForm(this, '<?= $this->id ?>')"<? endif ?>>
             <div class="hidden">
                 <input type="checkbox" name="category" value="<?= $category['id'] ?>">
                 <input type="checkbox" name="skiNumber" value="<?= $category['itemNumberRange'] ?>">
@@ -15,4 +22,23 @@
 
     <? endforeach ?>
 
+</div>
+<div class="choose-container-background">
+    <div class="ccb-inside">
+
+        <? foreach($this->arrCategories as $category): ?>
+        <div class="cat-background-item" id="catHoverCont_<?= $category['id'] ?>" style="background:<?= \IIDO\BasicBundle\Helper\ColorHelper::compileColor( \StringUtil::deserialize($category['color'], TRUE) ) ?>;">
+            <div class="cat-bg-item-inside bg-image bg-cover" style="background-image:url(<?= \IIDO\BasicBundle\Helper\ImageHelper::getImagePath( $category['detailSRC'] ) ?>);"></div>
+            <div class="ctable">
+                <div class="ctable-cell">
+                    <div class="name<? if($category['subtitle']): ?> has-subtitle<?endif ?>"><?= $category['title'] ?></div>
+                    <? if($category['subtitle']): ?>
+                        <div class="subtitle"><?= $category['subtitle'] ?></div>
+                    <? endif ?>
+                </div>
+            </div>
+        </div>
+        <? endforeach ?>
+
+    </div>
 </div>

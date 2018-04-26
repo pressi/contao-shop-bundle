@@ -1,0 +1,141 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content") ?>
+
+<div class="checkout-container">
+    <div class="checkout-container-inside">
+
+        <? if( $this->error && count($this->errorMessage['message']) && $this->showErrorMessagesOnTop ): ?>
+        <div class="error-container">
+            <? foreach($this->errorMessage['message'] as $message): ?>
+                <div class="error-msg"><?= $message ?></div>
+            <? endforeach ?>
+        </div>
+        <? endif ?>
+
+        <form action="<?= $this->forwardLink ?>" method="post" id="checkoutForm" onsubmit="return IIDO.Shop.Cart.checkCheckOutForm(this);">
+            <input type="hidden" name="FORM_SUBMIT" value="checkout_form">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+
+            <div class="form-columns">
+
+
+                <? foreach($this->formFields as $strClass => $arrFields): ?>
+
+                    <? if( $arrFields['type'] === "div" ): ?>
+                        <div class="<?= $strClass ?>">
+                    <? endif ?>
+
+                    <? foreach($arrFields['fields'] as $fieldName => $fieldConfig): ?>
+                        <? if($fieldConfig['wrapper']):
+
+                        $strClass   = '';
+                        $arrID      = explode("-", $fieldConfig['wrapper']);
+                        $wrapperID  = '';
+
+                        foreach($arrID as $key => $strID)
+                        {
+                            if( $key > 0 )
+                            {
+                                $wrapperID .= ucfirst($strID);
+                            }
+                            else
+                            {
+                                $wrapperID .= $strID;
+                            }
+                        }
+
+                        if( $fieldConfig['dependent'] )
+                        {
+                            if( $this->value[ $fieldConfig['dependent']['field'] ] !== $fieldConfig['dependent']['value'] )
+                            {
+                                $strClass = ' hidden';
+                            }
+                        }
+
+                        ?>
+                            <div class="<?= $fieldConfig['wrapper'] . $strClass ?>" id="<?= $wrapperID ?>">
+                        <? endif ?>
+
+                            <? if( $fieldConfig['type'] === "box" ): ?>
+                                <div class="legend-box">
+                                    <div class="legend"><?= $this->label[ $fieldName ] ?></div>
+
+                                    <? foreach($fieldConfig['fields'] as $strFieldName): ?>
+                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
+                                    <? endforeach ?>
+                                </div>
+                            <? elseif( $fieldConfig['type'] === "radioGroup" ): ?>
+                                <?= $this->insert("iido_shop_radiogroup", array("name"=>$fieldName, "fields"=>$fieldConfig['fields'], "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
+                            <? elseif( $fieldConfig['type'] === "hidden_box" ): ?>
+                                <div class="legend-box">
+                                    <? foreach($fieldConfig['fields'] as $strFieldName): ?>
+                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
+                                    <? endforeach ?>
+                                </div>
+                            <? elseif( $fieldConfig['type'] === "payment" || $fieldConfig['type'] === "shipping" ):
+                                $strClass   = $fieldConfig['type'];
+                                $strLabel   = (($strClass === "payment") ? 'paymentMethod' : 'shippingLabel');
+                                $arrMethod  = $this->$fieldName;
+                            ?>
+                                <div class="<?= $strClass ?> widget<? if($this->error && in_array($strClass, $this->errorMessage['fields'])): ?> error<? endif ?>">
+                                    <div class="label"><?= $this->label[ $strLabel ] ?></div>
+
+                                    <div class="items">
+
+                                        <? foreach($arrMethod as $method):
+                                            $strAlias = $method->alias?:$method->type;
+                                            ?>
+                                            <div class="item<? if( $method->info ): ?> has-infos<? endif ?><? if($this->value[ $strClass ] === $strAlias): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.check<?= ucfirst($strClass) ?>(this)">
+                                                <div class="hidden">
+                                                    <input type="radio" name="<?= $strClass ?>" value="<?= $strAlias ?>"<? if($this->value[ $strClass ] === $strAlias): ?> checked<? endif ?>>
+                                                </div>
+                                                <div class="name"><?= ($method->frontendTitle?:($method->title?:$method->name)) ?></div>
+                                                <? if( $method->info ): ?>
+                                                    <div class="infos"><?= $method->info ?></div>
+                                                <? endif ?>
+                                            </div>
+                                        <? endforeach ?>
+
+                                    </div>
+                                </div>
+                            <? endif ?>
+
+
+                        <? if($fieldConfig['wrapper']): ?>
+                            </div>
+                        <? endif ?>
+
+                    <? endforeach ?>
+
+                    <? if( $arrFields['type'] === "div" ): ?>
+                        </div>
+                    <? endif ?>
+
+                <? endforeach ?>
+
+            </div>
+
+
+            <div class="action-container">
+                <div class="backlink">
+                    <a href="<?= $this->cartLink ?>"><?= $this->label['back'] ?></a>
+                </div>
+
+                <div class="forward">
+                    <button type="submit"><?= $this->label['forward'] ?></button>
+                </div>
+            </div>
+
+        </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function()
+            {
+                IIDO.Shop.Cart.initCheckOutForm( document.getElementById("checkoutForm") );
+            });
+        </script>
+
+    </div>
+</div>
+
+<? $this->endblock() ?>

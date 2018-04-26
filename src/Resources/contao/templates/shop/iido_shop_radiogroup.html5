@@ -1,0 +1,21 @@
+<div class="<?= preg_replace('/_/', '-', $this->name) ?> widget widget-radio<? if($this->error && in_array($this->name, $this->msg['fields'])): ?> error<? endif ?>">
+    <div class="label"><?= $this->label[ $this->name ] ?></div>
+    <div class="items">
+
+        <? foreach($this->fields as $strField):
+            $strValue = $strField;
+            if( $strField === "agb_text" )
+            {
+                $strValue = 'accept';
+            }
+            ?>
+            <div class="item<? if($this->value[ $this->name ] === $strValue): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.checkRadioGroup(this)">
+                <div class="hidden">
+                    <input type="radio" name="<?= $this->name ?>" value="<?= $strValue ?>"<? if($this->value[ $this->name ] === $strValue): ?> checked<? endif ?>>
+                </div>
+                <div class="name"><?= $this->itemLabel[ $strField ]?:$this->label[ $strField ] ?></div>
+            </div>
+        <? endforeach ?>
+
+    </div>
+</div>

@@ -1,0 +1,84 @@
+<?
+$arrLabel       = $this->label;
+$strQunatity    = '';
+
+if( !$arrLabel )
+{
+    \Controller::loadLanguageFile("iido_shop_checkout");
+
+    $arrLabel = $GLOBALS['TL_LANG']['iido_shop_checkout']['label'];
+}
+
+if( $this->prefix === "overview" )
+{
+    $strQunatity = '<span class="quantity">' . $this->item['quantity'] . '<span class="quantity-unit">x</span></span>';
+}
+
+?>
+<div class="<?= $this->prefix ?>-item<?= $this->class ?>">
+    <div class="<?= $this->prefix ?>-item-inside">
+        <div class="top-infos">
+            <div class="desc-infos">
+                <? if( $this->prefix === "overview" ): ?><div class="item-key"><?= ($this->key + 1) ?>.</div><? endif ?>
+
+                <? if( preg_match('/product-item-ski/', $this->class) && $this->prefix === "overview" ): ?>
+                    <div class="name"><?= $this->item['name'] ?></div>
+                <? endif ?>
+                <div class="label"><?= $this->item['label'] ?></div>
+                <? if($this->prefix !== "overview" || ($this->prefix === "overview") && !preg_match('/product-item-ski/', $this->class) ): ?>
+                    <div class="name"><?= $this->item['name'] ?></div>
+                <? endif ?>
+            </div>
+            <div class="detail-infos">
+                <? if($this->prefix === "overview"): ?><?= $this->item['itemNumber'] ?><br><? endif ?><?= $this->item['detailInfos'] ?>
+            </div>
+        </div>
+        <div class="image">
+
+            <? if( !preg_match('/product-item-ski/', $this->class) ): ?>
+                <? if( $this->prefix !== "overview" ): ?>
+                <div class="ctable">
+                    <div class="ctable-cell">
+                        <?= $this->item['imageTag'] ?>
+                    </div>
+                </div>
+                <? endif ?>
+            <? else: ?>
+                <?= $this->item['imageTag'] ?>
+            <? endif ?>
+
+        </div>
+            <div class="bottom-infos">
+                <? if( $this->prefix !== "overview"): ?>
+                <div class="action-cont">
+                    <? if( preg_match('/product-item-ski/', $this->class) ): ?>
+                        <a class="edit-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>.editItem('<?= $this->item['id'] ?>_<?= $this->key ?>', this)" href="javascript:void(0)"><?= $this->editLabel ?></a>
+                    <? else: ?>
+                        <a class="edit-link" href="<?= preg_replace('/.html$/', '/mode/edit' . (($this->prefix === "watchlist") ? '-list' : '') . '.html', $this->item['detailLink']) ?>"><?= $this->editLabel ?></a>
+                    <? endif ?>
+                    <? if($this->prefix === "watchlist"): ?>
+                        <a class="buy-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>.moveItemToCart(this, '<?= $this->item['itemNumber'] ?>', '<?= $this->item['realName'] ?>', '<?= $this->item['id'] ?>_<?= $this->key ?>')" href="javascript:void(0)"><?= $this->buyLabel ?></a>
+                    <? else: ?>
+                        <a class="watchlist-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>.moveItemToWatchlist(this, '<?= $this->item['itemNumber'] ?>', '<?= $this->item['realName'] ?>', '<?= $this->item['id'] ?>_<?= $this->key ?>')" href="javascript:void(0)"><?= $this->toWatchlistLabel ?></a>
+                    <? endif ?>
+                    <a class="remove-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>.removeItem(this, '<?= $this->item['itemNumber'] ?>', '<?= $this->item['realName'] ?>')" href="javascript:void(0)"><?= $this->removeLabel ?></a>
+                </div>
+                <? endif ?>
+
+                <div class="price"><?= $strQunatity ?><?= $this->item['price'] ?></div>
+
+                <? if( $this->prefix !== "overview"): ?>
+                <form action="<?= $this->editLink ?>" id="<?= $this->prefix ?>ItemEdit_<?= $this->item['id'] ?>_<?= $this->key ?>" method="post" class="edit-form-container">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+                    <input type="hidden" name="EDIT_FORM" value="edit_item">
+                    <input type="hidden" name="NEXT_STEP" value="2">
+                    <input type="hidden" name="SHOP_MODE" value="edit">
+                    <input type="hidden" name="SUBMODE" value="<?= $this->prefix ?>">
+                    <input type="hidden" name="itemNumber" value="<?= $this->item['itemNumber'] ?>">
+                    <input type="hidden" name="name" value="<?= $this->item['name'] ?>">
+                    <input type="hidden" name="tuning" value="<?= $this->item['tuning'] ?>">
+                </form>
+                <? endif ?>
+            </div>
+    </div>
+</div>

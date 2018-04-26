@@ -1,0 +1,78 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content") ?>
+
+<div class="cart-columns" data-aurl="<?= \HeimrichHannot\Ajax\AjaxAction::generateUrl('iidoShop', 'getPrice') ?>">
+    <div class="col-left">
+
+        <div class="cart-container">
+            <div class="cart-container-inside">
+
+<? if(!$this->count): ?>
+    <div class="empty-text"><?= $this->empty ?></div>
+<? else: ?>
+
+            <? foreach($this->items as $key => $item):
+                $strClass = ($item['class'] ? ' ' . $item['class'] : '');
+
+            if( count($item['categories']) )
+            {
+                foreach($item['categories'] as $objCategory)
+                {
+                    $strClass .= ' cat-' . $objCategory->alias;
+                }
+            }
+
+            $objTemplate = new \FrontendTemplate("iido_shop_item");
+
+            $objTemplate->prefix    = 'cart';
+            $objTemplate->item      = $item;
+            $objTemplate->class     = $strClass;
+            $objTemplate->key       = $key;
+
+            $objTemplate->editLink  = ($this->iidoShopConfiguratorPage ? \PageModel::findByPk( $this->iidoShopConfiguratorPage )->getFrontendUrl() : '');
+
+            $objTemplate->editLabel         = $this->editLabel;
+            $objTemplate->toWatchlistLabel  = $this->toWatchlistLabel;
+            $objTemplate->removeLabel       = $this->removeLabel;
+            $objTemplate->buyLabel          = $this->buyLabel;
+
+            echo $objTemplate->parse();
+                ?>
+            <? endforeach ?>
+            <div class="empty-text hidden"><?= $this->empty ?></div>
+
+<? endif ?>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-right">
+
+        <? if( count($this->links) ): ?>
+        <div class="links">
+            <? foreach($this->links as $link): ?>
+                <div class="link">
+                    <?= $link['tag'] ?>
+                </div>
+            <? endforeach ?>
+        </div>
+        <? endif ?>
+
+        <div class="price-container">
+            <div class="txt"><?= $this->priceText ?></div>
+            <div class="price">
+                <span class="unit"><?= $this->priceUnit ?></span>
+                <span class="num" id="shopPriceNum"><?= $this->price ?></span>
+            </div>
+        </div>
+
+        <div class="check-out">
+            <?= $this->checkOutLink ?>
+        </div>
+
+    </div>
+</div>
+
+<? $this->endblock() ?>

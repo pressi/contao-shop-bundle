@@ -1,0 +1,8 @@
+<?
+$strLabelName   = preg_replace(array('/^shipping_/', '/^billing_/'), '', $this->name);
+$strLabel       = $this->label[ $strLabelName ];
+?>
+<div class="widget widget-text<? if($this->error && in_array($this->name, $this->msg['fields'])): ?> error<? endif ?>">
+    <input type="text" name="<?= $this->name ?>" class="text" id="ctrl_<?= $this->name ?>" value="<?= $this->value[ $this->name ] ?>">
+    <label for="ctrl_<?= $this->name ?>"><?= $strLabel ?></label>
+</div>

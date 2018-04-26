@@ -1,0 +1,104 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content") ?>
+
+<div class="product-details-container" id="productCont_<?= $this->id ?>">
+    <div class="product-details-cont-inside">
+        <input type="hidden" name="ARTICLE_NUMBER" value="<?= $this->product->itemNumber ?>">
+        <input type="hidden" name="name" value="<?= $this->product->name ?>">
+        <? if( $this->mode === "edit" ): ?>
+            <? //TODO: OLD ARTICLE NUMBER! ?>
+        <? endif ?>
+
+        <div class="name"><?= $this->product->name ?></div>
+
+        <div class="product-infos">
+
+            <div class="design">
+                <div class="label"><?= $this->label['design'] ?></div>
+
+                <div class="chooser"></div>
+                <div class="chooser-value"><?= $this->chooserValue['design'] ?></div>
+            </div>
+
+<!--            <div class="size">-->
+<!--                <div class="label">--><?//= $this->label['size'] ?><!--</div>-->
+<!---->
+<!--                <div class="chooser"></div>-->
+<!--                <div class="chooser-value">--><?//= $this->chooserValue['size'] ?><!--</div>-->
+<!--            </div>-->
+
+        </div>
+
+        <div class="product-image" onclick="IIDO.Shop.openProductDetails(this.parentNode.querySelector('div.details'))">
+            <figure class="image_container">
+
+                <div class="ctable">
+                    <div class="ctable-cell">
+                        <?= ($this->product->imageDetailTag ? :$this->product->imageTag) ?>
+                    </div>
+                </div>
+
+            </figure>
+        </div>
+
+        <div class="price-cart">
+
+            <div class="price">
+                <div class="label"><?= $this->label['price'] ?></div>
+                <div class="num"><span class="unit"><?= $this->priceUnit ?></span><span class="price-num"><?= $this->product->price ?></span></div>
+            </div>
+
+            <div class="cart">
+                <div class="label"><?= $this->label['cart'] ?></div>
+                <div class="num<? if( $this->cartLink ): ?> has-link<? endif ?>">
+                    <? if( $this->cartLink ): ?>
+                    <a href="<?= $this->cartLink ?>">
+                        <? endif ?>
+                        <?= $this->cartNum ?>
+                        <? if( $this->cartLink ): ?>
+                    </a>
+                <? endif ?>
+                </div>
+                <div class="watchlist-num<? if($this->watchlistNum === 0): ?> is-hidden<? endif ?>"><?= $this->watchlistNum ?></div>
+            </div>
+
+        </div>
+
+        <div class="settings">
+
+            <? if( $this->mode === "edit" ): ?>
+                <div class="save">
+                    <a href="javascript:void(0)" onclick="IIDO.Shop.updateProduct('<?= $this->subMode ?>')">
+                        <span class="save-icon"></span>
+                        <?= $this->label['save'] ?>
+                    </a>
+                </div>
+            <? else: ?>
+                <div class="buy">
+                    <a href="javascript:void(0)" onclick="IIDO.Shop.addProductToCart()">
+                        <?= $this->label['buy'] ?>
+                    </a>
+                </div>
+                <div class="watchlist">
+                    <a href="javascript:void(0)" onclick="IIDO.Shop.addProductToWatchlist()">
+                        <?= $this->label['watchlist'] ?>
+                    </a>
+                </div>
+            <? endif ?>
+
+        </div>
+
+        <div class="details" onclick="IIDO.Shop.openProductDetails(this)">
+            <div class="label"><?= $this->label['detail'] ?></div>
+            <canvas id="canvasDetail"></canvas>
+        </div>
+
+    </div>
+</div>
+<script>
+    IIDO.Shop.initDetails(<?= $this->id ?>);
+    //IIDO.Shop.initConfig(<?//= json_encode($this->arrConfig) ?>//);
+</script>
+
+<? $this->endblock() ?>

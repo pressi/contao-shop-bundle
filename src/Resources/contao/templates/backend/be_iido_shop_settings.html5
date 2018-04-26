@@ -1,0 +1,45 @@
+<?// if( !$this->overview ): ?>
+<!--    <div id="tl_buttons">-->
+<!--        <a href="--><?//= ampersand(preg_replace("/(&|&amp;)mode=([A-Za-z0-9]{0,})/", "", \Environment::get('request'))) ?><!--" class="header_back" title="--><?//= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?><!--" accesskey="b">--><?//= $GLOBALS['TL_LANG']['MSC']['backBT'] ?><!--</a>-->
+<!--    </div>-->
+<?// endif ?>
+
+<div class="backend-container<? if( $this->overview ): ?> shop-settings-container<? endif ?>">
+
+
+    <? if( $this->overview ): ?>
+
+        <div class="setting-container payment-setting">
+            <a href="<?= \Controller::addToUrl('mode=payment&table=' . \IIDO\ShopBundle\Model\IidoShopPaymentModel::getTable() ) ?>">
+                <span class="label"><?= $this->label['payment'] ?></span>
+            </a>
+        </div>
+
+        <div class="setting-container shipping-setting">
+            <a href="<?= \Controller::addToUrl('mode=shipping&table=' . \IIDO\ShopBundle\Model\IidoShopShippingModel::getTable() ) ?>">
+                <span class="label"><?= $this->label['shipping'] ?></span>
+            </a>
+        </div>
+
+        <div class="setting-container configuration-setting">
+            <a href="<?= \Controller::addToUrl('mode=configuration&table=tl_iido_shop_configuration' ) ?>">
+                <span class="label"><?= $this->label['configuration'] ?></span>
+            </a>
+        </div>
+
+        <? if( \IIDO\ShopBundle\Helper\ShopHelper::questionnaireTemplateExists() ): ?>
+            <div class="setting-container ai-setting">
+                <a href="<?= \Controller::addToUrl('mode=configuration&table=tl_iido_shop_configuration&p=ai' ) ?>">
+                    <span class="label"><?= $this->label['ai'] ?></span>
+                </a>
+            </div>
+        <? endif ?>
+
+    <? else: ?>
+
+        <?= $this->content ?>
+
+    <? endif ?>
+
+
+</div>
