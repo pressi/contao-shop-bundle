@@ -1,18 +1,16 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 namespace IIDO\ShopBundle\API;
 
 
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\ShopBundle\Config\BundleConfig;
 
 
@@ -42,6 +40,18 @@ class DefaultApi
     protected $arrConfig = array();
 
 
+    /**
+     * Product Url Path
+     *
+     * @var array
+     */
+    protected $productUrlPath = array
+    (
+        'de'    => 'produkt',
+        'en'    => 'product'
+    );
+
+
 
     /**
      * check if api is active
@@ -51,6 +61,18 @@ class DefaultApi
     public function isActive()
     {
         return \Config::get( BundleConfig::getTableFieldPrefix() . 'enable' . ucfirst( $this->apiName ) . 'Api' );
+    }
+
+
+
+    /**
+     * Get Product Url Path
+     *
+     * @return string
+     */
+    public function getUrlPath()
+    {
+        return $this->productUrlPath[ BasicHelper::getLanguage() ];
     }
 
 
