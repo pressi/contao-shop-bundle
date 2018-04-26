@@ -1,13 +1,10 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 namespace IIDO\ShopBundle\ContentElement;
@@ -48,40 +45,40 @@ class ProductListElement extends \ContentElement
     }
 
 
+
     /**
      * Generate the content element
      */
     protected function compile()
     {
-        if( TL_MODE === "BE" )
-        {
-            /** @var \BackendTemplate|object $objTemplate */
-            $objTemplate = new \BackendTemplate('be_wildcard');
-
-            $objTemplate->wildcard = '### PRODUKT LISTE ###';
-            $objTemplate->title = $this->headline;
-            $objTemplate->id = $this->id;
-            $objTemplate->link = $this->name;
-            $objTemplate->href = '';
-
-            return $objTemplate->parse();
-        }
-
+        $fromApi        = false;
         $arrProducts    = array();
-        $tablePrefix    = BundleConfig::getTablePrefix();
+//        $tablePrefix    = BundleConfig::getTablePrefix();
 
-        $isApiEnabled   = ApiHelper::isApiEnabled( true );
-
-        if( $isApiEnabled )
+        if( $this->loadProductsFrom === "archive" )
         {
-            $apiName    = 'IIDO\\ShopBundle\\API\\' . ucfirst($isApiEnabled) . 'Api';
-            $api        = new $apiName();
+        }
+        else
+        {
+            $apiName = $this->loadProductsFrom;
 
-            $arrProducts = $api->getProductList();
+            if( ApiHelper::isApiEnabled( $apiName ) )
+            {
+                $fromApi    = true;
+                $api        = ApiHelper::getApiObject( $apiName );
+
+//                echo "<pre>";
+//                print_r( $this->iidoShopProductItemNumber );
+//                echo "<br>";
+//                print_r( $this->iidoShopDetailPage );
+//                exit;
+                $arrProducts = $api->getProductList( $this->iidoShopProductItemNumber, $this->iidoShopDetailPage );
+            }
         }
 
 //        $objProducts    = new Collection( $arrProducts, $tablePrefix . 'products');
 
-        $this->Template->products = $arrProducts; //$objProducts;
+        $this->Template->formApi    = $fromApi;
+        $this->Template->products   = $arrProducts; //$objProducts;
     }
 }

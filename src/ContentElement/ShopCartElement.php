@@ -1,30 +1,19 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 namespace IIDO\ShopBundle\ContentElement;
 
 
-use Http\Message\Cookie;
-use IIDO\BasicBundle\Helper\ColorHelper;
-use IIDO\BasicBundle\Helper\ImageHelper;
-use IIDO\ShopBundle\API\WeclappApi;
-use IIDO\ShopBundle\Config\ApiConfig;
-use IIDO\ShopBundle\Config\BundleConfig;
+use HeimrichHannot\Ajax\Ajax;
+use IIDO\ShopBundle\Ajax\ShopAjax;
 use IIDO\ShopBundle\Config\ShopConfig;
-use IIDO\ShopBundle\Helper\ApiHelper;
-use Contao\Model\Collection;
-
-use IIDO\ShopBundle\Model\IidoShopProductCategoryModel;
-use IIDO\ShopBundle\Model\IidoShopProductModel;
+use IIDO\ShopBundle\Helper\ShopHelper;
 
 
 class ShopCartElement extends \ContentElement
@@ -36,6 +25,22 @@ class ShopCartElement extends \ContentElement
      */
     protected $strTemplate = 'ce_iido_shop_cart';
 
+
+
+
+    /**
+     * Initialize the object
+     *
+     * @param \ContentModel $objElement
+     * @param string       $strColumn
+     */
+    public function __construct($objElement, $strColumn='main')
+    {
+        parent::__construct($objElement, $strColumn);
+
+        Ajax::runActiveAction('iidoShop', 'getPrice', new ShopAjax($this));
+        Ajax::runActiveAction('iidoShop', 'renderPrice', new ShopAjax($this));
+    }
 
 
 
@@ -72,163 +77,74 @@ class ShopCartElement extends \ContentElement
     {
         \Controller::loadLanguageFile("iido_shop_cart");
 
-        $this->Template->editLabel          = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['edit'];
-        $this->Template->toWatchlistLabel   = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['toWatchlist'];
-        $this->Template->removeLabel        = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['remove'];
+        $strLang = $GLOBALS['TL_LANG']['iido_shop_cart'];
 
-        $strLangSize            = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['size'];
-        $strLangFlex            = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['flex'];
-        $strLangBinding         = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['binding'];
-        $strLangTuning          = $GLOBALS['TL_LANG']['iido_shop_cart']['label']['tuning'];
+        $this->Template->editLabel          = $strLang['label']['edit'];
+        $this->Template->toWatchlistLabel   = $strLang['label']['toWatchlist'];
+        $this->Template->removeLabel        = $strLang['label']['remove'];
 
-        $arrCartList = ShopConfig::getCartList();
+        $arrCartList    = ShopConfig::getCartList();
+        $intCartPrice   = 0;
 
         $this->Template->count = count($arrCartList);
-
+//echo "<pre>"; print_r( $arrCartList ); exit;
         if( count($arrCartList) )
         {
             $arrProducts = array();
 
-            //TODO: check if api is active // else use contao product details not form api!!
             foreach($arrCartList as $item)
             {
-                $itemNumber     = $item['itemNumber'];
+                $arrShopProduct = ShopHelper::getProduct( $item, $strLang, $this );
+                $intPrice       = ($arrShopProduct['intPrice'] * $item['quantity']);
 
-                $sizeNumber     = preg_replace('/^C.S([0-9]{4}).([A-Za-z0-9]{1,4}).([A-Za-z0-9]{1,4}).([A-Za-z0-9.]{1,})/', '$3', $itemNumber);
-                $flexNumber     = preg_replace('/^C.S([0-9]{4}).([A-Za-z0-9]{1,4}).([A-Za-z0-9]{1,4}).([A-Za-z0-9]{1,4}).([A-Za-z0-9.]{1,})/', '$4', $itemNumber);
-                $bindingNumber  = preg_replace('/([A-Za-z0-9.]{1,}).B([0-9]{1,})$/', 'B$2', $itemNumber);
-                $tuningNumber   = $item['tuning'];
+                $arrProducts[] = $arrShopProduct;
 
-                $objApi         = ApiHelper::getApiObject();
-                $objProduct     = $objApi->runApiUrl('article/?articleNumber-eq=' . $itemNumber);
-                $objBinding     = $objApi->runApiUrl('article/?articleNumber-eq=' . $bindingNumber);
-                $objTuning      = false; // $objApi->runApiUrl('article/?articleNumber-eq=' . $tuningNumber );
-                $arrCategories  = $this->getProductCategories( $itemNumber );
-                $strClass       = '';
-
-                $objShopProduct = $this->findShopProduct( $itemNumber );
-
-                $intPrice       = $objProduct['articlePrices'][0]['price'];
-                $imageTag       = '';
-                $detailInfos    = '';
-
-                if( $objShopProduct )
-                {
-                    $imageTag   = ImageHelper::getImageTag( $objShopProduct->overviewSRC );
-                }
-
-                $strLabel = 'ORIGINAL+';
-
-                if( preg_match('/^C/', $itemNumber) || preg_match('/^S/', $itemNumber) )
-                {
-                    $strLabel       = 'ORIGINAL+ SKI';
-                    $detailInfos    = $strLangSize . ': ' . $sizeNumber;
-
-                    if( count($objBinding) )
-                    {
-                        $detailInfos .= ' / ' . $strLangBinding . ': ' . $objBinding['name'];
-                    }
-
-                    $detailInfos .= ' / ' . $strLangFlex . ': ' . $objApi->getFlexName( $flexNumber );
-
-                    if( $objTuning )
-                    {
-                        $detailInfos .= ' / ' . $strLangTuning . ': ' . $objTuning['name'];
-                    }
-
-                    $strClass .= ' product-item-ski';
-                }
-
-                $arrProducts[] = array
-                (
-                    'name'          => $item['name'],
-                    'itemNumber'    => $itemNumber,
-                    'quantity'      => $item['quantity'],
-
-                    'label'         => $strLabel,
-                    'detailInfos'   => $detailInfos,
-                    'price'         => $intPrice,
-                    'imageTag'      => $imageTag,
-
-                    'categories'    => $arrCategories,
-                    'class'         => trim($strClass)
-                );
+                $intCartPrice = ($intCartPrice + $intPrice);
             }
 
-            $this->Template->items = $arrProducts;
+            $this->Template->items  = $arrProducts;
+            $this->Template->empty  = $strLang['cartEmpty'];
         }
         else
         {
-            $this->Template->empty = 'Derzeit sind keine Produkte in deinem Warenkorb.';
+            $this->Template->empty  = $strLang['cartEmpty'];
         }
-    }
 
+        $arrLinks       = array();
+        $arrShopLinks   = \StringUtil::deserialize($this->iidoShopCartLinks, TRUE);
+        $checkOutLink   = '';
 
-
-    protected function findShopProduct( $itemNumber )
-    {
-        $productTable   = IidoShopProductModel::getTable();
-
-        $skiNumber      = preg_replace('/^C.S([0-9]{4}).([A-Za-z0-9.]{1,})/', 'S$1', $itemNumber);
-        $colorNumber    = preg_replace('/^C.S([0-9]{4}).([A-Za-z0-9]{1,4}).([A-Za-z0-9.]{1,})/', '$2', $itemNumber);
-
-        $objProducts = \Database::getInstance()->prepare("SELECT * FROM " . $productTable ." WHERE itemNumber LIKE ?")->execute($skiNumber . '.' . $colorNumber . '%');
-
-        if( $objProducts && $objProducts->count() )
+        if( count($arrShopLinks) )
         {
-            while( $objProduct = $objProducts->next() )
+            foreach($arrShopLinks as $arrLink)
             {
-                if( $objProduct->overviewSRC )
+                if( $arrLink['link'] )
                 {
-                    return $objProduct;
+                    $arrLinks[] = array
+                    (
+                        'link'      => $arrLink['link'],
+                        'text'      => $arrLink['text'],
+                        'tag'       => '<a href="' . $arrLink['link'] . '">' . $arrLink['text'] . '</a>'
+                    );
                 }
             }
         }
 
-        return null;
-    }
-
-
-
-    protected function getProductCategories( $itemNumber )
-    {
-        $objProduct     = IidoShopProductModel::findBy("itemNumber", $itemNumber);
-        $arrCategories  = \StringUtil::deserialize($objProduct->categories, TRUE);
-
-        if( !count($arrCategories) )
+        if( $this->iidoShopCartCheckOutPage && count($arrCartList) )
         {
-            $skiNumber      = preg_replace('/C.S([A-Za-z0-9]{1,}).([A-Za-z0-9\.]{1,})/', 'C.S$1', $itemNumber);
-            $productTable   = IidoShopProductModel::getTable();
-            $objProducts    = \Database::getInstance()->prepare("SELECT * FROM " . $productTable ." WHERE itemNumber LIKE ?")->execute($skiNumber . '%');
+            $objCheckOutPage    = \PageModel::findByPk( $this->iidoShopCartCheckOutPage );
 
-            if( $objProducts )
-            {
-                while( $objProducts->next() )
-                {
-                    $arrProductCategories = \StringUtil::deserialize($objProducts->categories, TRUE);
-
-                    if( count($arrProductCategories) )
-                    {
-                        $arrCategories = $arrProductCategories;
-                        break;
-                    }
-                }
-            }
+            $checkOutHref       = $objCheckOutPage->getFrontendUrl();
+            $checkOutLink       = '<a href="' . $checkOutHref . '">' . ($this->iidoShopCartCheckOutText?:$objCheckOutPage->title) . '</a>';
         }
 
-        if( count($arrCategories) )
-        {
-            foreach($arrCategories as $num => $categoryID)
-            {
-                $objCategory = IidoShopProductCategoryModel::findByPk( $categoryID );
+        $this->Template->links          = $arrLinks;
 
-                if( $objCategory )
-                {
-                    $arrCategories[ $num ] = $objCategory;
-                }
-            }
-        }
+        $this->Template->priceText      = $this->iidoShopCartPriceText;
+        $this->Template->priceUnit      = '&euro;';
+        $this->Template->price          = ShopHelper::renderPrice($intCartPrice);
+        $this->Template->checkOutLink   = $checkOutLink;
 
-        return $arrCategories;
+        $this->Template->editLink       = \PageModel::findByPk( $this->iidoShopEditPage )->getFrontendUrl();
     }
 }
