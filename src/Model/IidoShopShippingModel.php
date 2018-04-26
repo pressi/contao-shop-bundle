@@ -14,7 +14,7 @@ namespace IIDO\ShopBundle\Model;
  *
  *
  */
-class IidoShopArchiveModel extends \Model
+class IidoShopShippingModel extends \Model
 {
 
     /**
@@ -22,5 +22,5 @@ class IidoShopArchiveModel extends \Model
      *
      * @var string
      */
-    protected static $strTable = 'tl_iido_shop_archive';
+    protected static $strTable = 'tl_iido_shop_shipping';
 }
