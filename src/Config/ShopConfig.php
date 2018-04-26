@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
@@ -10,22 +10,54 @@
 namespace IIDO\ShopBundle\Config;
 
 
+use IIDO\ShopBundle\Helper\ApiHelper;
+
+
 class ShopConfig
 {
-    static $cartCookie = 'iido_shop_cart';
+    /**
+     * Cartlist Cookie name
+     *
+     * @var string
+     */
+    static $cartCookie      = 'iido_shop_cart';
+
+
+    /**
+     * Watchlist Cookie name
+     *
+     * @var string
+     */
     static $watchlistCookie = 'iido_shop_watchlist';
+
 
 
     public static function getCartList()
     {
-        return json_decode($_COOKIE[ self::$cartCookie ], TRUE);
+        $strCookie = $_COOKIE[ self::$cartCookie ];
+        $arrCookie = json_decode($strCookie, TRUE);
+
+        if( count($arrCookie) === 1 && !is_array($arrCookie[0]) )
+        {
+            $arrCookie = array();
+        }
+
+        return $arrCookie;
     }
 
 
 
     public static function getWatchlistList()
     {
-        return json_decode($_COOKIE[ self::$watchlistCookie ], TRUE);
+        $arrCookie  = array();
+        $strCookie  = $_COOKIE[ self::$watchlistCookie ];
+
+        if( $strCookie !== "[null]" )
+        {
+            $arrCookie = json_decode($strCookie, TRUE);
+        }
+
+        return $arrCookie;
     }
 
 
@@ -72,5 +104,25 @@ class ShopConfig
         }
 
         return $num;
+    }
+
+
+
+    public static function getProduct( $itemNumber )
+    {
+        $objProduct = false;
+        $objApi     = ApiHelper::getApiObject();
+
+        if( $objApi )
+        {
+            $arrProduct = $objApi->runApiUrl('article/?articleNumber-eq=' . $itemNumber);
+            $objProduct = new \stdClass();
+
+            $objProduct->itemNumber     = $arrProduct['articleNumber'];
+            $objProduct->price          = $arrProduct['articlePrices'][0]['price'];
+            $objProduct->name           = $arrProduct['name'];
+        }
+
+        return $objProduct;
     }
 }
