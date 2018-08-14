@@ -73,8 +73,8 @@ class ShopCheckOutHelper
                     'type'      => 'box',
                     'fields'    => array
                     (
-                        'phone',
-                        'email'
+                        'phone' => 'widget-phone not-mandatory',
+                        'email' => 'widget-email'
                     )
                 ),
 
@@ -124,11 +124,21 @@ class ShopCheckOutHelper
 
                     if( $includePosts )
                     {
-                        $arrFields[ $k ] = \Input::post( $k );
+                        $arrFields[ $k ] = array
+                        (
+                            'mandatory' => true,
+                            'value' => \Input::post( $k ),
+                            'check'     => 'default'
+                        );
                     }
                     else
                     {
-                        $arrFields[] = $k;
+                        $arrFields[] = array
+                        (
+                            'mandatory' => true,
+                            'value'     => $k,
+                            'check'     => 'default'
+                        );
                     }
                 }
                 else
@@ -156,11 +166,21 @@ class ShopCheckOutHelper
 
                                 if( $includePosts )
                                 {
-                                    $arrFields[ $key ] = \Input::post( $key );
+                                    $arrFields[ $key ] = array
+                                    (
+                                        'mandatory' => true,
+                                        'value'     => \Input::post( $key ),
+                                        'check'     => 'default'
+                                    );
                                 }
                                 else
                                 {
-                                    $arrFields[] = $key;
+                                    $arrFields[] = array
+                                    (
+                                        'mandatory' => true,
+                                        'value'     => $key,
+                                        'check'     => 'default'
+                                    );
                                 }
                             }
                             else
@@ -175,13 +195,31 @@ class ShopCheckOutHelper
 
                                 foreach($fieldConfig['fields'] as $strKey => $strFieldConfig)
                                 {
+                                    $config = '';
+
+                                    if( !is_numeric($strKey) )
+                                    {
+                                        $config         = $strFieldConfig;
+                                        $strFieldConfig = $strKey;
+                                    }
+
                                     if( $includePosts )
                                     {
-                                        $arrFields[ $strFieldConfig ] = \Input::post( $strFieldConfig );
+                                        $arrFields[ $strFieldConfig ] = array
+                                        (
+                                            'mandatory' => preg_match('/not-mandatory/', $config) ? false : true,
+                                            'value'     => \Input::post( $strFieldConfig ),
+                                            'check'     => preg_match('/widget-([A-Za-z]{0,})/', $config, $arrConfigMatches) ? $arrConfigMatches[1] : 'default'
+                                        );
                                     }
                                     else
                                     {
-                                        $arrFields[] = $strFieldConfig;
+                                        $arrFields[] = array
+                                        (
+                                            'mandatory' => preg_match('/not-mandatory/', $config) ? false : true,
+                                            'value'     => $strFieldConfig,
+                                            'check'     => preg_match('/widget-([A-Za-z]{0,})/', $config, $arrConfigMatches) ? $arrConfigMatches[1] : 'default'
+                                        );
                                     }
                                 }
                             }
@@ -190,11 +228,21 @@ class ShopCheckOutHelper
                         {
                             if( $includePosts )
                             {
-                                $arrFields[ $fieldConfig ] = \Input::post( $fieldConfig );
+                                $arrFields[ $fieldConfig ] = array
+                                (
+                                    'mandatory' => true,
+                                    'value'     => \Input::post( $fieldConfig ),
+                                    'check'     => 'default'
+                                );
                             }
                             else
                             {
-                                $arrFields[] = $fieldConfig;
+                                $arrFields[] = array
+                                (
+                                    'mandatory' => true,
+                                    'value'     => $fieldConfig,
+                                    'check'     => 'default'
+                                );
                             }
                         }
                     }
@@ -204,11 +252,21 @@ class ShopCheckOutHelper
             {
                 if( $includePosts )
                 {
-                    $arrFields[ $arrFieldConfig ] = \Input::post( $arrFieldConfig );
+                    $arrFields[ $arrFieldConfig ] = array
+                    (
+                        'mandatory' => true,
+                        'value'     => \Input::post( $arrFieldConfig ),
+                        'check'     => 'default'
+                    );
                 }
                 else
                 {
-                    $arrFields[] = $arrFieldConfig;
+                    $arrFields[] = array
+                    (
+                        'mandatory' => true,
+                        'value'     => $arrFieldConfig,
+                        'check'     => 'default'
+                    );
                 }
             }
         }
@@ -268,14 +326,47 @@ class ShopCheckOutHelper
 
         $arrFields  = ShopCheckOutHelper::getFormInputs( true );
 
-        foreach( $arrFields as $strField => $fieldValue )
+        foreach( $arrFields as $strField => $arrField )
         {
+            $fieldValue = $arrField['value'];
+            if( !strlen( $fieldValue ) && !$arrField['mandatory'] )
+            {
+                continue;
+            }
+
             if( !strlen( $fieldValue ) )
             {
                 $error = true;
 
                 $arrMessage['fields'][]     = $strField;
                 $arrMessage['message'][]    = $langError[ $strField ];
+            }
+            else
+            {
+                $check = $arrField['check'];
+
+                switch( $check )
+                {
+                    case "email":
+                        if( !\Validator::isEmail( $fieldValue ) )
+                        {
+                            $error = true;
+
+                            $arrMessage['fields'][]     = $strField;
+                            $arrMessage['message'][]    = $langError[ $strField ];
+                        }
+                        break;
+
+                    case "phone":
+                        if( !\Validator::isPhone( $fieldValue ) )
+                        {
+                            $error = true;
+
+                            $arrMessage['fields'][]     = $strField;
+                            $arrMessage['message'][]    = $langError[ $strField ];
+                        }
+                        break;
+                }
             }
         }
 
@@ -343,6 +434,6 @@ class ShopCheckOutHelper
             $strName = \Input::post( $prefix  . "firstname" ) . ' ' . \Input::post( $prefix  . "lastname" );
         }
 
-        return $strName;
+        return trim($strName);
     }
 }

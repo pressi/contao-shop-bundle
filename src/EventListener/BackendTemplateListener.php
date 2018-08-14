@@ -48,7 +48,17 @@ class BackendTemplateListener extends DefaultListener
                         $strMessage = Message::render(array('info'=>'<strong>' . ucfirst($strApi) . '</strong> API ist aktiviert. Alle Produktdaten werden von dort geladen!'));
                     }
 
-                    $strContent = preg_replace('/<div([A-Za-z0-9\s\-_]{0,})class="tl_listing_container list_view"([A-Za-z0-9\s\-_]{0,})id="tl_listing">/', '<div$1class="tl_listing_container list_view"$2id="tl_listing">' . $strMessage, $strContent);
+                    if( $strMessage )
+                    {
+                        if( preg_match('/tl_empty/', $strContent) )
+                        {
+                            $strContent = preg_replace('/<p class="tl_empty">/', '<div class="iido-message-wrapper">' . $strMessage . '</div><p class="tl_empty">', $strContent);
+                        }
+                        else
+                        {
+                            $strContent = preg_replace('/<div([A-Za-z0-9\s\-_]{0,})class="tl_listing_container list_view"([A-Za-z0-9\s\-_]{0,})id="tl_listing">/', '<div$1class="tl_listing_container list_view"$2id="tl_listing">' . $strMessage, $strContent);
+                        }
+                    }
                 }
             }
         }

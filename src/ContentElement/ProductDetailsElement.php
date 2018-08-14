@@ -71,6 +71,8 @@ class ProductDetailsElement extends \ContentElement
         $strMode        = \Input::get("mode");
         $strSubMode     = 'cart';
 
+        $chooseInfos    = array();
+
         if($strMode === "edit-list")
         {
             $strMode    = 'edit';
@@ -153,5 +155,7 @@ class ProductDetailsElement extends \ContentElement
 
         $this->Template->mode           = $strMode;
         $this->Template->subMode        = $strSubMode;
+
+        $this->Template->chooseInfos    = $chooseInfos; // TODO: chooser!!
     }
 }

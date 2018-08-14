@@ -50,6 +50,11 @@ class ShopAjax
         $objProduct     = ShopConfig::getProduct( ShopHelper::getRealItemNumber($itemNumber) );
         $intPrice       = (float) $objProduct->price;
 
+        if( !$intPrice )
+        {
+            $intPrice = (float) $objProduct['price'];
+        }
+
         $strHtml        = array('price' => ($intPrice * (int) $quantity));
 
         $objResponse    = new ResponseSuccess();

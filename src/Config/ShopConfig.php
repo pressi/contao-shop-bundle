@@ -125,4 +125,13 @@ class ShopConfig
 
         return $objProduct;
     }
+
+
+
+    public static function getCurrency()
+    {
+        \Controller::loadLanguageFile("iido_shop");
+        $prefix = BundleConfig::getTableFieldPrefix();
+        return $GLOBALS['TL_LANG']['iido_shop']['currency'][ \Config::get( $prefix . 'currency' ) ];
+    }
 }

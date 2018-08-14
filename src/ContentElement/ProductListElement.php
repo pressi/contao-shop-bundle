@@ -13,6 +13,7 @@ namespace IIDO\ShopBundle\ContentElement;
 use IIDO\ShopBundle\Config\BundleConfig;
 use IIDO\ShopBundle\Helper\ApiHelper;
 use Contao\Model\Collection;
+use IIDO\ShopBundle\Model\IidoShopProductCategoryModel;
 
 
 class ProductListElement extends \ContentElement
@@ -40,6 +41,8 @@ class ProductListElement extends \ContentElement
 
             return $objTemplate->parse();
         }
+
+        $this->iidoShopCategories = \StringUtil::deserialize($this->iidoShopCategories, TRUE);
 
         return parent::generate();
     }
@@ -72,7 +75,31 @@ class ProductListElement extends \ContentElement
 //                echo "<br>";
 //                print_r( $this->iidoShopDetailPage );
 //                exit;
-                $arrProducts = $api->getProductList( $this->iidoShopProductItemNumber, $this->iidoShopDetailPage );
+                $itemNumbers    = '';
+                $strMessageText = '';
+
+                switch( $this->iidoShopShowProductsFrom )
+                {
+                    case 'itemNumber':
+                        $itemNumbers    = $this->iidoShopProductItemNumber;
+                        $strMessageText = '<strong>bei dem Inhaltselement</strong> ';
+                        break;
+
+                    case 'categories':
+                        $itemNumbers    = $this->getItemNumbersFromCategories( $this->iidoShopCategories );
+                        $strMessageText = '<strong>bei der ausgewählten Kategorie</strong> ';
+                        break;
+                }
+
+                if( !strlen($itemNumbers) )
+                {
+                    $this->Template->error      = TRUE;
+                    $this->Template->message    = 'Es sind keine Artikelnummern ausgewählt. Bitte hinterlegen Sie ' . $strMessageText . 'die Artikelnummern.';
+                }
+                else
+                {
+                    $arrProducts = $api->getProductList( $itemNumbers, $this->iidoShopDetailPage );
+                }
             }
         }
 
@@ -80,5 +107,30 @@ class ProductListElement extends \ContentElement
 
         $this->Template->formApi    = $fromApi;
         $this->Template->products   = $arrProducts; //$objProducts;
+    }
+
+
+
+    protected function getItemNumbersFromCategories( array $arrCategories )
+    {
+        $itemNumbers = '';
+
+        if( is_array($arrCategories) && count($arrCategories) )
+        {
+            foreach($arrCategories as $categoryID)
+            {
+                $objCategory = IidoShopProductCategoryModel::findByPk( $categoryID );
+
+                if( $objCategory )
+                {
+                    if( $objCategory->itemNumbers )
+                    {
+                        $itemNumbers .= (strlen($itemNumbers) ? ',' : '') . $objCategory->itemNumbers;
+                    }
+                }
+            }
+        }
+
+        return $itemNumbers;
     }
 }

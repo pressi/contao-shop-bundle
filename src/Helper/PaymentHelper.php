@@ -83,7 +83,7 @@ class PaymentHelper
 
 
 
-    public static function getAll()
+    public static function getAll( $getOnlyLocal = false )
     {
         $strTable       = IidoShopPaymentModel::getTable();
         $arrPayments    = array();
@@ -107,7 +107,7 @@ class PaymentHelper
                         }
                     }
 
-                    if( $objPayment && $objPayment->published )
+                    if( ($objPayment && $objPayment->published) || $getOnlyLocal )
                     {
                         $arrPayments[] = array
                         (
@@ -143,5 +143,19 @@ class PaymentHelper
         }
 
         return $strContent;
+    }
+
+
+
+    public static function getMethod( $objPayment )
+    {
+        $method = '\\IIDO\ShopBundle\\Payment\\' . $objPayment->title;
+
+        if( class_exists($method) )
+        {
+            return new $method();
+        }
+
+        return false;
     }
 }

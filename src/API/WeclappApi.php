@@ -8,6 +8,8 @@
  *******************************************************************/
 
 namespace IIDO\ShopBundle\API;
+
+
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
 use IIDO\ShopBundle\Config\BundleConfig;
@@ -51,7 +53,7 @@ class WeclappApi extends DefaultApi
      *
      * @var string
      */
-    protected $localImagePath = 'files/weclapp/article/';
+    protected $localImagePath = 'files/weclapp/article/'; // save in customer folder??
 
 
 
@@ -62,24 +64,79 @@ class WeclappApi extends DefaultApi
      */
     protected $colorCodes = array
     (
-        'AB'    => 'aqua_black',
-        'BA'    => 'black_aqua',
+        'AB'    => array
+        (
+            'alias'     => 'aqua_black',
+            'label'     => 'Aqua on Black'
+        ),
+        'BA'    => array
+        (
+            'alias'     => 'black_aqua',
+            'label'     => 'Black on Aqua'
+        ),
 
-        'BB'    => 'black_black',
-        'BC'    => 'black_cblue',
+        'WB'    => array
+        (
+            'alias'     => 'white_black',
+            'label'     => 'White on Black'
+        ),
+        'BW'    => array
+        (
+            'alias'     => 'black_white',
+            'label'     => 'Black on White'
+        ),
 
-        'BW'    => 'black_white',
-        'WB'    => 'white_black',
+        'BB'    => array
+        (
+            'alias'     => 'black_black',
+            'label'     => 'Black on Black'
+        ),
 
-        'BCB'   => 'black_cblue',
-        'CBB'   => 'cblue_black',
+        'CB'    => array
+        (
+            'alias'     => 'cblue_black',
+            'label'     => 'Crystal-Blue on Black'
+        ),
+        'BC'    => array
+        (
+            'alias'     => 'black_cblue',
+            'label'     => 'Black on Crystal-Blue'
+        ),
 
-        'BY'    => 'black_yellow',
-        'YB'    => 'yellow_black',
+        'YB'    => array
+        (
+            'alias'     => 'yellow_black',
+            'label'     => 'Yellow on Black'
+        ),
+        'MB'    => array
+        (
+            'alias'     => 'magenta_black',
+            'label'     => 'Magenta on Black'
+        ),
 
-        'MB'    => 'magenta_black',
-        'BM'    => 'black_magenta',
+        'IB'    => array
+        (
+            'alias'     => 'ired_black',
+            'label'     => 'Indian-Red on Black'
+        ),
+        'BI'    => array
+        (
+            'alias'     => 'black_ired',
+            'label'     => 'Black on Indian-Red'
+        ),
+
+        'CBB'    => array
+        (
+            'alias'     => 'cblue_black',
+            'label'     => 'Crystal-Blue on Black'
+        ),
+        'BCB'    => array
+        (
+            'alias'     => 'black_cblue',
+            'label'     => 'Black on Crystal-Blue'
+        ),
     );
+
 
 
     /**
@@ -103,10 +160,66 @@ class WeclappApi extends DefaultApi
 
         'ZZZ'   => array
         (
-            'label' => 'Stiff',
+            'label' => 'Hard',
             'range' => 100
         )
     );
+
+
+
+    protected $flexRange = array
+    (
+        'superhard' => array
+        (
+            'label' => 'Superhard',
+            'range' => array
+            (
+                'min'   => 0,
+                'max'   => 65
+            )
+        ),
+
+        'hard' => array
+        (
+            'label' => 'Hard',
+            'range' => array
+            (
+                'min'   => 66,
+                'max'   => 72
+            )
+        ),
+
+        'medium' => array
+        (
+            'label' => 'Medium',
+            'range' => array
+            (
+                'min'   => 73,
+                'max'   => 77
+            )
+        ),
+
+        'soft' => array
+        (
+            'label' => 'Soft',
+            'range' => array
+            (
+                'min'   => 78,
+                'max'   => 85
+            )
+        ),
+
+        'supersoft' => array
+        (
+            'label' => 'Supersoft',
+            'range' => array
+            (
+                'min'   => 82,
+                'max'   => 0
+            )
+        )
+    );
+
 
 
     protected $filterModes = array
@@ -126,6 +239,7 @@ class WeclappApi extends DefaultApi
         'in'        => 'the property value is in the specified list of values, the query parameter value must be a JSON array with the values in the correct type, for example <strong>?customerNumber-in=["1006","1007"]</strong>',
         'notin'     => 'the property value is not in the specified list of values'
     );
+
 
 
     /**
@@ -338,7 +452,28 @@ class WeclappApi extends DefaultApi
 
     public function getColorCode( $colorKey )
     {
+        return $this->colorCodes[ $colorKey ]['alias'];
+    }
+
+
+
+    public function getColorLabel( $colorKey )
+    {
+        return $this->colorCodes[ $colorKey ]['label'];
+    }
+
+
+
+    public function getColor( $colorKey )
+    {
         return $this->colorCodes[ $colorKey ];
+    }
+
+
+
+    public function getFlex()
+    {
+        return $this->flexRange;
     }
 
 
@@ -386,7 +521,7 @@ class WeclappApi extends DefaultApi
 
 
 
-    public function runApiUrl( $urlParams, $returnVar = '' )
+    public function runApiUrl( $urlParams, $returnVar = '', $method = 'GET' )
     {
         $auth = [
             'Content-Type: application/json',
@@ -395,11 +530,17 @@ class WeclappApi extends DefaultApi
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_URL, $this->getURL() . $urlParams);
 //        curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $auth);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        if( $method === "POST" )
+        {
+//            curl_setopt($ch, CURLOPT_POST, 1 );
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, "body goes here" );
+        }
 
         $out = curl_exec($ch);
         curl_close($ch);
@@ -428,11 +569,16 @@ class WeclappApi extends DefaultApi
 
 
 
-    public function downloadArticleImage( $articleId, $imageId, $imageName )
+    public function downloadArticleImage( $articleId, $imageId, $imageName, $imageCreated = 0 )
     {
         $articleImagePath = BasicHelper::getRootDir() . '/' . $this->localImagePath . $articleId . '/';
 
-        if( !file_exists( $articleImagePath .  $imageName) )
+        if( $imageCreated > 0 && strlen($imageCreated) > 10 )
+        {
+            $imageCreated = substr($imageCreated, 0, -(strlen($imageCreated) - 10));
+        }
+
+        if( !file_exists( $articleImagePath .  $imageName) || filemtime($articleImagePath . $imageName) < $imageCreated )
         {
             if( !is_dir($articleImagePath) )
             {
@@ -442,9 +588,145 @@ class WeclappApi extends DefaultApi
             $objImage = $this->runApiUrl('article/id/' . $articleId . '/downloadArticleImage?articleImageId=' . $imageId, false );
 
             file_put_contents( $articleImagePath . $imageName, $objImage);
+
+            $strLocalPath = $this->localImagePath . $articleId . '/' . $imageName;
+
+            if (\Dbafs::shouldBeSynchronized( $strLocalPath ))
+            {
+                $objModel = \FilesModel::findByPath( $strLocalPath );
+
+                if ($objModel === null)
+                {
+                    $objModel = \Dbafs::addResource( $strLocalPath );
+                }
+
+                // Update the hash of the target folder
+                \Dbafs::updateFolderHashes( $this->localImagePath . $articleId );
+            }
         }
 
         return $this->localImagePath . $articleId . '/' . $imageName;
+    }
+
+
+
+    public function getItemImage( $arrItem, $runTwice = false )
+    {
+        if( is_array($arrItem['articleImages']) && count($arrItem['articleImages']) )
+        {
+            $strFirstPath   = '';
+            $mainImagePath  = '';
+
+            foreach( $arrItem['articleImages'] as $artImage )
+            {
+                $strPath = $this->downloadArticleImage( $arrItem['id'], $artImage['id'], $artImage['fileName'] );
+
+                if( !$strFirstPath )
+                {
+                    $strFirstPath = $strPath;
+                    break;
+                }
+
+                if( $artImage['mainImage'] )
+                {
+                    $imagePath      = ImageHelper::renderImagePath( $strPath );
+                    $mainImagePath  = ImageHelper::renderImagePath( $strPath );
+                    break;
+                }
+                else
+                {
+                    $arrImages[] = ImageHelper::renderImagePath( $strPath );
+                }
+            }
+
+            if( !$imagePath && $strFirstPath )
+            {
+                $imagePath = ImageHelper::renderImagePath( $strFirstPath );
+            }
+
+            if( $mainImagePath )
+            {
+                $arrImages[] = $mainImagePath;
+
+                $imagePath = $mainImagePath;
+            }
+
+            return $imagePath;
+        }
+
+        if( $runTwice )
+        {
+            return $this->getItemImageTwice( $arrItem );
+        }
+        else
+        {
+            $itemNumber     = $arrItem['articleNumber'];
+            $arrItemNumber  = explode(".", $itemNumber);
+
+            $key = 3;
+
+            if( $arrItemNumber[0] === 'C' )
+            {
+                $key = 4;
+                array_shift($arrItemNumber);
+            }
+
+            unset($arrItemNumber[ $key ]); // TODO: ohne Flex Key = 3
+            unset($arrItemNumber[ ($key - 1) ]); // Flex
+            unset($arrItemNumber[ ($key - 2) ]); // Length
+
+            $newItemNumber = implode(".", $arrItemNumber) . '.___.___';
+
+            $arrNewItems = $this->runApiUrl("article/?articleNumber-ilike=" . $newItemNumber);
+
+            if( is_array($arrNewItems) && count($arrNewItems) )
+            {
+                foreach($arrNewItems as $newItem)
+                {
+                    if( is_array($newItem['articleImages']) && count($newItem['articleImages']) )
+                    {
+                        $imagePath = $this->getItemImage( $newItem, true );
+
+                        if( $imagePath )
+                        {
+                            return $imagePath;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->getItemImageTwice( $arrItem );
+    }
+
+
+
+    protected function getItemImageTwice( $arrItem )
+    {
+        $itemNumber     = $arrItem['articleNumber'];
+        $arrItemNumber  = explode(".", $itemNumber);
+
+        if( $arrItemNumber[0] === 'C' )
+        {
+            array_shift($arrItemNumber);
+        }
+
+        $arrNewItem = $this->runApiUrl("article/?articleNumber-eq=" . $arrItemNumber[0]);
+
+        if( is_array($arrNewItem) && !empty($arrNewItem) )
+        {
+            if( is_array($arrNewItem['articleImages']) && count($arrNewItem['articleImages']) )
+            {
+                $imagePath = $this->getItemImage( $arrNewItem, true );
+
+                if( $imagePath )
+                {
+                    return $imagePath;
+                }
+            }
+        }
+
+        return false;
     }
 
 
@@ -481,4 +763,8 @@ class WeclappApi extends DefaultApi
         $prefix = BundleConfig::getTableFieldPrefix();
         return \Config::get( $prefix . 'weclappToken' );
     }
+
+
+
+//    public function
 }

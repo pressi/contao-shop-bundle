@@ -12,6 +12,7 @@ namespace IIDO\ShopBundle\ContentElement;
 
 use HeimrichHannot\Ajax\Ajax;
 use IIDO\ShopBundle\Ajax\ShopAjax;
+use IIDO\ShopBundle\Config\BundleConfig;
 use IIDO\ShopBundle\Config\ShopConfig;
 use IIDO\ShopBundle\Helper\ShopHelper;
 
@@ -38,8 +39,13 @@ class ShopCartElement extends \ContentElement
     {
         parent::__construct($objElement, $strColumn);
 
-        Ajax::runActiveAction('iidoShop', 'getPrice', new ShopAjax($this));
-        Ajax::runActiveAction('iidoShop', 'renderPrice', new ShopAjax($this));
+        $strTableFieldPrefix = BundleConfig::getTableFieldPrefix();
+
+        if( !\Config::get($strTableFieldPrefix . "enableShopLight") )
+        {
+            Ajax::runActiveAction('iidoShop', 'getPrice', new ShopAjax($this));
+            Ajax::runActiveAction('iidoShop', 'renderPrice', new ShopAjax($this));
+        }
     }
 
 
@@ -88,12 +94,14 @@ class ShopCartElement extends \ContentElement
 
         $this->Template->count = count($arrCartList);
 //echo "<pre>"; print_r( $arrCartList ); exit;
+
         if( count($arrCartList) )
         {
             $arrProducts = array();
 
             foreach($arrCartList as $item)
             {
+//                echo "<pre>"; print_r( $item ); exit;
                 $arrShopProduct = ShopHelper::getProduct( $item, $strLang, $this );
                 $intPrice       = ($arrShopProduct['intPrice'] * $item['quantity']);
 

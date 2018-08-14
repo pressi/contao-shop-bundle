@@ -116,9 +116,14 @@ class ShopHelper
         $detailInfos    = '';
         $detailLink     = '';
 
-        if( $objShopProduct )
+        if( $objProduct )
         {
-            $imageTag = ImageHelper::getImageTag( $objShopProduct->overviewSRC );
+            $strImage = $objApi->getItemImage( (array) $objProduct );
+
+            if( $strImage )
+            {
+                $imageTag = ImageHelper::getImageTag( $strImage );
+            }
         }
 
         if( $object && $object->iidoShopEditPage )
@@ -146,9 +151,22 @@ class ShopHelper
             }
 
             $strClass .= ' product-item-ski';
+
+
+            $arrItemNumber  = explode(".", $itemNumber);
+
+            if( $arrItemNumber[0] === "C" )
+            {
+                array_shift( $arrItemNumber );
+            }
+
+            $skiNumber  = $arrItemNumber[0];
+            $objSki     = $objApi->runApiUrl('article/?articleNumber-eq=' . $skiNumber);
+
+            $item['name'] = $objSki['name'];
         }
 
-        $itemNumber = preg_replace('/\.' . $flexKey  . '\./', '.' . $flexKeyNumber . '.', $itemNumber);
+        $itemNumber     = preg_replace('/\.' . $flexKey  . '\./', '.' . $flexKeyNumber . '.', $itemNumber);
 
         return array
         (
@@ -242,6 +260,32 @@ class ShopHelper
             }
         }
 
+        if( !count($arrCategories) )
+        {
+            $objAllCategories = IidoShopProductCategoryModel::findAll();
+
+            if( $objAllCategories )
+            {
+                while( $objAllCategories->next() )
+                {
+                    if( $objAllCategories->published && strlen($objAllCategories->itemNumbers) )
+                    {
+                        $arrItemCats = explode(",", $objAllCategories->itemNumbers);
+
+                        foreach( $arrItemCats as $itemCat )
+                        {
+                            $itemCat = trim(str_replace('*', '', $itemCat));
+
+                            if( preg_match('/^' . $itemCat . '/', trim($itemNumber)) )
+                            {
+                                $arrCategories[] = $objAllCategories->current();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return $arrCategories;
     }
 
@@ -274,11 +318,19 @@ class ShopHelper
 
     public static function getPriceUnit( $includeWrapper = false )
     {
-        $priceUnit = \Config::get(BundleConfig::getTableFieldPrefix() . 'currency');
+        $strTablePrefix = BundleConfig::getTableFieldPrefix();
+        $priceUnit      = \Config::get($strTablePrefix . 'currency');
 
         if( !$priceUnit )
         {
             $priceUnit = self::$priceUnit;
+        }
+        else
+        {
+            \Controller::loadLanguageFile( 'tl_iido_shop_configuration' );
+
+            $arrUnit    = $GLOBALS['TL_LANG']['tl_iido_shop_configuration']['options'][ $strTablePrefix . 'currency'];
+            $priceUnit  = trim( preg_replace('/\(([A-Za-z0-9]{0,})\)$/', '', trim($arrUnit[ $priceUnit ])) );
         }
 
         return ($includeWrapper ? '<span class="price-unit">' . $priceUnit . '</span>' : $priceUnit);
@@ -382,6 +434,25 @@ class ShopHelper
         }
 
         return false;
+    }
+
+
+
+    public static function renderVariantItemNumber( $itemNumber, $parentItemNumber )
+    {
+        $newItemNumber = '';
+
+        if( $itemNumber )
+        {
+            $newItemNumber = $itemNumber;
+
+            if( preg_match('/\*/', $itemNumber) )
+            {
+                $newItemNumber = preg_replace('/\*/', $parentItemNumber, $itemNumber);
+            }
+        }
+
+        return $newItemNumber;
     }
 
 }

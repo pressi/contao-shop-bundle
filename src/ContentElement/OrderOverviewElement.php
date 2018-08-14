@@ -74,6 +74,7 @@ class OrderOverviewElement extends \ContentElement
 
         if( (!\Input::post("FORM_SUBMIT") || $hasError) && $this->iidoShopCartJumpTo )
         {
+            echo "<pre>"; print_r( "BACK"); exit;
             ShopCheckOutHelper::setFormError( $hasError );
             ShopCheckOutHelper::setFormErrorMessage( $errorMessage );
 
@@ -134,7 +135,7 @@ class OrderOverviewElement extends \ContentElement
             $intCartPrice = ($intCartPrice + $intPrice);
         }
 
-        $objShipping = ShippingHelper::getObject( $arrValue['shipping'] );
+        $objShipping = ShippingHelper::getObject( $arrValue['shipping']['value'] );
 
         if( $objShipping )
         {
@@ -143,15 +144,17 @@ class OrderOverviewElement extends \ContentElement
             $intShippingPrice = ($intShippingPrice + $objShipping->price);
         }
 
-        $objPayment = PaymentHelper::getObject( $arrValue['payment'] );
+//        $intCartPrice = ($intCartPrice + $intShippingPrice);
+
+        $objPayment = PaymentHelper::getObject( $arrValue['payment']['value'] );
 
         if( $objPayment )
         {
             $arrOverview['payment'] = PaymentHelper::getOverview( $objPayment );
         }
 
-        $arrValue['fullName']           = ShopCheckOutHelper::getFullName();
-        $arrValue['shippingFullName']   = ShopCheckOutHelper::getFullName( 'shipping_' );
+        $arrValue['fullName']['value']           = ShopCheckOutHelper::getFullName();
+        $arrValue['shippingFullName']['value']   = ShopCheckOutHelper::getFullName( 'shipping_' );
 
         $this->Template->products       = $arrProducts;
         $this->Template->value          = $arrValue;

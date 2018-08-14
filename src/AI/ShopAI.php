@@ -94,7 +94,8 @@ class ShopAI
         $arrResult = json_decode(self::runAction( self::$postParam, 'POST', $profile), TRUE);
 
         echo "<pre>";
-        print_r("TODO");
+//        print_r("TODO");
+        print_r( $arrResult );
 //        print_r( self::runAction( self::$postParam, 'POST', $profile) );
 //        echo "<br>";
 //        print_r( $profile );
