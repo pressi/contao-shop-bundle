@@ -11,7 +11,7 @@
         "active"    : true,
         "fields"    :
         [
-            "app_id", "secret"
+            "username", "password"
         ]
     },
 
