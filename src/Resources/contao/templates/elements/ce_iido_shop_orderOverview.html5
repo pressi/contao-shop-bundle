@@ -12,7 +12,7 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
             <input type="hidden" name="FORM_SUBMIT" value="orderOverview_form">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
             <? foreach($this->hiddenFields as $fieldName => $fieldValue): ?>
-                <input type="hidden" name="<?= $fieldName ?>" value="<?= $fieldValue ?>">
+                <input type="hidden" name="<?= $fieldName ?>" value="<?= $fieldValue['value'] ?>">
             <? endforeach ?>
 
             <div class="form-columns">
@@ -22,7 +22,7 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
                     <div class="legend-box">
                         <? $strLabel = 'billingAddress';
 
-                        if( $this->value['shipping_address'] === "like_billing_address" )
+                        if( $this->value['shipping_address']['value'] === "like_billing_address" )
                         {
                             $strLabel = 'shippingBillingAddress';
                         }
@@ -30,21 +30,21 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
                         ?>
                         <div class="legend"><?= $this->label[ $strLabel ] ?></div>
                         <div class="box-content">
-                            <?= $this->value['fullName'] ?><br>
-                            <?= $this->value['street'] ?><br>
-                            <?= $this->value['postal'] ?> <?= $this->value['city'] ?><br>
-                            <?= $this->value['country'] ?>
+                            <?= $this->value['fullName']['value'] ?><br>
+                            <?= $this->value['street']['value'] ?><br>
+                            <?= $this->value['postal']['value'] ?> <?= $this->value['city']['value'] ?><br>
+                            <?= $this->value['country']['value'] ?>
                         </div>
                     </div>
 
-                    <? if( $this->value['shipping_address'] === "other" ): ?>
+                    <? if( $this->value['shipping_address']['value'] === "other" ): ?>
                     <div class="legend-box">
                         <div class="legend"><?= $this->label['shippingAddress'] ?></div>
                         <div class="box-content">
-                            <?= $this->value['shippingFullName'] ?><br>
-                            <?= $this->value['shipping_street'] ?><br>
-                            <?= $this->value['shipping_postal'] ?> <?= $this->value['shipping_city'] ?><br>
-                            <?= $this->value['shipping_country'] ?>
+                            <?= $this->value['shippingFullName']['value'] ?><br>
+                            <?= $this->value['shipping_street']['value'] ?><br>
+                            <?= $this->value['shipping_postal']['value'] ?> <?= $this->value['shipping_city']['value'] ?><br>
+                            <?= $this->value['shipping_country']['value'] ?>
                         </div>
                     </div>
                     <? endif ?>
@@ -52,8 +52,8 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
                     <div class="legend-box">
                         <div class="legend"><?= $this->label['contact_data'] ?></div>
                         <div class="box-content">
-                            <?= $this->value['phone'] ?><br>
-                            <?= $this->value['email'] ?>
+                            <?= $this->value['phone']['value'] ? $this->value['phone']['value'] . '<br>' :'' ?>
+                            <?= $this->value['email']['value'] ?>
                         </div>
                     </div>
 
@@ -71,7 +71,7 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
                         </div>
                     </div>
 
-                    <? if( $this->value['agb'] && $this->value['agb'] === "accept" ): ?>
+                    <? if( $this->value['agb']['value'] && $this->value['agb']['value'] === "accept" ): ?>
                     <div class="legend-box text-normal">
                         <div class="legend"><?= $this->label['agbAccept'] ?></div>
                     </div>
@@ -123,11 +123,11 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
 
                 <div class="row row-bold">
                     <div class="name"><?= $this->label['total_price'] ?></div>
-                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( $this->cartPrice, true) ?><?= $strUnit ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( ($this->cartPrice + $this->shippingPrice), true) ?><?= $strUnit ?></div>
                 </div>
 
                 <div class="row">
-                    <div class="name"><?= $this->label['vat_text'] ?></div>
+                    <div class="name">+ <?= $this->label['vat_text'] ?></div>
                     <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( ($this->cartPrice * 0.17), true) ?><?= $strUnit ?></div>
                 </div>
 
