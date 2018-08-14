@@ -15,6 +15,7 @@ $ns         = $namespace . '\\' . $subNamespace;
 $modPrefix  = ucfirst( $subName );
 
 $listenerName = \IIDO\ShopBundle\Config\BundleConfig::getListenerName( true );
+$strTableFieldPrefix = \IIDO\ShopBundle\Config\BundleConfig::getTableFieldPrefix();
 
 
 // Load icon in Contao 4.2+ backend
@@ -24,8 +25,12 @@ if( 'BE' === TL_MODE )
 }
 elseif( 'FE' === TL_MODE )
 {
-    $GLOBALS['TL_JAVASCRIPT']['iido_shop']  = \IIDO\ShopBundle\Config\BundleConfig::getBundlePath( true ) . '/javascript/IIDO.Shop.js|static';
-    $GLOBALS['TL_JAVASCRIPT']['cookie']     = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true ) . '/javascript/cookie.min.js|static';
+    if( !\Config::get( $strTableFieldPrefix . 'enableShopLight') )
+    {
+        $GLOBALS['TL_JAVASCRIPT']['iido_shop']  = \IIDO\ShopBundle\Config\BundleConfig::getBundlePath( true, false ) . '/javascript/IIDO.Shop.js|static';
+    }
+
+    $GLOBALS['TL_JAVASCRIPT']['cookie']     = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true, false ) . '/javascript/cookie.min.js|static';
 }
 
 
@@ -45,11 +50,11 @@ $GLOBALS['IIDO']['SHOP']['API'] = array
  * Backend modules
  */
 
-array_insert($GLOBALS['BE_MOD'], 3, array
+$arrBackendMods = array
 (
 
     $prefix . 'Shop' => array
-   (
+    (
 //        $prefix . 'Products' => array
 //        (
 //            'callback'      => $ns . '\Backend\Module\ProductModule',
@@ -59,7 +64,7 @@ array_insert($GLOBALS['BE_MOD'], 3, array
 
         $prefix . $modPrefix . 'Products' => array
         (
-            'tables'        => array($tablePrefix . 'archive', $tablePrefix . 'product', $tablePrefix . 'product_category'),
+            'tables'        => array($tablePrefix . 'archive', $tablePrefix . 'product', $tablePrefix . 'product_category', 'tl_content'),
             'import'        => array($ns . '\Table\ProductTable', 'renderProductImporter')
         ),
 
@@ -75,9 +80,22 @@ array_insert($GLOBALS['BE_MOD'], 3, array
             'callback'      => $ns . '\BackendModule\ShopSettingsModule'
         ),
 
-   ),
+        $prefix . $modPrefix . 'Statistic' => array
+        (
+//            'tables'        => array($tablePrefix . 'payment', $tablePrefix . 'shipping', $tablePrefix . 'configuration'),
+            'callback'      => $ns . '\BackendModule\ShopStatisticModule'
+        ),
 
-));
+    )
+);
+
+if( \Config::get( $strTableFieldPrefix . 'enableShopLight') )
+{
+    unset( $arrBackendMods[ $prefix . 'Shop'][ $prefix . $modPrefix . 'Products'] );
+    unset( $arrBackendMods[ $prefix . 'Shop'][ $prefix . $modPrefix . 'API'] );
+}
+
+array_insert($GLOBALS['BE_MOD'], 3, $arrBackendMods);
 
 
 
@@ -85,13 +103,22 @@ array_insert($GLOBALS['BE_MOD'], 3, array
  * Content elements
  */
 
-$GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList']        = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+if( !\Config::get( $strTableFieldPrefix . 'enableShopLight') )
+{
+    $GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator']       = 'IIDO\ShopBundle\ContentElement\ConfiguratorElement';
+    $GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList']        = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+}
+else
+{
+    $GLOBALS['TL_CTE']['iido_shop']['iido_shop_product']            = 'IIDO\ShopBundle\ContentElement\ProductElement';
+}
+
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_productDetails']     = 'IIDO\ShopBundle\ContentElement\ProductDetailsElement';
-$GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator']       = 'IIDO\ShopBundle\ContentElement\ConfiguratorElement';
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_cart']               = 'IIDO\ShopBundle\ContentElement\ShopCartElement';
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_watchlist']          = 'IIDO\ShopBundle\ContentElement\WatchlistElement';
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_checkout']           = 'IIDO\ShopBundle\ContentElement\ShopCheckOutElement';
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_orderOverview']      = 'IIDO\ShopBundle\ContentElement\OrderOverviewElement';
+$GLOBALS['TL_CTE']['iido_shop']['iido_shop_orderComplete']      = 'IIDO\ShopBundle\ContentElement\OrderCompleteElement';
 
 
 
