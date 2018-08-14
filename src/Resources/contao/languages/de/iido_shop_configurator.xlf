@@ -65,6 +65,15 @@
                 <target>Speichern</target>
             </trans-unit>
 
+            <trans-unit id="iido_shop_configurator.label.moreDetails">
+                <source>more Details</source>
+                <target>Mehr Details</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.noBinding">
+                <source>no binding</source>
+                <target>Keine Bindung</target>
+            </trans-unit>
 
         </body>
     </file>

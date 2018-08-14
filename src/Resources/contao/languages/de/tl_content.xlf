@@ -23,11 +23,24 @@
                 <source>cart-page (back)</source>
                 <target>Warenkorb-Seite (Zurück)</target>
             </trans-unit>
+            <trans-unit id="tl_content.iidoShopCartJumpTo_overview.0">
+                <source>check out-page (back)</source>
+                <target>Check Out-Seite (Zurück)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.iidoShopCartJumpTo_complete.0">
+                <source>order overview-page (back)</source>
+                <target>Bestellübersicht-Seite (Zurück)</target>
+            </trans-unit>
 
             <trans-unit id="tl_content.iidoShopForwardJumpTo.0">
                 <source>check out-page (forward)</source>
                 <target>Check Out-Seite (Weiter)</target>
             </trans-unit>
+            <trans-unit id="tl_content.iidoShopForwardJumpTo_overview.0">
+                <source>order complete-page (forward)</source>
+                <target>Bestellung abschließen-Seite (Weiter)</target>
+            </trans-unit>
+
 
             <trans-unit id="tl_content.showErrorMessagesOnTop.0">
                 <source>show error message on top</source>
@@ -63,9 +76,16 @@
             </trans-unit>
 
             <trans-unit id="tl_content.iidoShopProductArchive.0">
-                <source>load products from</source>
+                <source>show products from</source>
                 <target>Produkte anzeigen von</target>
             </trans-unit>
+
+            <trans-unit id="tl_content.iidoShopShowProductsFrom.0">
+                <source>load products via</source>
+                <target>Produkte laden via</target>
+            </trans-unit>
+
+
 
 
 
@@ -104,6 +124,17 @@
             <trans-unit id="tl_content.options.loadProductsFrom.weclapp">
                 <source>Weclapp (API)</source>
                 <target>Weclapp (API)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.iidoShopShowProductsFrom.categories">
+                <source>categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.iidoShopShowProductsFrom.itemNumber">
+                <source>item numbers</source>
+                <target>Artikelnummer(n)</target>
             </trans-unit>
 
         </body>

@@ -122,6 +122,15 @@
                 <target>Nicht klickbar</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product_category.itemNumbers.0">
+                <source>item number(s)</source>
+                <target>Artikelnummer(n)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.itemNumbers.1">
+                <source>item number(s)</source>
+                <target>Eine Artikelnummer oder eine mit Beistrich "," getrennte Liste von Artikelnumern.</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -152,6 +161,11 @@
                 <target>Detail-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_product_category.items_legend">
+                <source>Produkt-Einstellungen</source>
+                <target>Produkt-Einstellungen</target>
+            </trans-unit>
+
 
 
 <!-- ### BUTTONS ############################################################################################################ -->
@@ -179,9 +193,19 @@
 
             <trans-unit id="tl_iido_shop_product_category.edit.0">
                 <source>edit category</source>
-                <target>Kategorie bearbeiten</target>
+                <target>Kategorie-Inhaltselemente bearbeiten</target>
             </trans-unit>
             <trans-unit id="tl_iido_shop_product_category.edit.1">
+                <source>edit category ID %s</source>
+                <target>Kategorie-Inhaltselemente ID %s bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_product_category.editmeta.0">
+                <source>edit category</source>
+                <target>Kategorie bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_product_category.editmeta.1">
                 <source>edit category ID %s</source>
                 <target>Kategorie ID %s bearbeiten</target>
             </trans-unit>

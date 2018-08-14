@@ -16,6 +16,11 @@
                 <target>Shop: Produktliste</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_shop_productDetails.0">
+                <source>Productdetails</source>
+                <target>Shop: Produktdetails</target>
+            </trans-unit>
+
             <trans-unit id="CTE.iido_shop_configurator.0">
                 <source>Configurator</source>
                 <target>Shop: Konfigurator</target>
@@ -34,6 +39,16 @@
             <trans-unit id="CTE.iido_shop_checkout.0">
                 <source>Check Out Form</source>
                 <target>Shop: Check Out (Formular)</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_orderOverview.0">
+                <source>Order Overview</source>
+                <target>Shop: Bestellübersicht</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_orderComplete.0">
+                <source>Order Overview</source>
+                <target>Shop: Bestellung abschließen</target>
             </trans-unit>
 
 

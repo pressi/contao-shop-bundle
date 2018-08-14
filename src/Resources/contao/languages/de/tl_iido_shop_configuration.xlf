@@ -4,6 +4,15 @@
         <body>
 
 
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_enableShopLight.0">
+                <source>enable shop light</source>
+                <target>Shop Light aktivieren</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.iidoShop_enableShopLight.1">
+                <source>enables shop light functions. deactivite some functions.</source>
+                <target>Aktiviert den Shop Light. Es werden einige Funktionen deaktiviert (API, AI, Produkt verwaltung). Die Produkt Inhalts-Elemente werden aktiviert.</target>
+            </trans-unit>
+
             <trans-unit id="tl_iido_shop_configuration.iidoShop_noImageSRC.0">
                 <source>no image source</source>
                 <target>"Kein Bild vorhanden" - Bild</target>
@@ -28,21 +37,21 @@
 
 
             <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartTextConfigurator.0">
-                <source>add to cart text</source>
+                <source>add to cart text configurator</source>
                 <target><![CDATA[<span style="color:red;">KONFIGURATOR</span> - Text: Zum Warenkorb hinzugefügt]]></target>
             </trans-unit>
             <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartTextConfigurator.1">
-                <source>add to cart text</source>
+                <source>add to cart text configurator description</source>
                 <target>Wenn der Text leer ist wird der Standardtext verwendet.</target>
             </trans-unit>
 
 
             <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistTextConfigurator.0">
-                <source>add to watchlist text</source>
+                <source>add to watchlist text configurator</source>
                 <target><![CDATA[<span style="color:red;">KONFIGURATOR</span> - Text: Zur Merkliste hinzugefügt]]></target>
             </trans-unit>
             <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistTextConfigurator.1">
-                <source>add to watchlist text</source>
+                <source>add to watchlist text configurator description</source>
                 <target>Wenn der Text leer ist wird der Standardtext verwendet.</target>
             </trans-unit>
 

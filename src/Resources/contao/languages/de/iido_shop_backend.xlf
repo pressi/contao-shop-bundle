@@ -27,6 +27,13 @@
             </trans-unit>
 
 
+
+            <trans-unit id="iido_shop_backend.statistic.ai">
+                <source>AI</source>
+                <target>Shop AI (Fragebogen) - Statistik</target>
+            </trans-unit>
+
+
         </body>
     </file>
 </xliff>

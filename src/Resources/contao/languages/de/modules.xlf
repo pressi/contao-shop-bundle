@@ -26,6 +26,11 @@
                 <target>Konfiguration</target>
             </trans-unit>
 
+            <trans-unit id="MOD.iidoShopStatistic.0">
+                <source>Statistics</source>
+                <target>Statistiken</target>
+            </trans-unit>
+
 
         </body>
     </file>
