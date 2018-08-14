@@ -9,6 +9,12 @@
 
     <? if( $this->overview ): ?>
 
+        <div class="setting-container configuration-setting">
+            <a href="<?= \Controller::addToUrl('mode=configuration&table=tl_iido_shop_configuration' ) ?>">
+                <span class="label"><?= $this->label['configuration'] ?></span>
+            </a>
+        </div>
+
         <div class="setting-container payment-setting">
             <a href="<?= \Controller::addToUrl('mode=payment&table=' . \IIDO\ShopBundle\Model\IidoShopPaymentModel::getTable() ) ?>">
                 <span class="label"><?= $this->label['payment'] ?></span>
@@ -18,12 +24,6 @@
         <div class="setting-container shipping-setting">
             <a href="<?= \Controller::addToUrl('mode=shipping&table=' . \IIDO\ShopBundle\Model\IidoShopShippingModel::getTable() ) ?>">
                 <span class="label"><?= $this->label['shipping'] ?></span>
-            </a>
-        </div>
-
-        <div class="setting-container configuration-setting">
-            <a href="<?= \Controller::addToUrl('mode=configuration&table=tl_iido_shop_configuration' ) ?>">
-                <span class="label"><?= $this->label['configuration'] ?></span>
             </a>
         </div>
 

@@ -1,0 +1,49 @@
+<div class="statistic-ai-container">
+    <div class="header-infos">
+        <div class="title"><?= $this->label['ai'] ?></div>
+        <div class="selector">
+            <form action="<?= \Environment::get('request') ?>" method="post">
+                <input type="hidden" name="FORM_SUBMIT" value="QUESTIONNAIRE_SELECTOR">
+                <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+
+                <select name="selectQuestionnaire" class="tl_select" onchange="this.form.submit()">
+                    <option value="">-</option>
+                    <? foreach($this->questionnaires as $questionnaireGroup => $arrQuestionnaires): ?>
+
+                        <optgroup label="<?= $questionnaireGroup ?>">
+                            <? foreach($arrQuestionnaires as $questionnaire):
+                                $disabled   = false;
+                                $selected   = false;
+
+                                if( !$questionnaire['hasData'] )
+                                {
+                                    $disabled = true;
+                                }
+
+                                if( \Input::post('selectQuestionnaire') === $questionnaire['id'] )
+                                {
+                                    $selected = true;
+                                }
+                                ?>
+                                <option value="<?= $questionnaire['id'] ?>"<? if($disabled): ?> disabled<? endif ?><? if($selected): ?> selected<? endif ?>><?= $questionnaire['title'] ?> - Seite: <?= $questionnaire['page']->title ?> (ID: <?= $questionnaire['page']->id ?>)<? if($disabled): ?> - KEINE DATEN VORHANDEN<? endif ?></option>
+                            <? endforeach ?>
+                        </optgroup>
+                    <? endforeach ?>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <? if( count($this->questionnaireData) ): ?>
+        <div class="questionnaire-data-list">
+            <? foreach( $this->questionnaireData as $questData): ?>
+                <div class="quest-row">
+                    <div class="date">
+                        <?= date(\Config::get("datimFormat"), $questData['tstamp']) ?>
+                    </div>
+
+                </div>
+            <? endforeach ?>
+        </div>
+    <? endif ?>
+</div>

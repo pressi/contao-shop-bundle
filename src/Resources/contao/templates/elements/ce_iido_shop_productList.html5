@@ -2,37 +2,48 @@
 
 <? $this->block("content") ?>
 
-<div class="product-list-container">
-    <? foreach( $this->products as $product ): ?>
-        <div class="product-item" data-number="<?= $product['articleNumber'] ?>">
-            <div class="product-item-inside">
+<? if( $this->error ): ?>
 
-                <div class="top-infos">
-                    <div class="desc-infos">
-                        <div class="name"><?= $product['name'] ?></div>
-                    </div>
-                    <div class="detail-infos"></div>
-                </div>
-
-                <div class="image bg-image bg-contain" style="background-image:url('<?= $product['imagePath'] ?>');">
-<!--                    <div class="ctable">-->
-<!--                        <div class="ctable-inside">-->
-<!--                            --><?//= $product['imageTag'] ?>
-<!--                        </div>-->
-<!--                    </div>-->
-                </div>
-
-                <div class="bottom-infos">
-                    <div class="action-cont">
-                        <a class="buy-link" onclick="IIDO.Shop.Cart.addItem(this)" href="javascript:void(0)">Kaufen</a>
-                        <a class="edit-link" href="<?= $product['detailsLink'] ?>">Details</a>
-                    </div>
-                    <div class="price"><?= $product['price'] ?></div>
-                </div>
-
-            </div>
+    <div class="message error-message">
+        <div class="msg-inside">
+            <?= $this->message ?>
         </div>
-    <? endforeach; ?>
-</div>
+    </div>
+
+<? else: ?>
+
+    <div class="product-list-container">
+        <? foreach( $this->products as $product ): ?>
+            <div class="product-item" data-number="<?= $product['articleNumber'] ?>">
+                <div class="product-item-inside">
+
+                    <div class="top-infos">
+                        <div class="desc-infos">
+                            <div class="name"><?= $product['name'] ?></div>
+                        </div>
+                        <div class="detail-infos"></div>
+                    </div>
+
+                    <div class="image bg-image bg-contain" style="background-image:url('<?= $product['imagePath'] ?>');">
+    <!--                    <div class="ctable">-->
+    <!--                        <div class="ctable-inside">-->
+    <!--                            --><?//= $product['imageTag'] ?>
+    <!--                        </div>-->
+    <!--                    </div>-->
+                    </div>
+
+                    <div class="bottom-infos">
+                        <div class="action-cont">
+                            <a class="buy-link" onclick="IIDO.Shop.Cart.addItem(this)" href="javascript:void(0)">Kaufen</a>
+                            <a class="edit-link" href="<?= $product['detailsLink'] ?>">Details</a>
+                        </div>
+                        <div class="price"><?= $product['price'] ?></div>
+                    </div>
+
+                </div>
+            </div>
+        <? endforeach; ?>
+    </div>
+<? endif ?>
 
 <? $this->endblock() ?>

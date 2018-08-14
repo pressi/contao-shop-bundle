@@ -1,0 +1,15 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block("content");
+
+$strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
+?>
+
+<div class="order-complete-container checkout-container">
+    <div class="order-complete-container-inside checkout-container-inside">
+
+
+    </div>
+</div>
+
+<? $this->endblock() ?>

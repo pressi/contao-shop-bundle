@@ -21,6 +21,15 @@
                 <div class="chooser-value"><?= $this->chooserValue['design'] ?></div>
             </div>
 
+            <? foreach( $this->chooseInfos as $chooseInfo): ?>
+                <div class="choose-item <?= $chooseInfo['mode'] ?>">
+                    <div class="label"><?= $chooseInfo['label'] ?></div>
+
+                    <div class="chooser"></div>
+                    <div class="chooser-value"><?= $chooseInfo['value'] ?></div>
+                </div>
+            <? endforeach ?>
+
 <!--            <div class="size">-->
 <!--                <div class="label">--><?//= $this->label['size'] ?><!--</div>-->
 <!---->
@@ -30,7 +39,7 @@
 
         </div>
 
-        <div class="product-image" onclick="IIDO.Shop.openProductDetails(this.parentNode.querySelector('div.details'))">
+        <div class="product-image">
             <figure class="image_container">
 
                 <div class="ctable">
@@ -89,10 +98,10 @@
 
         </div>
 
-        <div class="details" onclick="IIDO.Shop.openProductDetails(this)">
-            <div class="label"><?= $this->label['detail'] ?></div>
-            <canvas id="canvasDetail"></canvas>
-        </div>
+<!--        <div class="details" onclick="IIDO.Shop.openProductDetails(this)">-->
+<!--            <div class="label">--><?//= $this->label['detail'] ?><!--</div>-->
+<!--            <canvas id="canvasDetail"></canvas>-->
+<!--        </div>-->
 
     </div>
 </div>

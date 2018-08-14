@@ -9,9 +9,9 @@
                 $strValue = 'accept';
             }
             ?>
-            <div class="item<? if($this->value[ $this->name ] === $strValue): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.checkRadioGroup(this)">
+            <div class="item<? if($this->value[ $this->name ]['value'] === $strValue): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.checkRadioGroup(this)">
                 <div class="hidden">
-                    <input type="radio" name="<?= $this->name ?>" value="<?= $strValue ?>"<? if($this->value[ $this->name ] === $strValue): ?> checked<? endif ?>>
+                    <input type="radio" name="<?= $this->name ?>" value="<?= $strValue ?>"<? if($this->value[ $this->name ]['value'] === $strValue): ?> checked<? endif ?>>
                 </div>
                 <div class="name"><?= $this->itemLabel[ $strField ]?:$this->label[ $strField ] ?></div>
             </div>

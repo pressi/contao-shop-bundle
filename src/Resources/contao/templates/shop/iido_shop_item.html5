@@ -36,12 +36,14 @@ if( $this->prefix === "overview" )
         <div class="image">
 
             <? if( !preg_match('/product-item-ski/', $this->class) ): ?>
-                <? if( $this->prefix !== "overview" ): ?>
+                <? if( $this->prefix !== "overview" && 1 == 2 ): ?>
                 <div class="ctable">
                     <div class="ctable-cell">
                         <?= $this->item['imageTag'] ?>
                     </div>
                 </div>
+                <? else: ?>
+                    <?= $this->item['imageTag'] ?>
                 <? endif ?>
             <? else: ?>
                 <?= $this->item['imageTag'] ?>

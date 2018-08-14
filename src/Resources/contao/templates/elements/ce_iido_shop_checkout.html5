@@ -47,7 +47,7 @@
 
                         if( $fieldConfig['dependent'] )
                         {
-                            if( $this->value[ $fieldConfig['dependent']['field'] ] !== $fieldConfig['dependent']['value'] )
+                            if( $this->value[ $fieldConfig['dependent']['field'] ]['value'] !== $fieldConfig['dependent']['value'] )
                             {
                                 $strClass = ' hidden';
                             }
@@ -61,16 +61,28 @@
                                 <div class="legend-box">
                                     <div class="legend"><?= $this->label[ $fieldName ] ?></div>
 
-                                    <? foreach($fieldConfig['fields'] as $strFieldName): ?>
-                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
+                                    <? foreach($fieldConfig['fields'] as $strFieldName => $inputFieldConfig):
+                                        if( is_numeric($strFieldName) )
+                                        {
+                                            $strFieldName       = $inputFieldConfig;
+                                            $inputFieldConfig   = '';
+                                        }
+                                        ?>
+                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"config"=>$inputFieldConfig)); ?>
                                     <? endforeach ?>
                                 </div>
                             <? elseif( $fieldConfig['type'] === "radioGroup" ): ?>
                                 <?= $this->insert("iido_shop_radiogroup", array("name"=>$fieldName, "fields"=>$fieldConfig['fields'], "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
                             <? elseif( $fieldConfig['type'] === "hidden_box" ): ?>
                                 <div class="legend-box">
-                                    <? foreach($fieldConfig['fields'] as $strFieldName): ?>
-                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
+                                    <? foreach($fieldConfig['fields'] as $strFieldName => $inputFieldConfig):
+                                        if( is_numeric($strFieldName) )
+                                        {
+                                            $strFieldName       = $inputFieldConfig;
+                                            $inputFieldConfig   = '';
+                                        }
+                                        ?>
+                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"config"=>$inputFieldConfig)); ?>
                                     <? endforeach ?>
                                 </div>
                             <? elseif( $fieldConfig['type'] === "payment" || $fieldConfig['type'] === "shipping" ):
@@ -86,11 +98,11 @@
                                         <? foreach($arrMethod as $method):
                                             $strAlias = $method->alias?:$method->type;
                                             ?>
-                                            <div class="item<? if( $method->info ): ?> has-infos<? endif ?><? if($this->value[ $strClass ] === $strAlias): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.check<?= ucfirst($strClass) ?>(this)">
+                                            <div class="item<? if( $method->info ): ?> has-infos<? endif ?><? if($this->value[ $strClass ]['value'] === $strAlias): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.check<?= ucfirst($strClass) ?>(this)">
                                                 <div class="hidden">
-                                                    <input type="radio" name="<?= $strClass ?>" value="<?= $strAlias ?>"<? if($this->value[ $strClass ] === $strAlias): ?> checked<? endif ?>>
+                                                    <input type="radio" name="<?= $strClass ?>" value="<?= $strAlias ?>"<? if($this->value[ $strClass ]['value'] === $strAlias): ?> checked<? endif ?>>
                                                 </div>
-                                                <div class="name"><?= ($method->frontendTitle?:($method->title?:$method->name)) ?></div>
+                                                <div class="name"><?= ($method->frontendTitle?:($method->name?:$method->title)) ?></div>
                                                 <? if( $method->info ): ?>
                                                     <div class="infos"><?= $method->info ?></div>
                                                 <? endif ?>

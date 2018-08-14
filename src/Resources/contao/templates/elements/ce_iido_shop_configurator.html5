@@ -48,6 +48,13 @@
     <? endif ?>
 
 </div>
+<? if( $this->stepDetails ): ?>
+<div class="step-details-container" id="configuratorContent">
+    <div class="step-details-inside">
+        <?= $this->stepDetails ?>
+    </div>
+</div>
+<? endif ?>
 
 <script>
     IIDO.Shop.Configurator.initContainer(<?= $this->id ?>);

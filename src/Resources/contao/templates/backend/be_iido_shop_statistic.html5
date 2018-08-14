@@ -1,0 +1,27 @@
+<? if( !$this->overview ): ?>
+    <div id="tl_buttons">
+        <a href="<?= ampersand(preg_replace("/(&|&amp;)mode=([A-Za-z0-9]{0,})/", "", \Environment::get('request'))) ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+    </div>
+<? endif ?>
+
+<div class="backend-container<? if( $this->overview ): ?> shop-statistic-container<? endif ?>">
+
+
+    <? if( $this->overview ): ?>
+
+        <? if( \IIDO\ShopBundle\Helper\ShopHelper::questionnaireTemplateExists() ): ?>
+            <div class="statistic-container ai-statistic">
+                <a href="<?= \Controller::addToUrl('mode=ai' ) ?>">
+                    <span class="label"><?= $this->label['ai'] ?></span>
+                </a>
+            </div>
+        <? endif ?>
+
+    <? else: ?>
+
+        <?= $this->content ?>
+
+    <? endif ?>
+
+
+</div>
