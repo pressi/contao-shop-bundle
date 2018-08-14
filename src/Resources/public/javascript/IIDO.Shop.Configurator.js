@@ -58,22 +58,25 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
         var canvasDetail    = document.getElementById("canvasDetail"),
             // ctx             = canvasDetail.getContext("2d"),
 
-            color           = $configurator.getAttribute("data-color"),
-
-            canvasWidth     = ((window.innerWidth * 0.96) + 10),
-            canvasHeight    = window.innerHeight;
+            color           = $configurator.getAttribute("data-color");
 
         // $configurator.style.background = color;
 
-        if( window.innerWidth <= respWidth )
+        if( canvasDetail )
         {
-            canvasWidth   = window.innerWidth;
-            canvasHeight  = (window.innerHeight * 0.96);
+            var canvasWidth     = ((window.innerWidth * 0.96) + 10),
+                canvasHeight    = window.innerHeight;
+
+            if( window.innerWidth <= respWidth )
+            {
+                canvasWidth   = window.innerWidth;
+                canvasHeight  = (window.innerHeight * 0.96);
+            }
+
+            var arrCanvas = runCanvasFactor(canvasDetail, canvasWidth, canvasHeight);
+
+            IIDO.Shop.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
         }
-
-        var arrCanvas = runCanvasFactor(canvasDetail, canvasWidth, canvasHeight);
-
-        IIDO.Shop.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
     };
 
 
@@ -307,6 +310,11 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                     useBinding = true;
 
                     itemNumber = itemNumber.replace('##BINDING##', inputTag.value);
+
+                    if( inputTag.value === "none" )
+                    {
+                        itemNumber = itemNumber.replace(/^C./, '');
+                    }
                 }
                 else if( inputName === "length" )
                 {
@@ -322,18 +330,18 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                         flexInputValue  = parseInt( inputTag.value ),
                         flexValue       = 'YYY';
 
-                    if( flexInputValue < $flexSoft )
-                    {
-                        flexValue = IIDO.Shop.Configurator.getFlex('XXX', flexConfig).articleNumber;
-                    }
-                    else if( flexInputValue > $flexStiff )
-                    {
-                        flexValue = IIDO.Shop.Configurator.getFlex('ZZZ', flexConfig).articleNumber;
-                    }
-                    else
-                    {
-                        flexValue = IIDO.Shop.Configurator.getFlex('YYY', flexConfig).articleNumber;
-                    }
+                    // if( flexInputValue < $flexSoft )
+                    // {
+                    //     flexValue = IIDO.Shop.Configurator.getFlex('XXX', flexConfig).articleNumber;
+                    // }
+                    // else if( flexInputValue > $flexStiff )
+                    // {
+                    //     flexValue = IIDO.Shop.Configurator.getFlex('ZZZ', flexConfig).articleNumber;
+                    // }
+                    // else
+                    // {
+                    //     flexValue = IIDO.Shop.Configurator.getFlex('YYY', flexConfig).articleNumber;
+                    // }
 
                     itemNumber = itemNumber.replace('##FLEX##', flexValue);
                 }
@@ -375,8 +383,13 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
         if( !useBinding )
         {
             itemNumber = itemNumber.replace('##BINDING##', $config.default.binding);
-        }
 
+            if( $config.default.binding === "none" )
+            {
+                itemNumber = itemNumber.replace(/^C./, '');
+            }
+        }
+console.log( itemNumber );
         for(var intConfig in $config.products)
         {
             var configLine = $config.products[ intConfig ];
@@ -385,6 +398,12 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
             {
                 price = (price + parseInt(configLine.price));
             }
+        }
+console.log( price );
+
+        if( isNaN(price) )
+        {
+            price = 0;
         }
 
         document.querySelector(".configurator-container .price-cart .price .num > .price-num").innerHTML = price;
@@ -711,7 +730,7 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
     configurator.getFlex = function( flexNum, flexConfig )
     {
         var flex = {};
-
+console.log( flexConfig );
         for(var i=0; i<flexConfig.length; i++)
         {
             if( flexConfig[ i ].articleNumber === flexNum )
