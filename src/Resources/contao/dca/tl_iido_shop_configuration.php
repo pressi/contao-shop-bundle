@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA'][ $strTableFileName ] = array
     (
         '__selector__'      => array(),
 
-        'default'           =>  '{default_legend:hide},' . $tableFieldPrefix . 'noImageSRC,' . $tableFieldPrefix . 'currency'
+        'default'           =>  '{default_legend:hide},' . $tableFieldPrefix . 'enableShopLight,' . $tableFieldPrefix . 'noImageSRC,' . $tableFieldPrefix . 'currency'
                                 . ';{cart_legend:hide},' . $tableFieldPrefix . 'addToCartText,' . $tableFieldPrefix . 'addToCartTextConfigurator'
                                 . ';{watchlist_legend:hide},' . $tableFieldPrefix . 'addToWatchlistText,' . $tableFieldPrefix . 'addToWatchlistTextConfigurator',
 
@@ -63,15 +63,23 @@ $GLOBALS['TL_DCA'][ $strTableFileName ] = array
 );
 
 
-
+// DEFAULT - Default
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField($tableFieldPrefix . 'enableShopLight', $strTableFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addImageField($tableFieldPrefix . 'noImageSRC', $strTableFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField($tableFieldPrefix . 'currency', $strTableFileName);
 
+
+// DEFAULT - Cart
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToCartText', $strTableFileName, array(), '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToCartTextConfigurator', $strTableFileName, array(), '', false, true);
 
+
+// DEFAULT - Watchlist
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToWatchlistText', $strTableFileName, array(), '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToWatchlistTextConfigurator', $strTableFileName, array(), '', false, true);
 
+
+
+// AI - Access
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField($tableFieldPrefix . 'aiUsername', $strTableFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField($tableFieldPrefix . 'aiPassword', $strTableFileName);

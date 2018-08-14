@@ -198,7 +198,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
 
 $usedFields = array();
 
-foreach(\IIDO\ShopBundle\Helper\PaymentHelper::getAll() as $arrPayment)
+foreach(\IIDO\ShopBundle\Helper\PaymentHelper::getAll( true ) as $arrPayment)
 {
     if( isset($arrPayment['fields']) )
     {

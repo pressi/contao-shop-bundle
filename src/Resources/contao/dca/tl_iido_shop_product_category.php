@@ -24,6 +24,8 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
     (
         'label'                       => $GLOBALS['TL_LANG'][ $archiveTable ]['categories'][0],
         'dataContainer'               => 'Table',
+        'ctable'                      => array('tl_content'),
+        'switchToEdit'                => true,
         'enableVersioning'            => true,
         'onload_callback' => array
         (
@@ -80,8 +82,14 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'edit' => array
             (
                 'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['edit'],
+                'href'                => 'table=tl_content',
+                'icon'                => 'edit.svg'
+            ),
+            'editheader' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['editmeta'],
                 'href'                => 'act=edit',
-                'icon'                => 'edit.gif'
+                'icon'                => 'header.svg'
             ),
             'copy' => array
             (
@@ -217,7 +225,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['hideInList'],
             'exclude'                 => true,
             'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
+            'eval'                    => array('tl_class'=>'w50 m12'),
             'sql'                     => "char(1) NOT NULL default ''",
         ),
 
@@ -226,7 +234,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['hideInReader'],
             'exclude'                 => true,
             'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
+            'eval'                    => array('tl_class'=>'w50 m12'),
             'sql'                     => "char(1) NOT NULL default ''",
         ),
 
@@ -235,7 +243,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['excludeInRelated'],
             'exclude'                 => true,
             'inputType'               => 'checkbox',
-            'eval'                    => array('tl_class'=>'w50'),
+            'eval'                    => array('tl_class'=>'w50 m12'),
             'sql'                     => "char(1) NOT NULL default ''",
         ),
 
