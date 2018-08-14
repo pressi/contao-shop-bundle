@@ -59,16 +59,20 @@ tr.in-use > td.tl_file_list > span.in-use {
 .tl_content_left > span.product-categories {
 }
 
-.backend-container.shop-settings-container {
+.backend-container.shop-settings-container,
+.backend-container.shop-statistic-container {
     padding: 40px 35px 15px;
 }
 
-.backend-container.shop-settings-container .setting-container {
+.backend-container.shop-settings-container .setting-container,
+.backend-container.shop-statistic-container .statistic-container {
     margin: 0 0 25px;
 }
 
-.backend-container.shop-settings-container .setting-container a {
+.backend-container.shop-settings-container .setting-container a,
+.backend-container.shop-statistic-container .statistic-container a {
     display: block;
+    position: relative;
 
     width: 100%;
     height: 95px;
@@ -89,6 +93,7 @@ tr.in-use > td.tl_file_list > span.in-use {
 }
 
 .backend-container.shop-settings-container .setting-container a,
+.backend-container.shop-statistic-container .statistic-container a,
 .backend-container.shop-settings-container .setting-container.payment-setting a,
 .backend-container.shop-settings-container .setting-container.shipping-setting a {
     background-image: url("../../images/icons/settings-payment_black.png");
@@ -105,10 +110,12 @@ tr.in-use > td.tl_file_list > span.in-use {
 .backend-container.shop-settings-container .setting-container.configuration-setting a {
     background-image: url("../../images/icons/configurator_black.svg");
 }
+.backend-container.shop-statistic-container .statistic-container.ai-statistic a,
 .backend-container.shop-settings-container .setting-container.ai-setting a {
     background-image: url("../../images/icons/settings-ai_black.png");
 }
 
+.backend-container.shop-statistic-container .statistic-container a:hover,
 .backend-container.shop-settings-container .setting-container a:hover {
     color: #f47c00;
     background-color: #e0e0e0;
@@ -122,6 +129,26 @@ tr.in-use > td.tl_file_list > span.in-use {
 .backend-container.shop-settings-container .setting-container.configuration-setting a:hover {
     background-image: url("../../images/icons/configurator_orange.svg");
 }
+.backend-container.shop-statistic-container .statistic-container.ai-statistic a:hover,
 .backend-container.shop-settings-container .setting-container.ai-setting a:hover {
     background-image: url("../../images/icons/settings-ai_orange.png");
+}
+
+.backend-container.shop-statistic-container .statistic-container a:after {
+    content: '';
+
+    position: absolute;
+    bottom: 0; left: 80px;
+
+    width: 60px; height: 60px;
+
+    background-image: url("../../images/icons/chart-graph_black.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    -webkit-background-size : 100% auto;
+    background-size         : 100% auto;
+}
+.backend-container.shop-statistic-container .statistic-container a:hover:after {
+    background-image: url("../../images/icons/chart-graph_orange.svg");
 }
