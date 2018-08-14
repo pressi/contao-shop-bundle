@@ -17,6 +17,19 @@ $shippingTableClass = \IIDO\ShopBundle\Config\BundleConfig::getTableClass( \IIDO
 $paymentTableClass  = \IIDO\ShopBundle\Config\BundleConfig::getTableClass( \IIDO\ShopBundle\Model\IidoShopPaymentModel::getTable() );
 $strTableClass      = 'IIDO\ShopBundle\Table\ContentTable'; //\IIDO\ShopBundle\Config\BundleConfig::getTableClass( $strTable );
 
+$objElement         = \IIDO\BasicBundle\Helper\DcaHelper::getTableElement( $strTable );
+
+
+
+/**
+ * Dynamically add the permission check and parent table
+ */
+if( Input::get('do') == 'iidoShopProducts')
+{
+    $GLOBALS['TL_DCA'][ $strTable ]['config']['ptable'] = $categoryTable;
+//    $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['headerFields'] = array('name', 'alias');
+}
+
 
 
 /**
@@ -25,11 +38,12 @@ $strTableClass      = 'IIDO\ShopBundle\Table\ContentTable'; //\IIDO\ShopBundle\C
 //TODO: add sorting and filtering to product list element!!
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_shop_productList', '{config_legend},loadProductsFrom;{detail_legend},iidoShopDetailPage;', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_shop_productDetails', '{link_legend},iidoShopCart,iidoShopWatchlist;', $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_configurator", '{config_legend},iidoShopCategories,iidoShopArchive,iidoShopRedirect;{link_legend},iidoShopCart,iidoShopWatchlist;', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_configurator", '{config_legend},iidoShopCategories,iidoShopArchive,iidoShopRedirect;{link_legend},iidoShopCart,iidoShopWatchlist,iidoShopExtraLink,iidoShopExtraLinkLabel,iidoShopExtraLinkClass;', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_cart", '{link_legend},iidoShopCartLinks,iidoShopCartCheckOutPage,iidoShopCartCheckOutText,iidoShopEditPage,iidoShopConfiguratorPage;{price_legend},iidoShopCartPriceText;', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_watchlist", '{link_legend},iidoShopEditPage,iidoShopConfiguratorPage;', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_checkout", '{shipping_legend},iidoShopShippings;{payment_legend},iidoShopPayments;{error_legend},showErrorMessagesOnTop;{redirect_legend},iidoShopCartJumpTo,iidoShopForwardJumpTo;', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_orderOverview", '{redirect_legend},iidoShopCartJumpTo,iidoShopForwardJumpTo;', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette("iido_shop_orderComplete", '{redirect_legend},iidoShopCartJumpTo;', $strTable);
 
 
 //Contao\CoreBundle\DataContainer\PaletteManipulator::create()
@@ -43,7 +57,10 @@ $strTableClass      = 'IIDO\ShopBundle\Table\ContentTable'; //\IIDO\ShopBundle\C
  */
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('loadProductsFrom_archive', 'iidoShopProductArchive', $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('loadProductsFrom_weclapp', 'iidoShopProductItemNumber', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('loadProductsFrom_weclapp', 'iidoShopShowProductsFrom', $strTable);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('iidoShopShowProductsFrom_categories', 'iidoShopCategories', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('iidoShopShowProductsFrom_itemNumber', 'iidoShopProductItemNumber', $strTable);
 
 
 /**
@@ -74,6 +91,7 @@ $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopArchive'] = array
 //    'options_callback'        => array($categoryTableClass, 'getShopCategories'),
     'eval'                    => array
     (
+        'includeBlankOption'    => true,
         'multiple'              => false,
         'tl_class'              => 'w50 hauto'
     ),
@@ -102,6 +120,21 @@ $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopArchive'] = array
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('iidoShopCartJumpTo', $strTable, array(), 'clr w50 hauto');
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('iidoShopForwardJumpTo', $strTable, array(), 'w50 hauto');
+
+
+if( $objElement )
+{
+    if( $objElement->type === 'iido_shop_orderOverview' )
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ 'iidoShopCartJumpTo' ]['label'] = $GLOBALS['TL_LANG'][ $strTable ][ 'iidoShopCartJumpTo_overview' ];
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ 'iidoShopForwardJumpTo' ]['label'] = $GLOBALS['TL_LANG'][ $strTable ][ 'iidoShopForwardJumpTo_overview' ];
+
+    }
+    elseif( $objElement->type === 'iido_shop_orderComplete' )
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ 'iidoShopCartJumpTo' ]['label'] = $GLOBALS['TL_LANG'][ $strTable ][ 'iidoShopCartJumpTo_complete' ];
+    }
+}
 
 
 $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopShippings'] = array
@@ -173,6 +206,8 @@ $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopCartLinks'] = array
 
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField('loadProductsFrom', $strTable, array('mandatory'=>true,'includeBlankOption'=>true), '', false, '', false, true, '', array('options_callback'=>array($strTableClass, 'checkShopApi')));
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('iidoShopShowProductsFrom', $strTable, array('mandatory'=>true,'includeBlankOption'=>true), '', false, '', false, true);
+
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('iidoShopProductItemNumber', $strTable);
 
 $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopProductArchive'] = array
@@ -192,3 +227,8 @@ $GLOBALS['TL_DCA'][ $strTable ]['fields']['iidoShopProductArchive'] = array
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('iidoShopDetailPage', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('iidoShopConfiguratorPage', $strTable);
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addLinkField('iidoShopExtraLink', $strTable, array(), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('iidoShopExtraLinkLabel', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('iidoShopExtraLinkClass', $strTable, array(), 'o50');
