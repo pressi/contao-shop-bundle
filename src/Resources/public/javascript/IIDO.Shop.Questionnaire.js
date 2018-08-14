@@ -11,8 +11,13 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 {
     var $questionnaire, $activePage, $hasOverview = false, $maxPages = 0;
 
-    questionnaire.init = function( questionnaireID )
+    questionnaire.init = function( questionnaireID, saveData, saveID )
     {
+        if( saveData === undefined || saveData === "undefined" || saveData === null )
+        {
+            saveData = false;
+        }
+
         $activePage     = 0;
         $questionnaire  = document.getElementById("shopQuestionnaire_" + questionnaireID);
 
@@ -23,6 +28,11 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 
         $maxPages = parseInt($questionnaire.getAttribute("data-max-pages"));
 
+        if( saveData )
+        {
+            this.initSaveFormData( saveID, questionnaireID );
+        }
+
         this.initProgressSteps();
         this.initImageMap();
     };
@@ -31,7 +41,7 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 
     questionnaire.nextPage = function( nextButton )
     {
-        if( this.checkAnswerStatus(nextButton) )
+        if( this.validatePage(nextButton) )
         {
             $activePage = ($activePage + 1);
 
@@ -139,7 +149,7 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 
 
 
-    questionnaire.toggleAnswer = function( answerContainer )
+    questionnaire.toggleAnswer__Old = function( answerContainer )
     {
         var answerItem      = answerContainer.parentNode.parentNode,
             configContainer = answerItem.parentNode.parentNode;
@@ -207,13 +217,274 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                     // $(ovAnswerItem).siblings().find("input").checked = false;
                 }
             }
-
         }
 
         if( maxAnswers === 1 )
         {
             this.goToNextPage();
         }
+    };
+
+
+
+    questionnaire.toggleAnswer = function( answerContainer )
+    {
+        var hasError        = false,
+
+            answerItem      = answerContainer.parentNode.parentNode,
+            configContainer = answerItem.parentNode.parentNode;
+
+        if( answerItem.classList.contains("image-map-point") )
+        {
+            configContainer = answerItem.parentNode.parentNode.parentNode;
+        }
+
+        var inputTag        = answerContainer.querySelector("input"),
+
+            minAnswers      = parseInt(configContainer.getAttribute("data-min-answers")),
+            maxAnswers      = parseInt(configContainer.getAttribute("data-max-answers")),
+            ovAnswerItem    = false;
+
+        if( $hasOverview )
+        {
+            ovAnswerItem = this.getOverviewAnswerItem( configContainer, answerItem );
+        }
+
+        if( answerItem.classList.contains("is-checked") )
+        {
+            answerItem.classList.remove("is-checked");
+            inputTag.checked = false;
+
+            configContainer.parentNode.querySelector(".error-msg").innerHTML = '';
+
+            if( $hasOverview && ovAnswerItem )
+            {
+                ovAnswerItem.classList.remove("is-checked");
+            }
+
+            hasError = true;
+        }
+        else
+        {
+            answerItem.classList.add("is-checked");
+            inputTag.checked = true;
+
+            if( $hasOverview && ovAnswerItem )
+            {
+                ovAnswerItem.classList.add("is-checked");
+            }
+
+            if( maxAnswers > 1 )
+            {
+                if( !this.validateQuestion( answerItem.parentNode.parentNode.parentNode.parentNode, minAnswers, maxAnswers ) )
+                {
+                    answerItem.classList.remove("is-checked");
+                    inputTag.checked = false;
+
+                    if( $hasOverview && ovAnswerItem )
+                    {
+                        ovAnswerItem.classList.remove("is-checked");
+                    }
+
+                    hasError = true;
+                }
+            }
+            else if( maxAnswers === 1 )
+            {
+                $(answerItem).siblings().removeClass("is-checked");
+                $(answerItem).siblings().find("input").checked = false;
+
+                if( $hasOverview && ovAnswerItem )
+                {
+                    $(ovAnswerItem).siblings().removeClass("is-checked");
+                    // $(ovAnswerItem).siblings().find("input").checked = false;
+                }
+            }
+        }
+
+        if( maxAnswers === 1 && !hasError )
+        {
+            this.removeMessageFromQuestion( answerItem.parentNode.parentNode.parentNode.parentNode );
+            this.goToNextPage();
+        }
+    };
+
+
+
+    questionnaire.validateQuestion = function( questionItem, minAnswers, maxAnswers )
+    {
+        var answersCont = questionItem.querySelector(".answers-container");
+
+        if( minAnswers === undefined || minAnswers === "undefined" || minAnswers === null )
+        {
+            minAnswers = parseInt(answersCont.getAttribute("data-min-answers"));
+        }
+
+        if( maxAnswers === undefined || maxAnswers === "undefined" || maxAnswers === null )
+        {
+            maxAnswers = parseInt(answersCont.getAttribute("data-max-answers"));
+        }
+
+        var answersItems    = answersCont.querySelectorAll(".answer-item"),
+            checkedItems    = answersCont.querySelectorAll(".answer-item.is-checked"),
+            checkedCount    = checkedItems.length,
+
+            noInput         = true;
+
+        for( var i=0; i<answersItems.length; i++ )
+        {
+            var answerItem      = answersItems[ i ];
+
+            if( answerItem.classList.contains("input-answer") )
+            {
+                noInput = false;
+            }
+        }
+
+        if( (checkedCount < minAnswers || checkedCount > maxAnswers) && noInput )
+        {
+            if( checkedCount < minAnswers )
+            {
+                var muss        = ((minAnswers === 1) ? 'muss' : 'müssen'),
+                    antwort     = ((minAnswers === 1) ? 'ne Antwort' : ' Antworten');
+
+                this.addMessageToQuestion( questionItem, 'Es ' + muss + ' mindestens ' + minAnswers + antwort  + ' ausgewählt werden.');
+            }
+            else
+            {
+                var darf        = ((maxAnswers === 1) ? 'darf' : 'dürfen'),
+                    antwortMax  = ((maxAnswers === 1) ? 'ne Antwort' : ' Antworten');
+
+                this.addMessageToQuestion( questionItem, 'Es ' + darf + ' maximal nur ' + maxAnswers + antwortMax  + ' ausgewählt werden.');
+            }
+
+            return false;
+        }
+        else
+        {
+            if( minAnswers === 1 && maxAnswers === 1 && noInput )
+            {
+                return true;
+            }
+
+            if( !noInput )
+            {
+                var answerItem  = answersCont.querySelector(".answer-item"),
+                    answerInput = answerItem.querySelector("input");
+
+                if( answerItem.classList.contains("is-textarea") )
+                {
+                    answerInput = answerItem.querySelector("textarea");
+                }
+
+                var varValue = answerInput.value;
+
+                if( answerItem.classList.contains("select-input-answer") )
+                {
+                    var selectTag = answerItem.querySelector(".select-tag-container");
+
+                    if( selectTag )
+                    {
+                        var checkedSelectItem = selectTag.querySelector(".is-active");
+
+                        if( checkedSelectItem )
+                        {
+                            varValue = checkedSelectItem.querySelector("input").value;
+                        }
+                    }
+                    else
+                    {
+                        selectTag = answerItem.querySelector("select");
+
+                        varValue = selectTag.value;
+                    }
+                }
+
+                var fieldName = answerItem.querySelector("label") ? ' "' + answerItem.querySelector("label").innerHTML + '"' : '';
+
+                if( minAnswers === 1 && varValue.length === 0 && varValue === "" )
+                {
+                    this.addMessageToQuestion( questionItem, 'Das Feld' + fieldName + ' muss ausgefüllt werden!' );
+
+                    return false;
+                }
+                else
+                {
+                    if( varValue.length )
+                    {
+                        var validateMode    = answerItem.getAttribute("data-validate");
+
+                        if( !this.validateField( validateMode, varValue, answerItem, fieldName ) )
+                        {
+                            // this.addErrorToAnswer(answerItem);
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.removeMessageFromQuestion( questionItem );
+
+        return true;
+    };
+
+
+
+
+    questionnaire.validatePage = function( buttonTag )
+    {
+        if( $activePage === 0 )
+        {
+            return true;
+        }
+
+        var hasError = false,
+            pageContainer;
+
+        if( buttonTag.nodeName === "BUTTON" )
+        {
+            pageContainer = buttonTag.parentNode.parentNode.parentNode;
+        }
+        else
+        {
+            pageContainer = buttonTag.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+        }
+
+        var questionItems = pageContainer.querySelectorAll(".question-item");
+
+        if( questionItems.length )
+        {
+            for(var i=0; i<questionItems.length; i++)
+            {
+                var questionItem = questionItems[ i ];
+
+                if( !this.validateQuestion( questionItem ) )
+                {
+                    hasError = true;
+                }
+            }
+        }
+
+        return !hasError;
+    };
+
+
+
+    questionnaire.addMessageToQuestion = function(questionItem, strMessage)
+    {
+        var messageTag = questionItem.querySelector(".error-msg");
+
+        messageTag.innerHTML = strMessage;
+    };
+
+
+
+    questionnaire.removeMessageFromQuestion = function(questionItem, strMessage)
+    {
+        var messageTag = questionItem.querySelector(".error-msg");
+
+        messageTag.innerHTML = "";
     };
 
 
@@ -239,7 +510,16 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 
         if( $hasOverview && ovAnswerItem )
         {
-            ovAnswerItem.querySelector(".input-container").innerHTML = inputTag.value;
+            var inputCont       = ovAnswerItem.querySelector(".input-container"),
+                strInputValue   = inputTag.value,
+                contAddon       = inputCont.getAttribute("data-addon");
+
+            if( contAddon !== "undefned" && contAddon !== undefined && contAddon !== null )
+            {
+                strInputValue = strInputValue + ' ' + contAddon;
+            }
+
+            inputCont.innerHTML = strInputValue;
         }
     };
 
@@ -247,7 +527,7 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 
     questionnaire.checkAnswerStatus = function( buttonTag, minAnswers, maxAnswers )
     {
-        var hasError = true;
+        var hasError = false;
 
         if( $activePage === 0 )
         {
@@ -291,16 +571,18 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                         questMaxAns = maxAnswers;
                     }
 
-                    var hasChecked = false,strMessage = '',
+                    var hasChecked = false, strMessage = '',
                         animateImage = $questionnaire.querySelector(".image.is-animated");
 
                     if( checkedItems.length === 0 )
                     {
                         for(var num=0; num<answersItems.length;num++)
                         {
-                            var answerItem = answersItems[ num ];
+                            var answerItem = answersItems[ num ],
 
-                            if( answerItem.classList.contains("input-answer") && questMinAns > 0 )
+                                validateMode    = answerItem.getAttribute("data-validate");
+
+                            if( answerItem.classList.contains("input-answer") )
                             {
                                 hasChecked = true;
 
@@ -327,16 +609,33 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                                     }
                                 }
 
-                                if( !varValue.length )
+                                var fieldName = '', arrValidate;
+
+                                if( questionItems.length > 1 )
                                 {
-                                    var fieldName = '';
+                                    fieldName = ' "' + answerItem.querySelector("label").innerHTML + '"';
+                                }
 
-                                    if( questionItems.length > 1 )
+                                if( questMinAns > 0 )
+                                {
+                                    if( !varValue.length )
                                     {
-                                        fieldName = ' "' + answerItem.querySelector("label").innerHTML + '"';
+                                        strMessage += 'Das Feld' + fieldName + ' muss ausgefüllt werden!';
                                     }
+                                    else if( validateMode !== undefined && validateMode !== "undefined" && validateMode !== null )
+                                    {
+                                        arrValidate = this.validateField( validateMode, varValue, answerItem, fieldName, hasError, strMessage );
 
-                                    strMessage += 'Das Feld' + fieldName +' muss ausgefüllt werden!';
+                                        hasError        = arrValidate[0];
+                                        strMessage      = arrValidate[1];
+                                    }
+                                }
+                                else if( questMinAns === 0 && varValue.length )
+                                {
+                                    arrValidate = this.validateField( validateMode, varValue, answerItem, fieldName, hasError, strMessage );
+
+                                    hasError        = arrValidate[0];
+                                    strMessage      = arrValidate[1];
                                 }
                             }
                         }
@@ -394,7 +693,11 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                         else
                         {
                             message.innerHTML = strMessage;
-                            hasError = !!strMessage.length;
+
+                            if( !hasError )
+                            {
+                                hasError = !!strMessage.length;
+                            }
 
                             if( animateImage && hasError)
                             {
@@ -423,6 +726,52 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
         }
 
         return !hasError;
+    };
+
+
+
+    questionnaire.validateField = function( validateMode, varValue, answerItem, fieldName )
+    {
+        var questionItem = answerItem.parentNode.parentNode.parentNode.parentNode;
+
+        if( validateMode === "digit" )
+        {
+            var valRangeFrom    = parseInt(answerItem.getAttribute("data-range-from")),
+                valRangeTo      = parseInt(answerItem.getAttribute("data-range-to"));
+
+            var checkDigit = false;
+
+            if( isNaN( varValue ) )
+            {
+                this.addMessageToQuestion(questionItem, 'Das Feld' + fieldName + ' muss eine Zahl sein!');
+
+                return false;
+            }
+
+            varValue = parseInt(varValue);
+
+            if( valRangeFrom > 0 && valRangeFrom > varValue)
+            {
+                if( valRangeTo > 0 && valRangeTo < varValue )
+                {
+                    this.addMessageToQuestion(questionItem, 'Das Feld' + fieldName + ' muss zwischen ' + valRangeFrom + ' und ' + valRangeTo + ' sein!');
+
+                    return false;
+                }
+
+                this.addMessageToQuestion(questionItem, 'Das Feld' + fieldName + ' muss größer sein als ' + valRangeFrom + '!');
+
+                return false;
+            }
+            else if( valRangeTo > 0 && valRangeTo < varValue )
+            {
+                this.addMessageToQuestion(questionItem, 'Das Feld' + fieldName + ' muss kleiner sein als ' + valRangeTo + '!');
+
+                return false;
+            }
+        }
+
+        return true;
     };
 
 
@@ -547,7 +896,16 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
                             }
                             else
                             {
-                                ovAnswer.querySelector(".input-container").innerHTML = answer.querySelector("input").value;
+                                var inputCont       = ovAnswer.querySelector(".input-container"),
+                                    strInputValue   = answer.querySelector("input").value,
+                                    contAddon       = inputCont.getAttribute("data-addon");
+
+                                if( contAddon !== "undefned" && contAddon !== undefined && contAddon !== null )
+                                {
+                                    strInputValue = strInputValue + ' ' + contAddon;
+                                }
+
+                                inputCont.innerHTML = strInputValue;
                             }
                         }
                     }
@@ -595,7 +953,6 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
 
     questionnaire.changeOverviewItem = function( questionAlias )
     {
-
     };
 
 
@@ -605,7 +962,19 @@ IIDO.Shop.Questionnaire = IIDO.Shop.Questionnaire || {};
         var nextButton = document.querySelector(".page-item.is-active button.next-page");
 
         nextButton.click();
-    }
+    };
+    
+    
+    
+    questionnaire.initSaveFormData = function( saveID, questionnaireID )
+    {
+        var cookie = Cookies.get("iido_shopQuestionnaire_" + questionnaireID);
+
+        if( cookie === undefined || cookie === "undefined" || cookie === null )
+        {
+            Cookies.set("iido_shopQuestionnaire_" + questionnaireID, saveID);
+        }
+    };
 
 
 })(window, jQuery, IIDO.Shop.Questionnaire);

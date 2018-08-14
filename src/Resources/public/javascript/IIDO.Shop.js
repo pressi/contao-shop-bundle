@@ -136,21 +136,23 @@ IIDO.Shop.Watchlist = IIDO.Shop.Watchlist || {};
         $productContainer = document.getElementById("productCont_" + contID );
 
         var canvasDetail    = document.getElementById("canvasDetail"),
-
-            canvasWidth     = ((window.innerWidth * 0.96) + 10),
-            canvasHeight    = window.innerHeight,
-
             color           = '#1b1b1b';
 
-        if( window.innerWidth <= respWidth )
+        if( canvasDetail )
         {
-            canvasWidth   = window.innerWidth;
-            canvasHeight  = (window.innerHeight * 0.96);
+            var canvasWidth     = ((window.innerWidth * 0.96) + 10),
+                canvasHeight    = window.innerHeight;
+
+            if( window.innerWidth <= respWidth )
+            {
+                canvasWidth   = window.innerWidth;
+                canvasHeight  = (window.innerHeight * 0.96);
+            }
+
+            var arrCanvas = runCanvasFactor(canvasDetail, canvasWidth, canvasHeight);
+
+            this.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
         }
-
-        var arrCanvas = runCanvasFactor(canvasDetail, canvasWidth, canvasHeight);
-
-        this.generateCanvas( arrCanvas[0], color, arrCanvas[1], arrCanvas[2] );
     };
 
 
@@ -695,6 +697,11 @@ IIDO.Shop.Watchlist = IIDO.Shop.Watchlist || {};
     {
         var widgetCont  = inputTag.parentNode,
             error       = false;
+
+        if( widgetCont.classList.contains("not-mandatory") )
+        {
+            return;
+        }
 
         if( inputTag.value === "" )
         {
