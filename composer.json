@@ -22,7 +22,7 @@
         "codefog/contao-widget_tree_picker": "^2.0.1",
         "heimrichhannot/contao-ajax-bundle": "~1.0",
         "setasign/fpdi-fpdf": "^2.0",
-        "paypal/rest-api-sdk-php": "^2.0"
+        "paypal/rest-api-sdk-php": "^1.13"
     },
     "require-dev":
     {
