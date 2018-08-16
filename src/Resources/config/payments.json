@@ -11,7 +11,7 @@
         "active"    : true,
         "fields"    :
         [
-            "username", "password"
+            "clientID", "clientSecret"
         ]
     },
 

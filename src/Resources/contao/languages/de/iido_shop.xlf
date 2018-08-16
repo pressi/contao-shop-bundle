@@ -20,6 +20,25 @@
             </trans-unit>
 
 
+
+            <trans-unit id="iido_shop.currency_text.euro">
+                <source>EUR</source>
+                <target>EUR</target>
+            </trans-unit>
+            <trans-unit id="iido_shop.currency_text.pfund">
+                <source>GBP</source>
+                <target>GBP</target>
+            </trans-unit>
+            <trans-unit id="iido_shop.currency_text.dollar">
+                <source>USD</source>
+                <target>USD</target>
+            </trans-unit>
+            <trans-unit id="iido_shop.currency_text.franken">
+                <source>CHF</source>
+                <target>CHF</target>
+            </trans-unit>
+
+
         </body>
     </file>
 </xliff>

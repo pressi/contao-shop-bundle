@@ -15,7 +15,13 @@ namespace IIDO\ShopBundle\Payment;
 
 
 use IIDO\ShopBundle\Config\BundleConfig;
+use IIDO\ShopBundle\Config\ShopConfig;
 use IIDO\ShopBundle\Helper\PaymentHelper;
+
+//use PayPal\v1\Payments\PaymentCreateRequest;
+//use PayPal\Core\PayPalHttpClient;
+//use PayPal\Core\SandboxEnvironment;
+//use PayPal\Core\ProductionEnvironment;
 
 
 class PayPal
@@ -39,10 +45,50 @@ class PayPal
 //    protected $signature;
 //    protected $app_id;
 
+    protected $clientID;
+    protected $clientSecret;
 
 
-    public function __construct()
+
+    public function __construct($clientID, $clientSecret)
     {
+        if( $clientID )
+        {
+            $this->setClientID( $clientID );
+        }
+
+        if( $clientSecret )
+        {
+            $this->setClientSecret( $clientSecret );
+        }
+    }
+
+
+
+    public function setClientID( $clientID )
+    {
+        $this->clientID = $clientID;
+    }
+
+
+
+    public function getClientID()
+    {
+        return $this->clientID;
+    }
+
+
+
+    public function setClientSecret( $clientSecret )
+    {
+        $this->clientSecret = $clientSecret;
+    }
+
+
+
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
     }
 
 
@@ -152,10 +198,25 @@ echo "<pre>"; print_r( $out ); exit;
 
     public function newPayment()
     {
+        $this->runVersion1Payment();
+        return;
+
+
         global $objPage;
         /* @var $objPage \PageModel */
 
-        $environment = new SandboxEnvironment();
+        $totalPrice = 0;
+
+        if( $this->isDev )
+        {
+            $environment = new SandboxEnvironment($clientID, $clientSecret);
+        }
+        else
+        {
+            $environment = new ProductionEnvironment($clientID, $clientSecret);
+        }
+
+        $client = new PayPalHttpClient($environment);
 
         $body = array
         (
@@ -166,7 +227,7 @@ echo "<pre>"; print_r( $out ); exit;
                 'amount' => array
                 (
                     'total'         => $totalPrice,
-                    'currency'      => $shopCurrency
+                    'currency'      => ShopConfig::getCurrency( true )
                 )
             ),
 
@@ -181,9 +242,68 @@ echo "<pre>"; print_r( $out ); exit;
                 'payment_method' => 'paypal'
             )
         );
+echo "<pre>"; print_r( $body ); exit;
+        $request = new PaymentCreateRequest();
+        $request->body = $body;
 
-        echo "<pre>";
-        print_r( $environment );
-        exit;
+        try
+        {
+            return $client->execute($request);
+        }
+        catch( HttpException $ex )
+        {
+            echo $ex->statusCode;
+            print_r( $ex->getMessage() );
+        }
+    }
+
+
+
+    protected function runVersion1Payment()
+    {
+        global $objPage;
+
+        $totalPrice     = 0;
+        $clientID       = $this->getClientID();
+        $clientSecret   = $this->getClientSecret();
+
+        $apiContext = new \PayPal\Rest\ApiContext(
+            new \PayPal\Auth\OAuthTokenCredential(
+                $clientID,
+                $clientSecret
+            )
+        );
+
+        $apiContext->setConfig( array('mode' => 'live') );
+
+        $payer = new \PayPal\Api\Payer();
+        $payer->setPaymentMethod('paypal');
+
+        $amount = new \PayPal\Api\Amount();
+        $amount->setTotal( $totalPrice );
+        $amount->setCurrency( ShopConfig::getCurrency( true ) );
+
+        $transaction = new \PayPal\Api\Transaction();
+        $transaction->setAmount( $amount );
+
+        $redirectUrls = new \PayPal\Api\RedirectUrls();
+        $redirectUrls->setReturnUrl( $objPage->getFrontendUrl() )
+            ->setCancelUrl( $objPage->getFrontendUrl('mode/error') );
+
+        $payment = new \PayPal\Api\Payment();
+        $payment->setIntent('sale')
+            ->setPayer( $payer )
+            ->setTransactions( array($transaction) )
+            ->setRedirectUrls( $redirectUrls );
+
+        try
+        {
+            $payment->create($apiContext);
+            echo $payment;
+        }
+        catch (\PayPal\Exception\PayPalConnectionException $ex)
+        {
+            echo $ex->getData();
+        }
     }
 }
