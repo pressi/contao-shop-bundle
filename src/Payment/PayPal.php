@@ -12,11 +12,15 @@
 
 namespace IIDO\ShopBundle\Payment;
 
-
+//TODO: REMOVE UNUSED CODE!!!!
 
 use IIDO\ShopBundle\Config\BundleConfig;
 use IIDO\ShopBundle\Config\ShopConfig;
+use IIDO\ShopBundle\Helper\ApiHelper;
 use IIDO\ShopBundle\Helper\PaymentHelper;
+use IIDO\ShopBundle\Helper\ShippingHelper;
+use IIDO\ShopBundle\Helper\ShopOrderHelper;
+
 
 //use PayPal\v1\Payments\PaymentCreateRequest;
 //use PayPal\Core\PayPalHttpClient;
@@ -24,9 +28,9 @@ use IIDO\ShopBundle\Helper\PaymentHelper;
 //use PayPal\Core\ProductionEnvironment;
 
 
-class PayPal
+class PayPal extends DefaultPaymentMethod
 {
-    protected $isDev        = true;
+    protected $isDev        = false;
 
     protected $apiUrl       = 'https://api.paypal.com/';
     protected $devApiUrl    = 'https://api.sandbox.paypal.com/';
@@ -63,6 +67,128 @@ class PayPal
         }
     }
 
+
+
+    public function success()
+    {
+        $objApi = ApiHelper::getApiObject();
+
+//        $objPDF = $objApi->runApiUrl("/unit");
+//        $objPDF = $objApi->runApiUrl("/salesOrder?orderNumber-eq=1102");
+//        $objPDF = $objApi->runApiUrl("/salesOrder/id/124258/downloadLatestOrderConfirmationPdf");
+//        echo "<pre>"; print_r( $objPDF ); exit;
+
+        if( \Input::get("mode") === "success" )
+        {
+            $orderID    = \Input::get('order');
+            $objOrder   = ShopOrderHelper::getOrder( $orderID );
+
+            $objApi     = ApiHelper::getApiObject();
+
+            if( $objApi && !$objOrder->orderComplete )
+            {
+                $apiContext = new \PayPal\Rest\ApiContext(
+                    new \PayPal\Auth\OAuthTokenCredential(
+                        $this->getClientID(),
+                        $this->getClientSecret()
+                    )
+                );
+
+                $apiContext->setConfig(
+                    array
+                    (
+                        'mode' => $this->isDev ? 'sandbox' : 'live',
+
+                        'log.LogEnabled' => true,
+                        'log.FileName' => '../PayPal-2.log',
+                        'log.LogLevel' => $this->isDev ? 'DEBUG' : 'INFO'
+                    )
+                );
+
+                $payment = \PayPal\Api\Payment::get( \Input::get("paymentId"), $apiContext );
+                $execution = new \PayPal\Api\PaymentExecution();
+                $execution->setPayerId( \Input::get("PayerID") );
+
+                $runPayment = false;
+
+                try
+                {
+                    $payment->execute($execution, $apiContext);
+                    $runPayment = true;
+                }
+                catch (\PayPal\Exception\PayPalConnectionException $ex )
+                {
+                    \Input::setGet("mode", "error");
+                    $runPayment = false;
+
+                    echo $ex->getData();
+                    exit;
+                }
+
+                $paymentState = $payment->getState();
+
+                if( $runPayment && $paymentState === "approved" )
+                {
+                    $objApiOrder = $objApi->addNewOrder( $objOrder );
+
+                    if( $objApiOrder )
+                    {
+                        $paymentInfo = array
+                        (
+                            'paymentID' => \Input::get("paymentId"),
+                            'payerID'   => \Input::get("PayerID"),
+                            'token'     => \Input::get("token"),
+
+                            'transactionID' => $payment->getId(),
+                            'paymentAmount' => $payment->transactions[0]->amount->total,
+                            'paymentStatus' => $paymentState,
+                            'invoiceID'     => $payment->transactions[0]->invoice_number
+                        );
+
+                        $objOrder->hasPayed         = true;
+                        $objOrder->orderComplete    = true;
+                        $objOrder->paymentInfo      = json_encode($paymentInfo);
+
+                        $objOrder->apiOrderNumber   = $objApiOrder['orderNumber'];
+                        $objOrder->apiCustomerNumber = $objApiOrder['customerNumber'];
+
+                        $objOrder->save();
+
+                        ShopConfig::removeCartList();
+                        ShopOrderHelper::sendEmails( $objOrder, $objApiOrder );
+
+                        return true;
+                    }
+                    else
+                    {
+                        \Input::setGet("mode", "error");
+                    }
+                }
+            }
+
+            if( $objOrder->orderComplete )
+            {
+                \Input::setGet("mode", "error");
+            }
+        }
+
+        return false;
+    }
+
+
+
+    public function error()
+    {
+        if( \Input::get("mode") === "error" )
+        {
+//            echo "<pre>E<br>";
+//            print_r( $_GET );
+//            exit;
+            return true;
+        }
+
+        return false;
+    }
 
 
     public function setClientID( $clientID )
@@ -202,70 +328,79 @@ echo "<pre>"; print_r( $out ); exit;
         return;
 
 
-        global $objPage;
-        /* @var $objPage \PageModel */
-
-        $totalPrice = 0;
-
-        if( $this->isDev )
-        {
-            $environment = new SandboxEnvironment($clientID, $clientSecret);
-        }
-        else
-        {
-            $environment = new ProductionEnvironment($clientID, $clientSecret);
-        }
-
-        $client = new PayPalHttpClient($environment);
-
-        $body = array
-        (
-            'intent' => 'sale',
-
-            'transactions' => array
-            (
-                'amount' => array
-                (
-                    'total'         => $totalPrice,
-                    'currency'      => ShopConfig::getCurrency( true )
-                )
-            ),
-
-            'redirect_urls' => array
-            (
-                'cancel_url'    => $objPage->getFrontendUrl('mode/error'),
-                'return_url'    => $objPage->getFrontendUrl()
-            ),
-
-            'payer' => array
-            (
-                'payment_method' => 'paypal'
-            )
-        );
-echo "<pre>"; print_r( $body ); exit;
-        $request = new PaymentCreateRequest();
-        $request->body = $body;
-
-        try
-        {
-            return $client->execute($request);
-        }
-        catch( HttpException $ex )
-        {
-            echo $ex->statusCode;
-            print_r( $ex->getMessage() );
-        }
+//        global $objPage;
+//        /* @var $objPage \PageModel */
+//
+//        $totalPrice = 0;
+//
+//        if( $this->isDev )
+//        {
+//            $environment = new SandboxEnvironment($clientID, $clientSecret);
+//        }
+//        else
+//        {
+//            $environment = new ProductionEnvironment($clientID, $clientSecret);
+//        }
+//
+//        $client = new PayPalHttpClient($environment);
+//
+//        $body = array
+//        (
+//            'intent' => 'sale',
+//
+//            'transactions' => array
+//            (
+//                'amount' => array
+//                (
+//                    'total'         => $totalPrice,
+//                    'currency'      => ShopConfig::getCurrency( true )
+//                )
+//            ),
+//
+//            'redirect_urls' => array
+//            (
+//                'cancel_url'    => $objPage->getFrontendUrl('mode/error'),
+//                'return_url'    => $objPage->getFrontendUrl()
+//            ),
+//
+//            'payer' => array
+//            (
+//                'payment_method' => 'paypal'
+//            )
+//        );
+//echo "<pre>"; print_r( $body ); exit;
+//        $request = new PaymentCreateRequest();
+//        $request->body = $body;
+//
+//        try
+//        {
+//            return $client->execute($request);
+//        }
+//        catch( HttpException $ex )
+//        {
+//            echo $ex->statusCode;
+//            print_r( $ex->getMessage() );
+//        }
     }
 
 
 
     protected function runVersion1Payment()
     {
-        global $objPage;
+        if( \Input::get("mode") === "success" || \Input::get("mode") === "error" )
+        {
+            return;
+        }
 
-        $totalPrice     = 0;
+        global $objPage;
+        /* @var $objPage \PageModel */
+
+        list($arrOrder, $totalPrice) = ShopOrderHelper::getOrderArray(true);
+        $objOrder       = ShopOrderHelper::addNewOrder( $arrOrder );
+
         $clientID       = $this->getClientID();
         $clientSecret   = $this->getClientSecret();
+        $baseUrl        =  \Environment::get("base");
 
         $apiContext = new \PayPal\Rest\ApiContext(
             new \PayPal\Auth\OAuthTokenCredential(
@@ -274,21 +409,50 @@ echo "<pre>"; print_r( $body ); exit;
             )
         );
 
-        $apiContext->setConfig( array('mode' => 'live') );
+        $apiContext->setConfig(
+            array
+            (
+                'mode' => $this->isDev ? 'sandbox' : 'live',
+
+                'log.LogEnabled' => true,
+                'log.FileName' => '../PayPal.log',
+                'log.LogLevel' => $this->isDev ? 'DEBUG' : 'INFO'
+            )
+        );
+
+//        $payerAddress = new \PayPal\Api\Address();
+//        $payerAddress->setLine1( $arrOrder['street'] );
+//        $payerAddress->setPostalCode( $arrOrder['postal'] );
+//        $payerAddress->setCity( $arrOrder['city'] );
+//        $payerAddress->setCountryCode('AT');
+
+//        $payerInfo = new \PayPal\Api\PayerInfo();
+//        $payerInfo->setFirstName( $arrOrder['name'] );
+//        if( $arrOrder['phone'] ) { $payerInfo->setPhone( $arrOrder['phone'] ); }
+//        $payerInfo->setEmail( $arrOrder['email'] );
+//        $payerInfo->setBillingAddress( $payerAddress );
 
         $payer = new \PayPal\Api\Payer();
         $payer->setPaymentMethod('paypal');
+//        $payer->setPayerInfo( $payerInfo );
+
+//        $details = new \PayPal\Api\Details();
+//        $details->setShipping( $shippingPrice );
+//        $details->setTax(0.2);
 
         $amount = new \PayPal\Api\Amount();
         $amount->setTotal( $totalPrice );
         $amount->setCurrency( ShopConfig::getCurrency( true ) );
+//        $amount->setDetails( $details );
 
         $transaction = new \PayPal\Api\Transaction();
         $transaction->setAmount( $amount );
 
         $redirectUrls = new \PayPal\Api\RedirectUrls();
-        $redirectUrls->setReturnUrl( $objPage->getFrontendUrl() )
-            ->setCancelUrl( $objPage->getFrontendUrl('mode/error') );
+//        $redirectUrls->setReturnUrl( $baseUrl . $objPage->getFrontendUrl() . '/mode/success/order/' . $objOrder->id )
+//        $redirectUrls->setReturnUrl( $baseUrl . $objPage->getFrontendUrl('/mode/success/payment/'. $arrOrder['paymentMethod'] . '/order/5') )
+        $redirectUrls->setReturnUrl( $baseUrl . $objPage->getFrontendUrl('/mode/success/payment/'. $arrOrder['paymentMethod'] . '/order/' . $objOrder->id) )
+            ->setCancelUrl( $baseUrl . $objPage->getFrontendUrl('/mode/error/payment/' . $arrOrder['paymentMethod']) );
 
         $payment = new \PayPal\Api\Payment();
         $payment->setIntent('sale')
@@ -299,11 +463,13 @@ echo "<pre>"; print_r( $body ); exit;
         try
         {
             $payment->create($apiContext);
-            echo $payment;
+//            echo $payment;
+            \Controller::redirect( $payment->getApprovalLink() );
         }
         catch (\PayPal\Exception\PayPalConnectionException $ex)
         {
             echo $ex->getData();
+            exit;
         }
     }
 }
