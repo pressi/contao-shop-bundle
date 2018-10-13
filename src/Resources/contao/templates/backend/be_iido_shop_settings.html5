@@ -9,27 +9,41 @@
 
     <? if( $this->overview ): ?>
 
+        <? if ($this->User->isAdmin || $this->User->hasAccess('configuration', 'iidoShopSettings')): ?>
         <div class="setting-container configuration-setting">
             <a href="<?= \Controller::addToUrl('mode=configuration&table=tl_iido_shop_configuration' ) ?>">
                 <span class="label"><?= $this->label['configuration'] ?></span>
             </a>
         </div>
+        <? endif ?>
 
+        <? if ($this->User->isAdmin || $this->User->hasAccess('payment', 'iidoShopSettings')): ?>
         <div class="setting-container payment-setting">
             <a href="<?= \Controller::addToUrl('mode=payment&table=' . \IIDO\ShopBundle\Model\IidoShopPaymentModel::getTable() ) ?>">
                 <span class="label"><?= $this->label['payment'] ?></span>
             </a>
         </div>
+        <? endif ?>
 
+        <? if ($this->User->isAdmin || $this->User->hasAccess('shipping', 'iidoShopSettings')): ?>
         <div class="setting-container shipping-setting">
             <a href="<?= \Controller::addToUrl('mode=shipping&table=' . \IIDO\ShopBundle\Model\IidoShopShippingModel::getTable() ) ?>">
                 <span class="label"><?= $this->label['shipping'] ?></span>
             </a>
         </div>
+        <? endif ?>
 
-        <? if( \IIDO\ShopBundle\Helper\ShopHelper::questionnaireTemplateExists() ): ?>
+        <? if ($this->User->isAdmin || $this->User->hasAccess('voucher', 'iidoShopSettings')): ?>
+            <div class="setting-container voucher-setting">
+                <a href="<?= \Controller::addToUrl('mode=voucher&table=' . \IIDO\ShopBundle\Model\IidoShopVoucherModel::getTable() ) ?>">
+                    <span class="label"><?= $this->label['voucher'] ?></span>
+                </a>
+            </div>
+        <? endif ?>
+
+        <? if( \IIDO\ShopBundle\Helper\ShopHelper::questionnaireTemplateExists() && ($this->User->isAdmin || $this->User->hasAccess('ai', 'iidoShopSettings')) ): ?>
             <div class="setting-container ai-setting">
-                <a href="<?= \Controller::addToUrl('mode=configuration&table=tl_iido_shop_configuration&p=ai' ) ?>">
+                <a href="<?= \Controller::addToUrl('mode=ai&table=tl_iido_shop_configuration&p=ai' ) ?>">
                     <span class="label"><?= $this->label['ai'] ?></span>
                 </a>
             </div>

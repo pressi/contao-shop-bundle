@@ -1,6 +1,7 @@
 <?
 $arrLabel       = $this->label;
 $strQunatity    = '';
+$enableEdit     = false;
 
 if( !$arrLabel )
 {
@@ -9,13 +10,12 @@ if( !$arrLabel )
     $arrLabel = $GLOBALS['TL_LANG']['iido_shop_checkout']['label'];
 }
 
-if( $this->prefix === "overview" )
+if( $this->prefix === "overview" || $this->item['quantity'] > 1 )
 {
-    $strQunatity = '<span class="quantity">' . $this->item['quantity'] . '<span class="quantity-unit">x</span></span>';
+    $strQunatity = '<span class="quantity"><span class="quantity-num">' . $this->item['quantity'] . '</span><span class="quantity-unit">x</span></span>';
 }
-
 ?>
-<div class="<?= $this->prefix ?>-item<?= $this->class ?>">
+<div class="<?= $this->prefix ?>-item<?= $this->class ?>"<? if($this->catColor): ?> style="background:<?= $this->catColor ?>;" <? endif ?> data-number="<?= $this->item['itemNumber'] ?>">
     <div class="<?= $this->prefix ?>-item-inside">
         <div class="top-infos">
             <div class="desc-infos">
@@ -24,13 +24,13 @@ if( $this->prefix === "overview" )
                 <? if( preg_match('/product-item-ski/', $this->class) && $this->prefix === "overview" ): ?>
                     <div class="name"><?= $this->item['name'] ?></div>
                 <? endif ?>
-                <div class="label"><?= $this->item['label'] ?></div>
+                <div class="label<? if( !strlen($this->item['label']) ): ?> empty<? endif ?>"><?= $this->item['label'] ?></div>
                 <? if($this->prefix !== "overview" || ($this->prefix === "overview") && !preg_match('/product-item-ski/', $this->class) ): ?>
                     <div class="name"><?= $this->item['name'] ?></div>
                 <? endif ?>
             </div>
             <div class="detail-infos">
-                <? if($this->prefix === "overview"): ?><?= $this->item['itemNumber'] ?><br><? endif ?><?= $this->item['detailInfos'] ?>
+                <? if($this->prefix === "overview"): ?><?= $this->item['realItemNumber']?:$this->item['itemNumber'] ?><br><? endif ?><?= $this->item['detailInfos'] ?>
             </div>
         </div>
         <div class="image">
@@ -53,10 +53,12 @@ if( $this->prefix === "overview" )
             <div class="bottom-infos">
                 <? if( $this->prefix !== "overview"): ?>
                 <div class="action-cont">
+                    <? if( $enableEdit ): ?>
                     <? if( preg_match('/product-item-ski/', $this->class) ): ?>
-                        <a class="edit-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>.editItem('<?= $this->item['id'] ?>_<?= $this->key ?>', this)" href="javascript:void(0)"><?= $this->editLabel ?></a>
+                        <a class="edit-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>//.editItem('<?= $this->item['id'] ?>//_<?= $this->key ?>//', this)" href="javascript:void(0)"><?= $this->editLabel ?></a>
                     <? else: ?>
                         <a class="edit-link" href="<?= preg_replace('/.html$/', '/mode/edit' . (($this->prefix === "watchlist") ? '-list' : '') . '.html', $this->item['detailLink']) ?>"><?= $this->editLabel ?></a>
+                    <? endif ?>
                     <? endif ?>
                     <? if($this->prefix === "watchlist"): ?>
                         <a class="buy-link" onclick="IIDO.Shop.<?= ucfirst($this->prefix) ?>.moveItemToCart(this, '<?= $this->item['itemNumber'] ?>', '<?= $this->item['realName'] ?>', '<?= $this->item['id'] ?>_<?= $this->key ?>')" href="javascript:void(0)"><?= $this->buyLabel ?></a>
@@ -67,7 +69,7 @@ if( $this->prefix === "overview" )
                 </div>
                 <? endif ?>
 
-                <div class="price"><?= $strQunatity ?><?= $this->item['price'] ?></div>
+                <div class="price"><?= $strQunatity ?><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice($this->item['price'], true) ?></div>
 
                 <? if( $this->prefix !== "overview"): ?>
                 <form action="<?= $this->editLink ?>" id="<?= $this->prefix ?>ItemEdit_<?= $this->item['id'] ?>_<?= $this->key ?>" method="post" class="edit-form-container">

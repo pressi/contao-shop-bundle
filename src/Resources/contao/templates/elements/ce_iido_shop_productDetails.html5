@@ -1,31 +1,125 @@
-<? $this->extend("block_searchable") ?>
+<? $this->extend("block_searchable");
+
+global $objPage;
+
+$backlink = '';
+$hideWatchlistOnNull = false;
+
+$objPageSiblings = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $objPage->pid );
+
+if( $objPageSiblings )
+{
+    while( $objPageSiblings->next() )
+    {
+        if( $objPageSiblings->id !== $objPage->id )
+        {
+            $objArticles = \ArticleModel::findPublishedByPidAndColumn($objPageSiblings->id, "main");
+
+            if( $objArticles )
+            {
+                while( $objArticles->next() )
+                {
+                    $objElement = \ContentModel::findOneBy(array('tl_content.type=?', 'tl_content.pid=?'), array('iido_shop_productList', $objArticles->id));
+
+                    if( $objElement->loadProductsFrom !== "archive" )
+                    {
+                        if( $objElement->iidoShopShowProductsFrom === "categories" )
+                        {
+                            $arrCategories = \StringUtil::deserialize($objElement->iidoShopCategories, TRUE);
+
+                            if( in_array($this->category->id, $arrCategories) )
+                            {
+                                $backlink = $objPageSiblings->current()->getFrontendUrl();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if( $backlink )
+        {
+            break;
+        }
+    }
+}
+
+?>
 
 <? $this->block("content") ?>
 
 <div class="product-details-container" id="productCont_<?= $this->id ?>">
     <div class="product-details-cont-inside">
-        <input type="hidden" name="ARTICLE_NUMBER" value="<?= $this->product->itemNumber ?>">
+        <? if( $this->noProduct ): ?>
+            <div class="name"><?= $this->messageName ?></div>
+
+            <div class="error-message">
+                <?= $this->message ?>
+            </div>
+
+            <div class="backlink">
+                <a href="javascript:history.back(-1)">{{iflng::de}}Zurück zur Übersicht{{iflng::en}}back to overview{{iflng}}</a>
+            </div>
+        <? else: ?>
+        <input type="hidden" name="ARTICLE_NUMBER[article]" value="<?= $this->product->itemNumberRange ?>" id="articleNumberInput">
+        <input type="hidden" name="current_article_number" value="<?= $this->product->itemNumber ?>">
         <input type="hidden" name="name" value="<?= $this->product->name ?>">
         <? if( $this->mode === "edit" ): ?>
             <? //TODO: OLD ARTICLE NUMBER! ?>
         <? endif ?>
 
         <div class="name"><?= $this->product->name ?></div>
+        <div class="product-desc"><?= $this->product->shortDescription ?></div>
 
         <div class="product-infos">
 
-            <div class="design">
-                <div class="label"><?= $this->label['design'] ?></div>
+            <? if( !$this->noDesigns): ?>
+                <div class="choose-item design" onclick="IIDO.Shop.Details.toggleChooser( this )">
+                    <div class="label"><?= $this->label['design'] ?></div>
 
-                <div class="chooser"></div>
-                <div class="chooser-value"><?= $this->chooserValue['design'] ?></div>
-            </div>
+                    <div class="chooser">
+                        <? foreach($this->designs as $design):
+                            $strClass       = '';
+                            $strAttribute   = '';
+
+                            if( $this->chooserInputValue['design'] === $design['articleNumber'] )
+                            {
+                                $strClass       = ' is-checked';
+                                $strAttribute   = ' checked="checked"';
+                            }
+                            ?>
+                            <div class="choose-item color-picker<?= $strClass ?>" data-number="<?= $design['articleNumber'] ?>" data-image="<?= $design['image'] ?>" onclick="IIDO.Shop.Details.checkItem(this, 'color')" data-alias="<?= $design['alias'] ?>">
+                                <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[design]" value="<?= $design['articleNumber'] ?>"<?= $strAttribute ?> class="article-number-input"></div>
+                                <div class="color_circle cc-<?= $design['alias'] ?>"><span class="title"><?= $design['label'] ?></span></div>
+                            </div>
+                        <? endforeach ?>
+                    </div>
+                    <div class="chooser-value"><?= $this->chooserValue['design'] ?></div>
+                </div>
+            <? endif ?>
 
             <? foreach( $this->chooseInfos as $chooseInfo): ?>
-                <div class="choose-item <?= $chooseInfo['mode'] ?>">
+                <div class="choose-item <?= $chooseInfo['mode'] ?>" onclick="IIDO.Shop.Details.toggleChooser( this )">
                     <div class="label"><?= $chooseInfo['label'] ?></div>
 
-                    <div class="chooser"></div>
+                    <div class="chooser">
+                        <? foreach($chooseInfo['items'] as $item):
+                            $strClass       = '';
+                            $strAttribute   = '';
+
+                            if( $this->chooserInputValue[ $chooseInfo['mode'] ] === $item['articleNumber'] )
+                            {
+                                $strClass       = ' is-checked';
+                                $strAttribute   = ' checked="checked"';
+                            }
+                            ?>
+                            <div class="choose-item<?= $strClass ?>" data-number="<?= $item['articleNumber'] ?>" onclick="IIDO.Shop.Details.checkItem(this, '<?= $chooseInfo['mode'] ?>')">
+                                <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[<?= $chooseInfo['mode'] ?>]" value="<?= $item['articleNumber'] ?>"<?= $strAttribute ?> class="article-number-input"></div>
+                                <div class="name"><?= $item['name'] ?></div>
+                            </div>
+                        <? endforeach ?>
+                    </div>
                     <div class="chooser-value"><?= $chooseInfo['value'] ?></div>
                 </div>
             <? endforeach ?>
@@ -39,7 +133,7 @@
 
         </div>
 
-        <div class="product-image">
+        <div class="product-image" id="productImage_<?= $this->id ?>">
             <figure class="image_container">
 
                 <div class="ctable">
@@ -63,13 +157,21 @@
                 <div class="num<? if( $this->cartLink ): ?> has-link<? endif ?>">
                     <? if( $this->cartLink ): ?>
                     <a href="<?= $this->cartLink ?>">
-                        <? endif ?>
+                    <? endif ?>
                         <?= $this->cartNum ?>
-                        <? if( $this->cartLink ): ?>
+                    <? if( $this->cartLink ): ?>
                     </a>
                 <? endif ?>
                 </div>
-                <div class="watchlist-num<? if($this->watchlistNum === 0): ?> is-hidden<? endif ?>"><?= $this->watchlistNum ?></div>
+                <div class="watchlist-num<? if( $this->watchlistLink ): ?> has-link<? endif ?><? if($this->watchlistNum === 0 && $hideWatchlistOnNull): ?> is-hidden<? endif ?>">
+                    <? if( $this->watchlistLink ): ?>
+                    <a href="<?= $this->watchlistLink ?>">
+                        <? endif ?>
+                    <?= $this->watchlistNum ?>
+                        <? if( $this->watchlistLink ): ?>
+                    </a>
+                <? endif ?>
+                </div>
             </div>
 
         </div>
@@ -98,16 +200,48 @@
 
         </div>
 
+        <div class="product-slogan"><?= $this->product->shortDescription2 ?></div>
 <!--        <div class="details" onclick="IIDO.Shop.openProductDetails(this)">-->
 <!--            <div class="label">--><?//= $this->label['detail'] ?><!--</div>-->
 <!--            <canvas id="canvasDetail"></canvas>-->
 <!--        </div>-->
 
+            <div class="backlink">
+                <a href="<?= $backlink ?>">{{iflng::de}}Zurück zur Übersicht{{iflng::en}}back to overview{{iflng}}</a>
+            </div>
+
+            <? if( $this->stepDetails ): ?>
+                <div class="more-details-link"><a href="javascript:void(0)" onclick="IIDO.Page.scrollTo(window.event, this.getAttribute('data-anker'), 0)" data-anker="shopDetailsContent"><span><?= $this->label['moreDetails'] ?></span></a></div>
+            <? endif ?>
+
+        <? endif ?>
     </div>
 </div>
+<? if( $this->stepDetails ): ?>
+    <div class="step-details-container" id="shopDetailsContent">
+        <div class="step-details-inside">
+            <?= $this->stepDetails ?>
+        </div>
+    </div>
+<? endif ?>
+<? if( !$this->noProduct ): ?>
 <script>
     IIDO.Shop.initDetails(<?= $this->id ?>);
     //IIDO.Shop.initConfig(<?//= json_encode($this->arrConfig) ?>//);
+    IIDO.Shop.setLanguage( '<?= \IIDO\BasicBundle\Helper\BasicHelper::getLanguage() ?>');
 </script>
+<? endif ?>
+
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
+    </div>
+</div>
 
 <? $this->endblock() ?>

@@ -31,7 +31,7 @@
             <div class="cat-bg-item-inside bg-image bg-cover" style="background-image:url(<?= \IIDO\BasicBundle\Helper\ImageHelper::getImagePath( $category['detailSRC'] ) ?>);"></div>
             <div class="ctable">
                 <div class="ctable-cell">
-                    <div class="name<? if($category['subtitle']): ?> has-subtitle<?endif ?>"><?= $category['title'] ?></div>
+                    <div class="name<? if($category['subtitle']): ?> has-subtitle<?endif ?>"><?= $category['frontendTitle']?:$category['title'] ?></div>
                     <? if($category['subtitle']): ?>
                         <div class="subtitle"><?= $category['subtitle'] ?></div>
                     <? endif ?>

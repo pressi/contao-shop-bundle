@@ -1,14 +1,18 @@
 <? $this->extend("block_searchable") ?>
 
-<? $this->block("content") ?>
+<? $this->block("content");
+
+$checkOutOptions = array('shippingPerCountry'=>array());
+?>
 
 <div class="checkout-container">
     <div class="checkout-container-inside">
 
-        <? if( $this->error && count($this->errorMessage['message']) && $this->showErrorMessagesOnTop ): ?>
+
+        <? if( $this->error && count($this->errorMessage['message']) && $this->showErrorMessagesOnTop && $this->cartNum > 0 ): ?>
         <div class="error-container">
             <? foreach($this->errorMessage['message'] as $message): ?>
-                <div class="error-msg"><?= $message ?></div>
+                <div class="error-msg <?=$message['class'] ?>"><?= $message['text'] ?></div>
             <? endforeach ?>
         </div>
         <? endif ?>
@@ -17,126 +21,304 @@
             <input type="hidden" name="FORM_SUBMIT" value="checkout_form">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
 
-            <div class="form-columns">
+            <? if($this->cartNum === 0): ?>
+                <div class="no-products-in-cart">
+                    {{iflng::de}}Es sind keine Produkte im Warenkorb, es kann keine Bestellung durchgeführt werden.{{iflng::en}}There are no products in the cart, no order can be made.{{iflng}}
+                </div>
+            <? else: ?>
+                <div class="form-columns">
 
+                    <? $arrDisabledShippings = array(); foreach($this->formFields as $strClass => $arrFields): ?>
 
-                <? foreach($this->formFields as $strClass => $arrFields): ?>
-
-                    <? if( $arrFields['type'] === "div" ): ?>
-                        <div class="<?= $strClass ?>">
-                    <? endif ?>
-
-                    <? foreach($arrFields['fields'] as $fieldName => $fieldConfig): ?>
-                        <? if($fieldConfig['wrapper']):
-
-                        $strClass   = '';
-                        $arrID      = explode("-", $fieldConfig['wrapper']);
-                        $wrapperID  = '';
-
-                        foreach($arrID as $key => $strID)
-                        {
-                            if( $key > 0 )
-                            {
-                                $wrapperID .= ucfirst($strID);
-                            }
-                            else
-                            {
-                                $wrapperID .= $strID;
-                            }
-                        }
-
-                        if( $fieldConfig['dependent'] )
-                        {
-                            if( $this->value[ $fieldConfig['dependent']['field'] ]['value'] !== $fieldConfig['dependent']['value'] )
-                            {
-                                $strClass = ' hidden';
-                            }
-                        }
-
-                        ?>
-                            <div class="<?= $fieldConfig['wrapper'] . $strClass ?>" id="<?= $wrapperID ?>">
+                        <? if( $arrFields['type'] === "div" ): ?>
+                            <div class="<?= $strClass ?>">
                         <? endif ?>
 
-                            <? if( $fieldConfig['type'] === "box" ): ?>
-                                <div class="legend-box">
-                                    <div class="legend"><?= $this->label[ $fieldName ] ?></div>
+                        <? foreach($arrFields['fields'] as $fieldName => $fieldConfig): ?>
+                            <? if($fieldConfig['wrapper']):
 
-                                    <? foreach($fieldConfig['fields'] as $strFieldName => $inputFieldConfig):
-                                        if( is_numeric($strFieldName) )
-                                        {
-                                            $strFieldName       = $inputFieldConfig;
-                                            $inputFieldConfig   = '';
-                                        }
-                                        ?>
-                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"config"=>$inputFieldConfig)); ?>
-                                    <? endforeach ?>
-                                </div>
-                            <? elseif( $fieldConfig['type'] === "radioGroup" ): ?>
-                                <?= $this->insert("iido_shop_radiogroup", array("name"=>$fieldName, "fields"=>$fieldConfig['fields'], "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value)); ?>
-                            <? elseif( $fieldConfig['type'] === "hidden_box" ): ?>
-                                <div class="legend-box">
-                                    <? foreach($fieldConfig['fields'] as $strFieldName => $inputFieldConfig):
-                                        if( is_numeric($strFieldName) )
-                                        {
-                                            $strFieldName       = $inputFieldConfig;
-                                            $inputFieldConfig   = '';
-                                        }
-                                        ?>
-                                        <?= $this->insert("iido_shop_textfield", array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"config"=>$inputFieldConfig)); ?>
-                                    <? endforeach ?>
-                                </div>
-                            <? elseif( $fieldConfig['type'] === "payment" || $fieldConfig['type'] === "shipping" ):
-                                $strClass   = $fieldConfig['type'];
-                                $strLabel   = (($strClass === "payment") ? 'paymentMethod' : 'shippingLabel');
-                                $arrMethod  = $this->$fieldName;
+                            $strClass   = '';
+                            $arrID      = explode("-", $fieldConfig['wrapper']);
+                            $wrapperID  = '';
+
+                            foreach($arrID as $key => $strID)
+                            {
+                                if( $key > 0 )
+                                {
+                                    $wrapperID .= ucfirst($strID);
+                                }
+                                else
+                                {
+                                    $wrapperID .= $strID;
+                                }
+                            }
+
+                            if( $fieldConfig['dependent'] )
+                            {
+                                if( $this->value[ $fieldConfig['dependent']['field'] ]['value'] !== $fieldConfig['dependent']['value'] )
+                                {
+                                    $strClass = ' hidden';
+                                }
+                            }
+
                             ?>
-                                <div class="<?= $strClass ?> widget<? if($this->error && in_array($strClass, $this->errorMessage['fields'])): ?> error<? endif ?>">
-                                    <div class="label"><?= $this->label[ $strLabel ] ?></div>
+                                <div class="<?= $fieldConfig['wrapper'] . $strClass ?>" id="<?= $wrapperID ?>">
+                            <? endif ?>
 
-                                    <div class="items">
+                                <? if( $fieldConfig['type'] === "box" ): ?>
+                                    <div class="legend-box">
+                                        <div class="legend"><?= $this->label[ $fieldName ] ?></div>
 
-                                        <? foreach($arrMethod as $method):
-                                            $strAlias = $method->alias?:$method->type;
+                                        <? foreach($fieldConfig['fields'] as $strFieldName => $inputFieldConfig):
+                                            if( is_numeric($strFieldName) )
+                                            {
+                                                $strFieldName       = $inputFieldConfig;
+                                                $inputFieldConfig   = '';
+                                            }
+
+                                            $fieldTemplate  = "iido_shop_textfield";
+                                            $arrFieldConfig = array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"config"=>$inputFieldConfig);
+
+                                            if( is_array($inputFieldConfig) && $inputFieldConfig['type'] === 'country' )
+                                            {
+                                                $fieldTemplate = 'iido_shop_country';
+
+                                                $arrFieldConfig['shippings']=$this->shippings;
+                                            }
                                             ?>
-                                            <div class="item<? if( $method->info ): ?> has-infos<? endif ?><? if($this->value[ $strClass ]['value'] === $strAlias): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.check<?= ucfirst($strClass) ?>(this)">
-                                                <div class="hidden">
-                                                    <input type="radio" name="<?= $strClass ?>" value="<?= $strAlias ?>"<? if($this->value[ $strClass ]['value'] === $strAlias): ?> checked<? endif ?>>
-                                                </div>
-                                                <div class="name"><?= ($method->frontendTitle?:($method->name?:$method->title)) ?></div>
-                                                <? if( $method->info ): ?>
-                                                    <div class="infos"><?= $method->info ?></div>
-                                                <? endif ?>
-                                            </div>
+                                            <?= $this->insert($fieldTemplate, $arrFieldConfig); ?>
                                         <? endforeach ?>
-
                                     </div>
+                                <? elseif( $fieldConfig['type'] === "radioGroup" ):
+                                $strLink = '';
+
+                                if( $fieldName === "agb" )
+                                {
+                                    if( $this->agbLink )
+                                    {
+                                        $strLink = '<a href="' . $this->agbLink . '" target="_blank">{{iflng::de}}Zu den AGB\'s{{iflng::en}}To AGB\'s{{iflng}}</a>';
+
+                                    }
+                                }
+                                ?>
+                                    <?= $this->insert("iido_shop_radiogroup", array("name"=>$fieldName, "fields"=>$fieldConfig['fields'], "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"link"=>$strLink)); ?>
+                                <? elseif( $fieldConfig['type'] === "hidden_box" ): ?>
+                                    <div class="legend-box">
+                                        <? foreach($fieldConfig['fields'] as $strFieldName => $inputFieldConfig):
+                                            if( is_numeric($strFieldName) )
+                                            {
+                                                $strFieldName       = $inputFieldConfig;
+                                                $inputFieldConfig   = '';
+                                            }
+                                            $fieldTemplate  = "iido_shop_textfield";
+                                            $arrFieldConfig = array("name"=>$strFieldName, "label"=>$this->label, "error"=>$this->error,"msg"=>$this->errorMessage,"value"=>$this->value,"config"=>$inputFieldConfig);
+
+                                            if( is_array($inputFieldConfig) && $inputFieldConfig['type'] === 'country' )
+                                            {
+                                                $fieldTemplate = 'iido_shop_country';
+
+                                                $arrFieldConfig['shippings']=$this->shippings;
+                                            }
+                                            ?>
+                                            <?= $this->insert($fieldTemplate, $arrFieldConfig); ?>
+                                        <? endforeach ?>
+                                    </div>
+                                <? elseif( $fieldConfig['type'] === "payment" || $fieldConfig['type'] === "shipping" ):
+                                    $strClass   = $fieldConfig['type'];
+                                    $strLabel   = (($strClass === "payment") ? 'paymentMethod' : 'shippingLabel');
+                                    $arrMethod  = $this->$fieldName;
+
+                                    $strValueCountry = $this->value['shipping_country']['value']?:$this->value['country']['value'];
+
+                                ?>
+                                    <div class="<?= $strClass ?> widget<? if($this->error && in_array($strClass, $this->errorMessage['fields'])): ?> error<? endif ?>">
+                                        <div class="label"><?= $this->label[ $strLabel ] ?></div>
+
+                                        <div class="items">
+
+                                            <? foreach($arrMethod as $method):
+
+                                            $strAlias       = $method->alias?:$method->type;
+                                            $strInfo        = $method->info;
+                                            $strAttributes  = '';
+
+                                                if( preg_match('/\#\#[^#]+\#\#/', $strInfo, $matches ) )
+                                                {
+                                                    foreach($matches as $match)
+                                                    {
+                                                        $varValue = '';
+
+                                                        $strKey = strtolower(substr($match, 2, -2));
+
+                                                        switch( $strKey )
+                                                        {
+                                                            case "pricepercountry":
+                                                                $countryPrice = \IIDO\ShopBundle\Helper\ShippingHelper::getShippingPrice($strValueCountry?:"at", $method, 0, false, true);
+                                                                $varValue = '<span class="currency">' . \IIDO\ShopBundle\Config\ShopConfig::getCurrency() . '</span> <span class="country-price-number">' . \IIDO\ShopBundle\Helper\ShopHelper::renderPrice($countryPrice, true) . '</span>';
+                                                                break;
+                                                        }
+
+                                                        $strInfo = preg_replace('/' . preg_quote($match, '/') . '/', $varValue, $strInfo, 1);
+                                                    }
+                                                }
+
+                                                if( $method->enablePricePerCountry )
+                                                {
+                                                    $pricePerCountry = \StringUtil::deserialize($method->pricePerCountry, TRUE);
+
+                                                    foreach( $pricePerCountry as $countryOptions)
+                                                    {
+                                                        if( !is_array($checkOutOptions['shippingPerCountry'][ $method->alias ]) || !isset($checkOutOptions['shippingPerCountry'][ $method->alias ]) )
+                                                        {
+                                                            $checkOutOptions['shippingPerCountry'][ $method->alias ] = array();
+                                                        }
+
+                                                        if( $countryOptions['country'] === "eu" )
+                                                        {
+                                                            foreach($GLOBALS['TL_LANG']['SHOP']['countries']['eu'] as $key => $countryName)
+                                                            {
+                                                                if( !array_key_exists($key, $checkOutOptions['shippingPerCountry'][ $method->alias ]) )
+                                                                {
+                                                                    $checkOutOptions['shippingPerCountry'][ $method->alias ][ $key ] = $countryOptions['price'];
+                                                                }
+                                                            }
+                                                        }
+                                                        elseif( $countryOptions['country'] === "world" )
+                                                        {
+                                                            foreach($GLOBALS['TL_LANG']['CNT'] as $key => $countryName)
+                                                            {
+                                                                if( !array_key_exists($key, $checkOutOptions['shippingPerCountry'][ $method->alias ]) )
+                                                                {
+                                                                    $checkOutOptions['shippingPerCountry'][ $method->alias ][ $key ] = $countryOptions['price'];
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if( !array_key_exists($countryOptions['country'], $checkOutOptions['shippingPerCountry'][ $method->alias ]) )
+                                                            {
+                                                                $checkOutOptions['shippingPerCountry'][ $method->alias ][ $countryOptions['country'] ] = $countryOptions['price'];
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                $strItemClass = '';
+
+                                                if( $fieldConfig['type'] === "shipping" )
+                                                {
+                                                    if( $method->useShippingPerCountry )
+                                                    {
+                                                        $arrCountries       = array();
+                                                        $arrUseCountries    = \StringUtil::deserialize($method->shippingPerCountry, TRUE);
+
+                                                        foreach($arrUseCountries as $country)
+                                                        {
+                                                            $countryCode = $country['country'];
+
+                                                            if( strlen($countryCode) )
+                                                            {
+                                                                $arrCountries[ $countryCode ] = $countryCode;
+                                                            }
+                                                        }
+
+                                                        if( count($arrCountries) )
+                                                        {
+                                                            switch( $method->useShippingPerCountry )
+                                                            {
+                                                                case "enable":
+                                                                    $strAttributes .= ' data-enable="' . implode(',', $arrCountries) . '"';
+
+                                                                    if($strValueCountry && !in_array($strValueCountry, $arrCountries) )
+                                                                    {
+                                                                        $strItemClass = ' hidden';
+                                                                        $arrDisabledShippings[] = $strAlias;
+                                                                    }
+
+                                                                    break;
+
+                                                                case "disable":
+                                                                    $strAttributes .= ' data-disable="' . implode(',', $arrCountries) . '"';
+
+                                                                    if($strValueCountry && in_array($strValueCountry, $arrCountries) )
+                                                                    {
+                                                                        $strItemClass = ' hidden';
+                                                                        $arrDisabledShippings[] = $strAlias;
+                                                                    }
+                                                                    break;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if( $method->linkPaymentMethod )
+                                                    {
+                                                        if( $method->linkedPaymentMethod )
+                                                        {
+                                                            $objPayment = \IIDO\ShopBundle\Model\IidoShopPaymentModel::findByPk( $method->linkedPaymentMethod );
+
+                                                            if( $objPayment )
+                                                            {
+                                                                $strAttributes .= ' data-linked="' . ($objPayment->alias?:$objPayment->type) . '"';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    $objShipping = \IIDO\ShopBundle\Model\IidoShopShippingModel::findBy( array('linkPaymentMethod=?', 'linkedPaymentMethod=?'), array('1', $method->id) );
+
+                                                    if( $objShipping )
+                                                    {
+                                                        $strAttributes .= ' data-linked="' . $objShipping->alias . '"';
+
+                                                        if( in_array($objShipping->alias, $arrDisabledShippings) )
+                                                        {
+                                                            $strItemClass .= ' disabled';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                                <div class="item method-<?= $strAlias . $strItemClass ?><? if( $method->info ): ?> has-infos<? endif ?><? if($this->value[ $strClass ]['value'] === $strAlias): ?> active<? endif ?>" onclick="IIDO.Shop.Cart.check<?= ucfirst($strClass) ?>(this)"<?= $strAttributes ?>>
+                                                    <div class="hidden">
+                                                        <input type="radio" name="<?= $strClass ?>" value="<?= $strAlias ?>"<? if($this->value[ $strClass ]['value'] === $strAlias): ?> checked<? endif ?>>
+                                                    </div>
+                                                    <div class="name"><?= ($method->frontendTitle?:($method->name?:$method->title)) ?></div>
+                                                    <? if( $method->info ): ?>
+                                                        <div class="infos"><?= $strInfo ?></div>
+                                                    <? endif ?>
+                                                </div>
+                                            <? endforeach ?>
+
+                                        </div>
+                                    </div>
+                                <? endif ?>
+
+
+                            <? if($fieldConfig['wrapper']): ?>
                                 </div>
                             <? endif ?>
 
+                        <? endforeach ?>
 
-                        <? if($fieldConfig['wrapper']): ?>
+                        <? if( $arrFields['type'] === "div" ): ?>
                             </div>
                         <? endif ?>
 
                     <? endforeach ?>
 
-                    <? if( $arrFields['type'] === "div" ): ?>
-                        </div>
-                    <? endif ?>
-
-                <? endforeach ?>
-
-            </div>
-
+                </div>
+            <? endif ?>
 
             <div class="action-container">
                 <div class="backlink">
                     <a href="<?= $this->cartLink ?>"><?= $this->label['back'] ?></a>
                 </div>
 
+                <? if($this->cartNum > 0): ?>
                 <div class="forward">
                     <button type="submit"><?= $this->label['forward'] ?></button>
                 </div>
+                <? endif ?>
             </div>
 
         </form>
@@ -145,8 +327,22 @@
             {
                 IIDO.Shop.Cart.initCheckOutForm( document.getElementById("checkoutForm") );
             });
+
+            IIDO.Shop.addCheckOutOptions(<?= json_encode($checkOutOptions) ?>);
         </script>
 
+    </div>
+</div>
+
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
     </div>
 </div>
 

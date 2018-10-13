@@ -1,6 +1,7 @@
 <div class="configurator-container" data-item-number="<?= $this->skiNumber ?>" data-color="<?= $this->catColor ?>" id="configuratorCont_<?= $this->id ?>" style="background:<?= $this->catColor ?>;">
     <div class="conf-cont-inside">
         <input type="hidden" name="ARTICLE_NUMBER[range]" value="<?= $this->itemNumberRange . '.' . $this->skiNumber ?>">
+        <input type="hidden" name="real_item_number" value="" id="realItemNumber">
         <input type="hidden" name="name" value="<?= $this->productName ?>">
         <? if($this->mode === "edit" ): ?>
             <input type="hidden" name="CURRENT_ARTICLE_NUMBER" value="<?= $this->currentItemNumber ?>">
@@ -11,7 +12,7 @@
             <div class="product-desc"><?= $this->productDesc ?></div>
         <? endif ?>
 
-        <div class="configurator-infos">
+        <div class="configurator-infos" style="background:<?= $this->catColor ?>;">
 
             <div class="design" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
                 <div class="label"><?= $this->label['design'] ?></div>
@@ -40,8 +41,8 @@
                 <div class="label"><?= $this->label['binding'] ?></div>
 
                 <div class="chooser">
-                    <div class="choose-item<? if($this->chooserInputValue['none']): ?> is-checked<? endif ?>" data-number="none" onclick="IIDO.Shop.Configurator.checkItem(this, 'binding')">
-                        <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[binding]" value="none"></div>
+                    <div class="choose-item binding-picker<? if($this->chooserInputValue['binding'] === 'none'): ?> is-checked<? endif ?>" data-number="none" onclick="IIDO.Shop.Configurator.checkItem(this, 'binding')">
+                        <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[binding]" value="none"<? if($this->chooserInputValue['binding'] === 'none'): ?> checked="checked"<? endif ?>></div>
                         <div class="name"><?= $this->label['noBinding'] ?></div>
                     </div>
                     <? foreach($this->bindings as $binding):
@@ -54,17 +55,17 @@
                             $strAttribute   = ' checked="checked"';
                         }
                         ?>
-                        <div class="choose-item<?= $strClass ?>" data-number="<?= $binding['articleNumber'] ?>" data-image="<?= $binding['image'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'binding')">
+                        <div class="choose-item binding-picker<?= $strClass ?>" data-number="<?= $binding['articleNumber'] ?>" data-image="<?= $binding['image'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'binding')">
                             <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[binding]" value="<?= $binding['articleNumber'] ?>"<?= $strAttribute ?>></div>
                             <div class="name"><?= $binding['title'] ?></div>
-                            <div class="description"><?= $binding['description'] ?></div>
+                            <div class="description<? if($binding['description']): ?> has-text<? endif ?>"><div class="desc-inside"><?= $binding['description'] ?></div></div>
                         </div>
                     <? endforeach ?>
                 </div>
                 <div class="chooser-value"><?= $this->chooserValue['binding'] ?></div>
             </div>
 
-            <div class="length" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="length<? if($this->questionnaireMode): ?> saved<? endif ?>" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
                 <div class="label"><?= $this->label['length'] ?></div>
 
                 <div class="chooser">
@@ -78,7 +79,7 @@
                             $strAttribute   = ' checked="checked"';
                         }
                         ?>
-                        <div class="choose-item<?= $strClass ?>" data-number="<?= $length['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this)">
+                        <div class="choose-item<?= $strClass ?>" data-number="<?= $length['articleNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'length')">
                             <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[length]" value="<?= $length['articleNumber'] ?>"<?= $strAttribute ?>></div>
                             <div class="name"><?= $length['articleNumber'] ?></div>
                         </div>
@@ -87,7 +88,7 @@
                 <div class="chooser-value"><?= $this->chooserValue['length'] ?></div>
             </div>
 
-            <div class="flex" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
+            <div class="flex<? if($this->questionnaireMode): ?> saved<? endif ?>" onclick="IIDO.Shop.Configurator.toggleChooser( this )">
                 <? //<div class="label" onclick="IIDO.Shop.Configurator.toggleChooser( this.parentNode )"><?= $this->label['flex'] ? ></div> ?>
                 <div class="label"><?= $this->label['flex'] ?></div>
 
@@ -102,7 +103,7 @@
                         ?>
                         <div class="choose-item<?= $strClass ?>" data-number="<?= $flex['alias'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'flex')">
                             <?php //<div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[flex]" value="<?= $flex['articleNumber'] ? >"></div> ?>
-                            <div class="hidden"><input type="checkbox" name="flex" value="<?= $flex['alias'] ?>"<?= $strAttribute ?>></div>
+                            <div class="hidden"><input type="checkbox" name="ARTICLE_NUMBER[flex]" value="<?= $flex['alias'] ?>"<?= $strAttribute ?>></div>
                             <div class="name"><?= $flex['title'] ?></div>
                         </div>
                     <? endforeach ?>
@@ -124,10 +125,23 @@
                 <div class="label"><?= $this->label['tuning'] ?></div>
 
                 <div class="chooser">
+                    <? if(count($this->tunings) ): ?>
+
+                        <? foreach($this->tunings as $tuning): ?>
+                            <div class="choose-item<? if($this->chooserInputValue['tuning'] === $tuning['itemNumber']): ?> is-checked<? endif ?>" data-number="<?= $tuning['itemNumber'] ?>" onclick="IIDO.Shop.Configurator.checkItem(this, 'tuning')">
+                                <div class="hidden"><input type="checkbox" name="tuning" value="<?= $tuning['itemNumber'] ?>"<? if($this->chooserInputValue['tuning'] === $tuning['itemNumber']): ?> checked="checked"<? endif ?>></div>
+                                <div class="name"><?= $tuning['name'] ?></div>
+                                <div class="description<? if($tuning['description']): ?> has-text<? endif ?>"><div class="desc-inside"><?= $tuning['description'] ?></div></div>
+                            </div>
+                        <? endforeach ?>
+
+                    <? else: ?>
+
                     <div class="choose-item<? if($this->chooserInputValue['tuning'] === "Standardtuning"): ?> is-checked<? endif ?>" data-number="0" onclick="IIDO.Shop.Configurator.checkItem(this, 'tuning')">
                         <div class="hidden"><input type="checkbox" name="tuning" value="Standardtuning"<? if($this->chooserInputValue['tuning'] === "Standardtuning"): ?> checked="checked"<? endif ?>></div>
                         <div class="name">Standardtuning (Gratis)</div>
                     </div>
+                    <? endif ?>
                 </div>
                 <div class="chooser-value"><?= $this->chooserValue['tuning'] ?></div>
             </div>
@@ -136,8 +150,8 @@
 
         <div class="product-image" id="productImage_<?= $this->id ?>">
             <figure class="image_container">
-                <?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $this->productImage, array(), true ) ?>
-                <div class="binding-image"><?= $this->bindingImage ?></div>
+                <?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $this->productImage, array(), true, $this->productImageObj ) ?>
+                <? // <div class="binding-image"><?= $this->bindingImage ? ></div> ?>
             </figure>
         </div>
 
@@ -159,7 +173,15 @@
                         </a>
                     <? endif ?>
                 </div>
-                <div class="watchlist-num<? if($this->watchlistNum === 0): ?> is-hidden<? endif ?>"><?= $this->watchlistNum ?></div>
+                <div class="watchlist-num<? if($this->watchlistNum === 0): ?> is-hidden<? endif ?><? if( $this->watchlistLink ): ?> has-link<? endif ?>">
+                    <? if( $this->watchlistLink ): ?>
+                        <a href="<?= $this->watchlistLink ?>">
+                    <? endif ?>
+                        <?= $this->watchlistNum ?>
+                    <? if( $this->watchlistLink ): ?>
+                        </a>
+                    <? endif ?>
+                </div>
             </div>
 
         </div>
@@ -205,7 +227,7 @@
         <? endif ?>
 
         <? if( $this->hasMoreDetails ): ?>
-            <div class="more-details-link"><a href="javascript:void(0)" onclick="IIDO.Page.scrollTo(window.event, this.getAttribute('data-anker'), 0)" data-anker="configuratorContent"><?= $this->label['moreDetails'] ?></a></div>
+            <div class="more-details-link"><a href="javascript:void(0)" onclick="IIDO.Page.scrollTo(window.event, this.getAttribute('data-anker'), 0)" data-anker="configuratorContent"><span><?= $this->label['moreDetails'] ?></span></a></div>
         <? endif ?>
 
     </div>
@@ -213,5 +235,5 @@
 </div>
 <script>
     IIDO.Shop.Configurator.init(<?= $this->id ?>);
-    IIDO.Shop.Configurator.initConfig(<?= json_encode($this->arrConfig) ?>);
+    IIDO.Shop.Configurator.<? if($this->configNumber): ?>initNewConfig<? else: ?>initConfig<? endif ?>(<?= ($this->configNumber ? "'" . $this->configNumber . "'" : json_encode($this->arrConfig)) ?>);
 </script>

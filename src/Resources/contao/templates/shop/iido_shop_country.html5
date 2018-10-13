@@ -1,0 +1,20 @@
+<?
+$strLabelName   = preg_replace(array('/^shipping_/', '/^billing_/'), '', $this->name);
+$strLabel       = $this->label[ $strLabelName ];
+
+$strClass       = (is_array($this->config) ? $this->name : $this->config);
+$strClass       = ($strClass ? ' ' : '') . $strClass;
+?>
+<div class="widget widget-select<?= $strClass ?><? if($this->error && in_array($this->name, $this->msg['fields'])): ?> error<? endif ?>">
+    <input type="hidden" name="<?= $this->name ?>" class="text" id="ctrl_<?= $this->name ?>_hidden" value="<?= $this->value[ $this->name ]['value'] ?>">
+
+    <div class="select-tag">
+        <select name="<?= $this->name ?>" onchange="IIDO.Shop.checkCountryMode(this<? if($this->name === "shipping_country"): ?>, true<? endif ?>)">
+            <? foreach(\IIDO\ShopBundle\Helper\ShopCheckOutHelper::getShippingCountries($this->shippings) as $key => $country): ?>
+                <option value="<?= $key ?>"<?if( $key === $this->value[ $this->name ]['value']): ?> selected<? endif ?>><?= $country ?></option>
+            <? endforeach ?>
+        </select>
+    </div>
+    <label for="ctrl_<?= $this->name ?>"><?= $strLabel ?></label>
+
+</div>

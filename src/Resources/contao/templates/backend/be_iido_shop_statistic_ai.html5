@@ -1,49 +1,136 @@
 <div class="statistic-ai-container">
     <div class="header-infos">
-        <div class="title"><?= $this->label['ai'] ?></div>
+
         <div class="selector">
-            <form action="<?= \Environment::get('request') ?>" method="post">
-                <input type="hidden" name="FORM_SUBMIT" value="QUESTIONNAIRE_SELECTOR">
-                <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+            <form action="<?= \Environment::get('request') ?>" method="get" class="tl_form">
+                <div class="tl_formbody">
+                    <input type="hidden" name="do" value="<?= \Input::get("do") ?>">
+                    <input type="hidden" name="mode" value="<?= \Input::get("mode") ?>">
+<!--                    <input type="hidden" name="FORM_SUBMIT" value="QUESTIONNAIRE_SELECTOR">-->
+<!--                    <input type="hidden" name="REQUEST_TOKEN" value="--><?//= REQUEST_TOKEN ?><!--">-->
 
-                <select name="selectQuestionnaire" class="tl_select" onchange="this.form.submit()">
-                    <option value="">-</option>
-                    <? foreach($this->questionnaires as $questionnaireGroup => $arrQuestionnaires): ?>
+                    <div class="tl_panel cf">
+                        <div class="tl_filter tl_subpanel">
+                            <strong>Filtern: </strong>
+                            <select name="questionnaire" class="tl_select" onchange="this.form.submit()">
+                                <option value="">-</option>
+                                <? foreach($this->questionnaires as $questionnaireGroup => $arrQuestionnaires): ?>
 
-                        <optgroup label="<?= $questionnaireGroup ?>">
-                            <? foreach($arrQuestionnaires as $questionnaire):
-                                $disabled   = false;
-                                $selected   = false;
+                                    <optgroup label="<?= $questionnaireGroup ?>">
+                                        <? foreach($arrQuestionnaires as $questionnaire):
+                                            $disabled   = false;
+                                            $selected   = false;
 
-                                if( !$questionnaire['hasData'] )
-                                {
-                                    $disabled = true;
-                                }
+                                            if( !$questionnaire['hasData'] )
+                                            {
+                                                $disabled = true;
+                                            }
 
-                                if( \Input::post('selectQuestionnaire') === $questionnaire['id'] )
-                                {
-                                    $selected = true;
-                                }
-                                ?>
-                                <option value="<?= $questionnaire['id'] ?>"<? if($disabled): ?> disabled<? endif ?><? if($selected): ?> selected<? endif ?>><?= $questionnaire['title'] ?> - Seite: <?= $questionnaire['page']->title ?> (ID: <?= $questionnaire['page']->id ?>)<? if($disabled): ?> - KEINE DATEN VORHANDEN<? endif ?></option>
-                            <? endforeach ?>
-                        </optgroup>
-                    <? endforeach ?>
-                </select>
+                                            if( \Input::get('questionnaire') === $questionnaire['id'] )
+                                            {
+                                                $selected = true;
+                                            }
+                                            ?>
+                                            <option value="<?= $questionnaire['id'] ?>"<? if($disabled): ?> disabled<? endif ?><? if($selected): ?> selected<? endif ?>><?= $questionnaire['title'] ?> - Seite: <?= $questionnaire['page']->title ?> (ID: <?= $questionnaire['page']->id ?>)<? if($disabled): ?> - KEINE DATEN VORHANDEN<? endif ?></option>
+                                        <? endforeach ?>
+                                    </optgroup>
+                                <? endforeach ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
 
-    <? if( count($this->questionnaireData) ): ?>
-        <div class="questionnaire-data-list">
-            <? foreach( $this->questionnaireData as $questData): ?>
-                <div class="quest-row">
-                    <div class="date">
-                        <?= date(\Config::get("datimFormat"), $questData['tstamp']) ?>
+    <? if( $this->addButtons ): ?>
+        <div id="tl_buttons">
+            <a href="<?= ampersand(preg_replace(array("/(&|&amp;)mode=([A-Za-z0-9]{0,})/", "/(&|&amp;)questionnaire=([A-Za-z0-9]{0,})/"), "", \Environment::get('request'))) ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+            <? if( !$this->overview ): ?>
+                    <a href="<?= ampersand(preg_replace(array("/(&|&amp;)questionnaire=([A-Za-z0-9]{0,})/"), "", \Environment::get('request'))) ?>" class="header_shop_product_categories" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle_overview']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT_overview'] ?></a>
+            <? endif ?>
+        </div>
+    <? endif ?>
+
+    <? if( $this->overview ): ?>
+        <div class="overview-list-container tl_listing_container parent_view" id="tl_listing">
+            <? foreach($this->questionnaires as $questionnaireGroup => $arrQuestionnaires):
+                $backendPageID  = preg_replace(array('/^([A-Za-z0-9\s\-,;.:_+\(\)öäüÖÄÜß!]{0,})\(ID: /', '/\)$/'), '', $questionnaireGroup);
+                $objBackendPage = \PageModel::findByPk( $backendPageID );
+
+                $strLang = $objBackendPage->language;
+                ?>
+                <div class="overview-parent-container">
+                    <div class="tl_header click2edit toggle_select hover-div">
+                        <table class="tl_header_table">
+                            <tbody><tr>
+                                <td><span class="tl_label">Seitenbaum:</span> </td>
+                                <td><?= $questionnaireGroup ?></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tl_label">Sprache:</span> </td>
+                                <td><?= $strLang ?></td>
+                            </tr>
+                            </tbody></table>
                     </div>
 
+
+                    <div class="overview-parent-items-container">
+                        <div class="tl_content_header"><span class="name">Fragebogen</span><span class="page">Seite</span><span class="info">Info</span></div>
+                        <? foreach($arrQuestionnaires as $questionnaire):
+                            $disabled = false;
+
+                            if( !$questionnaire['hasData'] )
+                            {
+                                $disabled = true;
+                            }
+                            ?>
+                            <div class="tl_content even click2edit toggle_select hover-div<? if($disabled): ?> disabled<? endif ?>">
+                                <div class="tl_content_right">
+                                    <? if($disabled): ?>
+                                        <div class="disabled-msg">KEINE DATEN VORHANDEN</div>
+                                    <? else: ?>
+                                        <a href="<?= \Environment::get('request') . '&questionnaire=' . $questionnaire['id'] ?>">DATEN ANSEHEN</a>
+                                    <? endif ?>
+                                </div>
+                                <div class="tl_content_left"><span class="title"><?= $questionnaire['title'] ?></span> <span class="page" style="color:#999;"><?= $questionnaire['page']->title ?> (ID: <?= $questionnaire['page']->id ?>)</span></div>
+                            </div>
+                        <? endforeach ?>
+                    </div>
                 </div>
             <? endforeach ?>
         </div>
+    <? else: ?>
+
+        <? if( count($this->questionnaireData) ): ?>
+            <div class="questionnaire-data-list">
+                <? foreach( $this->questionnaireData as $questData): ?>
+                    <div class="quest-row">
+                        <div class="header">
+                            <div class="date">
+                                <?= date(\Config::get("datimFormat"), $questData['tstamp']) ?>
+                            </div>
+                            <div class="id">
+                                ID: <?= $questData['id'] ?>
+                            </div>
+                        </div>
+                        <div class="data">
+                            <? $arrData = json_decode($questData['questionnaireData'], TRUE);
+                            if( count($arrData) ):
+                                foreach($arrData as $key => $value):
+                            ?>
+                                <div class="data-item">
+                                    <div class="key"><?= $key ?></div>
+                                    <div class="value"><?= $value ?></div>
+                                </div>
+                            <? endforeach; endif; ?>
+                        </div>
+
+                    </div>
+                <? endforeach ?>
+            </div>
+        <? endif ?>
+
     <? endif ?>
 </div>

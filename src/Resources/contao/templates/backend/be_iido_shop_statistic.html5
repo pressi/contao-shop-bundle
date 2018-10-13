@@ -1,4 +1,4 @@
-<? if( !$this->overview ): ?>
+<? if( !$this->overview && !$this->removeButtons ): ?>
     <div id="tl_buttons">
         <a href="<?= ampersand(preg_replace("/(&|&amp;)mode=([A-Za-z0-9]{0,})/", "", \Environment::get('request'))) ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
     </div>
@@ -9,12 +9,21 @@
 
     <? if( $this->overview ): ?>
 
-        <? if( \IIDO\ShopBundle\Helper\ShopHelper::questionnaireTemplateExists() ): ?>
+
+        <? if( \IIDO\ShopBundle\Helper\ShopHelper::questionnaireTemplateExists() && ($this->User->isAdmin || $this->User->hasAccess('ai', 'iidoShopStatistic')) ): ?>
             <div class="statistic-container ai-statistic">
                 <a href="<?= \Controller::addToUrl('mode=ai' ) ?>">
                     <span class="label"><?= $this->label['ai'] ?></span>
                 </a>
             </div>
+        <? endif ?>
+
+        <? if ($this->User->isAdmin || $this->User->hasAccess('order', 'iidoShopStatistic')): ?>
+        <div class="statistic-container order-statistic">
+            <a href="<?= \Controller::addToUrl('mode=order' ) ?>">
+                <span class="label"><?= $this->label['order'] ?></span>
+            </a>
+        </div>
         <? endif ?>
 
     <? else: ?>

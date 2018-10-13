@@ -13,13 +13,17 @@
 <? else: ?>
 
             <? foreach($this->items as $key => $item):
-                $strClass = ($item['class'] ? ' ' . $item['class'] : '');
+
+            $strClass = ($item['class'] ? ' ' . $item['class'] : '');
+            $catColor = '';
 
             if( count($item['categories']) )
             {
                 foreach($item['categories'] as $objCategory)
                 {
                     $strClass .= ' cat-' . $objCategory->alias;
+
+                    $catColor = \IIDO\BasicBundle\Helper\ColorHelper::compileColor( \StringUtil::deserialize($objCategory->color, TRUE) );
                 }
             }
 
@@ -29,6 +33,7 @@
             $objTemplate->item      = $item;
             $objTemplate->class     = $strClass;
             $objTemplate->key       = $key;
+            $objTemplate->catColor  = $catColor;
 
             $objTemplate->editLink  = ($this->iidoShopConfiguratorPage ? \PageModel::findByPk( $this->iidoShopConfiguratorPage )->getFrontendUrl() : '');
 
@@ -72,6 +77,18 @@
             <?= $this->checkOutLink ?>
         </div>
 
+    </div>
+</div>
+
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
     </div>
 </div>
 

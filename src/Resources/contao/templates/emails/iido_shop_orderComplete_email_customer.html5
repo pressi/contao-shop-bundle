@@ -1,0 +1,145 @@
+<div class="order-container" style="width:800px;margin:0 auto;">
+
+    <div class="order-header">
+        <table cellspacing="0" cellpadding="0" border="0" style="padding:0;border:none;width:100%" width="100%">
+            <tr>
+                <td style="vertical-align:top;" valign="top">
+                    <p style="margin:0;font-size:12px;"><strong><?= $this->label['orderNumber'] ?></strong>: <?= $this->orderNumber ?><br>
+                        <strong><?= $this->label['orderDate'] ?></strong>: <?= $this->orderDate ?><br>
+                        <strong><?= $this->label['paymentMethod'] ?></strong>: <?= $this->paymentMethod ?><br>
+                        <strong><?= $this->label['shippingMethod'] ?></strong>: <?= $this->shippingMethod ?></p>
+                </td>
+                <td style="vertical-align:top;text-align:right;" valign="top">
+                    <div class="logo"><?= $this->logo ?></div>
+                    <div class="slogan" style="text-align:right;padding-top:30px;padding-bottom:20px;"><?= $this->slogan ?></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="order-address-infos" style="border-top:1px solid #000;border-bottom:1px solid #000;padding:4px;">
+        <table cellpadding="0" cellspacing="0" border="0" style="padding:0;border:none;width:100%" width="100%">
+            <tr>
+                <td style="background:#eaeaea;font-size:12px;padding:5px;border-right:1px solid #fff;width:50%;" width="50%" bgcolor="#eaeaea"><strong><?= $this->label['shippingAddress'] ?></strong></td>
+                <td style="background:#eaeaea;font-size:12px;padding:5px;width:50%;" width="50%" bgcolor="#eaeaea"><strong><?= $this->label['billingAddress'] ?></strong></td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top;" valign="top">
+                    <p style="font-size:12px;margin:10px 0 15px;"><?= $this->shipping_firstname ?> <?= $this->shipping_lastname ?><br>
+                        <?= $this->shipping_street ?><br>
+                        <?= $this->shipping_postal ?> <?= $this->shipping_city ?><br>
+                        <?= $this->shipping_country ?>
+                    </p>
+                    <p style="font-size:12px;margin:0;">
+                        <? if($this->phone): ?><?= $this->phone ?><br><? endif ?><?= $this->email ?>
+                    </p>
+                </td>
+                <td style="vertical-align:top;" valign="top">
+                    <p style="font-size:12px;margin:10px 0 0;"><?= $this->firstname ?> <?= $this->lastname ?><br>
+                        <?= $this->street ?><br>
+                        <?= $this->postal ?> <?= $this->city ?><br>
+                        <?= $this->country ?>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="salutation" style="padding-top:20px;padding-bottom:10px;"><?= $this->dummy['salutation'] ?></div>
+
+    <div class="info-text" style="padding-bottom:20px"><?= $this->dummy[ $this->payment ] ?></div>
+
+    <div class="agb" style="padding-bottom:20px;text-transform:uppercase;"><strong><?= $this->label['agb'] ?></strong></div>
+
+    <div class="oder-items-container">
+        <div class="items-intro" style="border-bottom:1px solid #000;margin-bottom:20px;"><strong><?= $this->label['orderItemsIntro'] ?></strong></div>
+        <div class="items">
+
+            <? if( count($this->items) ): ?>
+
+                <table cellpadding="8" cellspacing="0" width="800" style="width:800px;border:none;" border="0">
+                    <thead>
+                    <tr style="text-align:left;">
+                        <th style="border-bottom:2px solid #000;">Pos.</th>
+                        <th style="border-bottom:2px solid #000;"><?= $this->label['articleDescription'] ?></th>
+                        <th style="border-bottom:2px solid #000;text-align:center;"><?= $this->label['quantity'] ?></th>
+                        <th style="border-bottom:2px solid #000;text-align:center;"><?= $this->label['singlePrice'] ?></th>
+                        <th style="border-bottom:2px solid #000;text-align:right;"><?= $this->label['totalPrice'] ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                <? $summe=0; $shippingSumme=0; foreach($this->items as $pos => $item):
+
+                    $strName = $item['name'];
+
+                    $strName = preg_replace('/%2B/', '+', $strName);
+                    $strName = preg_replace('/%20/', ' ', $strName);
+                    $strName = preg_replace('/ORIGINAL /', 'ORIGINAL+ ', $strName);
+
+
+                    $productInfos = '<strong>' . $strName . '</strong><br>';
+                    $productInfos .= preg_replace('/.none$/', '', $item['realArticleNumber']?:$item['articleNumber']);
+
+                    $quantity   = $item['quantity'];
+                    $price      = $item['singlePrice'];
+                    $totalPrice = (float) $item['totalPrice'];
+
+                    $summe = ($summe + $totalPrice);
+                    ?>
+
+                    <tr>
+                        <td style="border-bottom:1px solid #000;"><?= ($pos + 1) ?></td>
+                        <td style="border-bottom:1px solid #000;"><?= $productInfos ?></td>
+                        <td style="border-bottom:1px solid #000;text-align:center;"><?= $quantity ?></td>
+                        <td style="border-bottom:1px solid #000;text-align:center;"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice($price, true) ?></td>
+                    <td style="border-bottom:1px solid #000;text-align:right;"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice($totalPrice, true) ?></td>
+                    </tr>
+
+
+                <? endforeach;
+
+                foreach($this->shippingItems as $shippingItem)
+                {
+                    $shippingSumme = ($shippingSumme + (float)$shippingItem['price']);
+                }
+
+                $summe = ($shippingSumme + $summe);
+                ?>
+
+                    </tbody>
+                    <tfood>
+                        <tr>
+                            <td colspan="3">&nbsp;</td>
+                            <td style="text-align:right;"><?= $this->label['shippingCosts'] ?></td>
+                            <td style="text-align:right;">&euro; <?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice($shippingSumme, true) ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">&nbsp;</td>
+                            <td style="text-align:right;"><strong><?= $this->label['sum'] ?></strong></td>
+                            <td style="text-align:right;"><strong>&euro; <?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice($summe, true) ?></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">&nbsp;</td>
+                            <td style="text-align:right;"><?= $this->label['incl_vat'] ?></td>
+                            <td style="text-align:right;">&euro; <?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice(($summe * 0.2), true) ?></td>
+                        </tr>
+                    </tfood>
+                </table>
+
+            <? endif ?>
+
+        </div>
+    </div>
+
+    <div class="order-footer">
+        <div class="footer-thanks" style="padding-top:40px;padding-bottom:20px;"><?= $this->dummy['thanks'] ?></div>
+
+        <div class="footer-addon-text" style="font-size:12px;margin-bottom:30px;padding-bottom:5px;border-bottom:1px solid #000;"><?= $this->dummy['addText'] ?></div>
+
+        <div class="shop-address">
+            <?= $this->dummy['shopAddress'] ?>
+        </div>
+
+    </div>
+</div>

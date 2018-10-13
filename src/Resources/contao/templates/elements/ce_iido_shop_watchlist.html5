@@ -13,13 +13,17 @@
 <? else: ?>
 
             <? foreach($this->items as $key => $item):
-                $strClass = ($item['class'] ? ' ' . $item['class'] : '');
+
+            $strClass = ($item['class'] ? ' ' . $item['class'] : '');
+            $catColor = '';
 
             if( count($item['categories']) )
             {
                 foreach($item['categories'] as $objCategory)
                 {
                     $strClass .= ' cat-' . $objCategory->alias;
+
+                    $catColor = \IIDO\BasicBundle\Helper\ColorHelper::compileColor( \StringUtil::deserialize($objCategory->color, TRUE) );
                 }
             }
 
@@ -29,6 +33,7 @@
             $objTemplate->item      = $item;
             $objTemplate->class     = $strClass;
             $objTemplate->key       = $key;
+            $objTemplate->catColor  = $catColor;
 
             $objTemplate->editLink  = ($this->iidoShopConfiguratorPage ? \PageModel::findByPk( $this->iidoShopConfiguratorPage )->getFrontendUrl() : '');
 

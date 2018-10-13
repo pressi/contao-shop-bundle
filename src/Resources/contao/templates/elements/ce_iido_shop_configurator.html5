@@ -1,10 +1,37 @@
-<? $this->extend("block_searchable") ?>
+<? $this->extend("block_searchable");
+
+global $objPage;
+
+$this->class = preg_replace('/_configurator_v2/', '_configurator', $this->class);
+$this->class = preg_replace('/_configurator_v3/', '_configurator', $this->class);
+?>
 
 <? $this->block("content") ?>
 
 <div class="step-container step-<?= $this->stepNum ?><? if($this->stepNum == 1): ?> overview-container<? endif ?>">
 
     <? if( $this->stepNum === 1 ): ?>
+
+    <div class="configurator-overview-content">
+
+        <div class="top-title">{{iflng::de}}Finde dein optimales Ski Setup.{{iflng::en}}Find your optimal ski setup.{{iflng}}</div>
+        <div class="title">{{iflng::de}}Frag Origo{{iflng::en}}Ask Origo{{iflng}}</div>
+
+        <div class="text">
+            <p>{{iflng::de}}Unser Berater auf Basis künstlicher Intelligenz wird jetzt, mit Deinem Input, den für Dich perfekt passenden Ski entwickeln.{{iflng::en}}Our configuration software, based on artificial intelligence, needs your input and will now develop the perfect ski for you.{{iflng}}</p>
+        </div>
+
+        <div class="button-container text-center">
+            <div class="ce_hyperlink btn btn-type-round btn-primary btn-middle">
+                <a href="{{iflng::de}}{{link_url::28}}{{iflng::en}}{{link_url::82}}{{iflng}}"><span class="text-line">{{iflng::de}}ORIGO starten!{{iflng::en}}Start ORIGO!{{iflng}}</span></a>
+            </div>
+        </div>
+
+        <div class="sub-title">{{iflng::de}}oder wähle dein Modell selbst.{{iflng::en}}or choose your model yourself.{{iflng}}</div>
+
+
+    </div>
+
     <div class="choose-container choose-bottom">
         <div class="container-inside">
     <? endif ?>
@@ -24,7 +51,6 @@
     <? if( $this->stepNum === 1 ): ?>
         </div>
     </div>
-
     <? endif ?>
 
     <? if( $this->stepNum > 1 ): ?>
@@ -58,6 +84,19 @@
 
 <script>
     IIDO.Shop.Configurator.initContainer(<?= $this->id ?>);
+    IIDO.Shop.setLanguage( '<?= \IIDO\BasicBundle\Helper\BasicHelper::getLanguage() ?>');
 </script>
-
+<?// if( !preg_match('/homepage/', $objPage->cssClass) ): ?>
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
+    </div>
+</div>
+<?// endif ?>
 <? $this->endblock() ?>

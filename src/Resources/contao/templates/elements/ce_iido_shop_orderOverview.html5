@@ -12,7 +12,7 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
             <input type="hidden" name="FORM_SUBMIT" value="orderOverview_form">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
             <? foreach($this->hiddenFields as $fieldName => $fieldValue): ?>
-                <input type="hidden" name="<?= $fieldName ?>" value="<?= $fieldValue['value'] ?>">
+                <input type="hidden" name="<?= $fieldName ?>" value="<?= $fieldValue['key']?:$fieldValue['value'] ?>">
             <? endforeach ?>
 
             <div class="form-columns">
@@ -118,18 +118,52 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
 
                 <div class="row">
                     <div class="name"><?= $this->label['shipping_costs'] ?></div>
-                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( $this->shippingPrice, true) ?><?= $strUnit ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( $this->shippingPrice, true, true) ?><?= $strUnit ?></div>
                 </div>
 
                 <div class="row row-bold">
                     <div class="name"><?= $this->label['total_price'] ?></div>
-                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( ($this->cartPrice + $this->shippingPrice), true) ?><?= $strUnit ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( ($this->cartPrice + $this->shippingPrice), true, true) ?><?= $strUnit ?></div>
                 </div>
 
                 <div class="row">
-                    <div class="name">+ <?= $this->label['vat_text'] ?></div>
-                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( ($this->cartPrice * 0.17), true) ?><?= $strUnit ?></div>
+                    <div class="name"><?= $this->label['inclusive_short'] ?> <?= $this->label['vat_text'] ?></div>
+                    <div class="price"><?= \IIDO\ShopBundle\Helper\ShopHelper::renderPrice( (($this->cartPrice + $this->shippingPrice) * 0.2), true, true) ?><?= $strUnit ?></div>
                 </div>
+
+                <?
+                $country = $this->value['shipping_country']['key'] ? : $this->value['country']['key'];
+
+                if( $country === "ch" || $country === "no" || $country === "world" || \IIDO\ShopBundle\Helper\ShopOrderHelper::isWorldCountry( $country, $this->value['shipping']['value'] ) ):
+
+                    $messageText    = 'in Ihr Land';
+
+                    $messageTextEN  = 'When shipping to your country';
+                    $messageDutyEN  = 'costs for the customs';
+
+                switch( $country )
+                {
+                    case "ch":
+                        $messageText = 'in die Schweiz';
+
+                        $messageTextEN  = 'When shipping to Switzerland';
+                        $messageDutyEN  = 'costs for the customs';
+                        break;
+
+                    case "no":
+                        $messageText = 'nach Norwegen';
+
+                        $messageTextEN  = 'Shipping to Norway';
+                        $messageDutyEN  = 'customs fees';
+                        break;
+                }
+
+
+                ?>
+                <div class="price-message">
+                    {{iflng::de}}Beim Versand <?= $messageText ?> können zusätzliche Kosten für den Zoll anfallen. Genaueres erhalten Sie dann per E-Mail.{{iflng::en}}<?= $messageTextEN ?> may incur additional <?= $messageDutyEN ?>. You will receive more details by E-Mail.{{iflng}}
+                </div>
+                <? endif ?>
 
             </div>
 
@@ -145,6 +179,18 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
 
         </form>
 
+    </div>
+</div>
+
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
     </div>
 </div>
 

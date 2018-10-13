@@ -1,6 +1,18 @@
-<? $this->extend("block_searchable") ?>
+<? $this->extend("block_searchable");
+
+$this->class = preg_replace('/_productList_v2/', '_productList', $this->class, -1, $count);
+
+$useInside = false;
+
+if( $count )
+{
+    $useInside = true;
+}
+?>
 
 <? $this->block("content") ?>
+
+<? if($useInside): ?><div class="element-inside"><? endif ?>
 
 <? if( $this->error ): ?>
 
@@ -14,17 +26,18 @@
 
     <div class="product-list-container">
         <? foreach( $this->products as $product ): ?>
-            <div class="product-item" data-number="<?= $product['articleNumber'] ?>">
+            <div class="product-item has-link" data-number="<?= $product['articleNumber'] ?>"<? if($product['catColor']): ?> style="background:<?= $product['catColor'] ?>;" <? endif ?>>
                 <div class="product-item-inside">
 
+                    <a href="<?= $product['detailsLink'] ?>">
                     <div class="top-infos">
                         <div class="desc-infos">
                             <div class="name"><?= $product['name'] ?></div>
                         </div>
-                        <div class="detail-infos"></div>
+                        <div class="detail-infos"><?= $product['subName'] ?></div>
                     </div>
 
-                    <div class="image bg-image bg-contain" style="background-image:url('<?= $product['imagePath'] ?>');">
+                    <div class="image bg-image bg-contain" style="background-image:url('<?= $product['imagePathOverview']?:$product['imagePath'] ?>');">
     <!--                    <div class="ctable">-->
     <!--                        <div class="ctable-inside">-->
     <!--                            --><?//= $product['imageTag'] ?>
@@ -34,16 +47,32 @@
 
                     <div class="bottom-infos">
                         <div class="action-cont">
-                            <a class="buy-link" onclick="IIDO.Shop.Cart.addItem(this)" href="javascript:void(0)">Kaufen</a>
-                            <a class="edit-link" href="<?= $product['detailsLink'] ?>">Details</a>
+<!--                            <a class="buy-link" onclick="IIDO.Shop.Cart.addItem(this)" href="javascript:void(0)">Kaufen</a>-->
+                            <span class="edit-link">Details</span><?php //<a class="edit-link" href="<?= $product['detailsLink'] ? >">Details</a> ?>
                         </div>
                         <div class="price"><?= $product['price'] ?></div>
                     </div>
+
+                    </a>
 
                 </div>
             </div>
         <? endforeach; ?>
     </div>
 <? endif ?>
+
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
+    </div>
+</div>
+
+<? if($useInside): ?></div><? endif ?>
 
 <? $this->endblock() ?>

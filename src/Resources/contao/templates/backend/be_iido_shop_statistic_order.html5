@@ -1,0 +1,11 @@
+<div class="statistic-ai-container">
+    <div class="header-infos">
+
+    <? if( $this->addButtons ): ?>
+        <div id="tl_buttons">
+            <a href="<?= ampersand(preg_replace(array("/(&|&amp;)mode=([A-Za-z0-9]{0,})/", "/(&|&amp;)questionnaire=([A-Za-z0-9]{0,})/"), "", \Environment::get('request'))) ?>" class="header_back" title="<?= \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>" accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+        </div>
+    <? endif ?>
+
+    </div>
+</div>

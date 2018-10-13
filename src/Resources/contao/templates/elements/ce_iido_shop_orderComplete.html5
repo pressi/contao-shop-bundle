@@ -8,7 +8,44 @@ $strUnit = \IIDO\ShopBundle\Helper\ShopHelper::getPriceUnit(true);
 <div class="order-complete-container checkout-container">
     <div class="order-complete-container-inside checkout-container-inside">
 
+        <? if($this->noOrder): ?>
+            <div class="no-order">
+                <div class="message">{{iflng::de}}Es kann keine Bestellung durchgeführt werden!{{iflng::en}}No order can be made!{{iflng}}</div>
+            </div>
+        <? endif ?>
 
+        <? if($this->orderComplete): ?>
+            <div class="title">YEAH!!!</div>
+
+            <div class="message">{{iflng::de}}Herzlichen Glückwunsch,<br>Deine Bestellung wurde erfolgreich abgeschlossen.{{iflng::en}}Congratulations,<br>your order has been successfully completed.{{iflng}}</div>
+
+            <div class="text">
+                <p>{{iflng::de}}Vielen Dank für deine Bestellung! Die Bestellbestätigung wurde an deine Mail-Adresse geschickt.{{iflng::en}}Thank you for your order! The order confirmation has been sent to your email address.{{iflng}}</p>
+            </div>
+        <? endif ?>
+
+        <div class="links">
+            <div class="link-left">
+                <a href="{{iflng::de}}{{link_url::29}}{{iflng::en}}{{link_url::91}}{{iflng}}">{{iflng::de}}WEITER SHOPPEN{{iflng::en}}CONTINUE SHOPPING{{iflng}}</a>
+            </div>
+
+            <div class="link-right">
+                <a href="{{iflng::de}}{{link_url::17}}{{iflng::en}}{{link_url::83}}{{iflng}}">{{iflng::de}}EINEN SKI KONFIGURIEREN{{iflng::en}}CONFIGURE A SKI{{iflng}}</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="shop-mobile-container">
+    <div class="mobile-text-container">
+        <div class="image"><img src="/files/original-plus/images/icons/desktop-computer.png"></div>
+        <div class="title">DESKTOP ONLY</div>
+        <div class="text">{{iflng::de}}Unser Konfigurator/Shop
+            ist in Kürze auch für mobile
+            Endgeräte verfügbar,
+            bitte verwende bis dahin
+            einen Desktop Computer.{{iflng::en}}Our configurator/shop will be ready soon for mobile devices. In the meanwhile, please use a desktop computer.{{iflng}}</div>
     </div>
 </div>
 
