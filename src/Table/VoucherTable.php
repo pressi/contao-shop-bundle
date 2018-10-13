@@ -15,9 +15,9 @@ use IIDO\ShopBundle\Helper\PaymentHelper;
 use IIDO\ShopBundle\Model\IidoShopPaymentModel;
 
 
-class PaymentTable extends \Backend
+class VoucherTable extends \Backend
 {
-    protected $strTable = 'tl_iido_shop_payment';
+    protected $strTable = 'tl_iido_shop_voucher';
 
 
 
@@ -80,90 +80,6 @@ class PaymentTable extends \Backend
 
 
 
-    public function getPaymentTypes( \DataContainer $dc )
-    {
-        $arrTypes = PaymentHelper::getAllTypes();
-
-        if( \Input::get("act") === "edit" )
-        {
-            $objPayments = $this->Database->prepare('SELECT * FROM ' . $this->strTable)->execute();
-
-            if( $objPayments && $objPayments->count() )
-            {
-                while( $objPayments->next() )
-                {
-                    if( in_array($objPayments->type, array_keys($arrTypes)) )
-                    {
-                        if( $dc->activeRecord->type !== $objPayments->type || !$dc->activeRecord->type )
-                        {
-                            unset( $arrTypes[ $objPayments->type ] );
-                        }
-                    }
-                }
-            }
-        }
-
-        return $arrTypes;
-    }
-
-
-
-    public function getPaymentName( $varValue, \DataContainer $dc)
-    {
-        if( !$varValue )
-        {
-            if( !$dc->activeRecord )
-            {
-                $arrTypes   = PaymentHelper::getAllTypes();
-                $strType    = key( $arrTypes );
-            }
-            else
-            {
-                $strType = $dc->activeRecord->type;
-
-                if( !$strType )
-                {
-                    $arrTypes   = PaymentHelper::getAllTypes();
-                    $strType    = key( $arrTypes );
-                }
-            }
-
-            $varValue = PaymentHelper::get($strType, "name");
-        }
-
-        return $varValue;
-    }
-
-
-
-    public function getPaymentAlias( $varValue, \DataContainer $dc)
-    {
-        if( !$varValue )
-        {
-            if( !$dc->activeRecord )
-            {
-                $arrTypes   = PaymentHelper::getAllTypes();
-                $strType    = key( $arrTypes );
-            }
-            else
-            {
-                $strType = $dc->activeRecord->type;
-
-                if( !$strType )
-                {
-                    $arrTypes   = PaymentHelper::getAllTypes();
-                    $strType    = key( $arrTypes );
-                }
-            }
-
-            $varValue = $strType;
-        }
-
-        return $varValue;
-    }
-
-
-
     /**
      * Add an image to each record
      * @param array          $row
@@ -175,8 +91,8 @@ class PaymentTable extends \Backend
      */
 	public function renderLabel($row, $label, \DataContainer $dc, $args)
     {
-        $args[0]    = PaymentHelper::getAllTypes()[ $row['type'] ];
-        $args[1]    = ($row['alias']?:$row['type']);
+//        $args[0]    = PaymentHelper::getAllTypes()[ $row['type'] ];
+//        $args[1]    = ($row['alias']?:$row['type']);
 
 //        if( $row['name'] )
 //        {
@@ -339,80 +255,26 @@ class PaymentTable extends \Backend
 
 
 
-    public function loadPaymentTable()
+    public function renderIsVoucherUsedField(\DataContainer $dc, $field)
     {
-        $arrAllTypes        = PaymentHelper::getAllTypes();
-        $objPayments        = $this->Database->prepare("SELECT * FROM " . $this->strTable)->execute();
+        $record     = $dc->activeRecord;
+        $strField   = '';
 
-        if( $objPayments && $objPayments->count() )
+        if( $record->used )
         {
-            while( $objPayments->next() )
-            {
-                if( isset($arrAllTypes[ $objPayments->type ]) )
-                {
-                    unset( $arrAllTypes[ $objPayments->type ] );
-                }
-            }
+            $strField = '<div class="widget"><div class="backend-message error">
+    <div class="msg">Der Gutschein wurde bereits benutzt.</div>
+    <div class="action"><a href="" class="btn">Gutschein wieder aktivieren</a></div>
+</div></div>';
         }
+//        else
+//        {
+//            $strField = '<div class="widget"><div class="backend-message tl_message tl_info">
+//    <div class="msg">Der Gutschein wurde noch nicht benutzt.</div>
+//</div></div>';
+//        }
 
-        if( !count($arrAllTypes) )
-        {
-            $GLOBALS['TL_DCA'][ $this->strTable ]['config']['closed'] = TRUE;
-        }
-    }
-
-
-
-    public function getPayments()
-    {
-        $arrOptions     = array();
-        $arrPayments    = PaymentHelper::getAllTypes();
-        $objPayments    = $this->Database->prepare("SELECT * FROM " . $this->strTable)->execute(); //IidoShopShippingModel::findAll();
-
-        if( $objPayments && $objPayments->count() )
-        {
-            while( $objPayments->next() )
-            {
-                $frontendTitle = '';
-
-                if( $objPayments->name )
-                {
-                    $strFeTitle = $objPayments->name;
-
-                    $strFeTitle = preg_replace('/\{\{iflng::de\}\}/', '', $strFeTitle);
-                    $strFeTitle = preg_replace('/\{\{iflng::en\}\}([A-Za-z0-9\s\-öäüÖÄÜß\{\},;.:_\+\(\)#&!?]{1,})/', '', $strFeTitle);
-
-
-                    $frontendTitle = ' <span class="grey">[' . $strFeTitle. ']</span>';
-                }
-
-                $arrOptions[ $objPayments->id ] = $arrPayments[ $objPayments->type ] . ' (' . $objPayments->type . ') ' . $frontendTitle;
-            }
-        }
-
-        return $arrOptions;
-    }
-
-
-
-    public function getApiMethods()
-    {
-        $arrMethods = array();
-
-        $objApi         = ApiHelper::getApiObject();
-        $arrApiMethods  = $objApi->runApiUrl("/paymentMethod");
-
-        if( $arrApiMethods && is_array($arrApiMethods) && count($arrApiMethods) )
-        {
-            $arrMethods[] = '-';
-
-            foreach($arrApiMethods as $arrMethod)
-            {
-                $arrMethods[ $arrMethod['id'] ] = $arrMethod['name'];
-            }
-        }
-
-        return $arrMethods;
+        return $strField;
     }
 
 

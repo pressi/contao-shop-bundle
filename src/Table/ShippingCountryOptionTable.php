@@ -11,13 +11,13 @@ namespace IIDO\ShopBundle\Table;
 
 
 use IIDO\ShopBundle\Helper\ApiHelper;
-use IIDO\ShopBundle\Helper\PaymentHelper;
-use IIDO\ShopBundle\Model\IidoShopPaymentModel;
+use IIDO\ShopBundle\Helper\ShippingHelper;
+use IIDO\ShopBundle\Model\IidoShopShippingModel;
 
 
-class PaymentTable extends \Backend
+class ShippingCountryOptionTable extends \Backend
 {
-    protected $strTable = 'tl_iido_shop_payment';
+    protected $strTable = 'tl_iido_shop_shipping_country_option';
 
 
 
@@ -76,119 +76,6 @@ class PaymentTable extends \Backend
         }
 
         return $varValue;
-    }
-
-
-
-    public function getPaymentTypes( \DataContainer $dc )
-    {
-        $arrTypes = PaymentHelper::getAllTypes();
-
-        if( \Input::get("act") === "edit" )
-        {
-            $objPayments = $this->Database->prepare('SELECT * FROM ' . $this->strTable)->execute();
-
-            if( $objPayments && $objPayments->count() )
-            {
-                while( $objPayments->next() )
-                {
-                    if( in_array($objPayments->type, array_keys($arrTypes)) )
-                    {
-                        if( $dc->activeRecord->type !== $objPayments->type || !$dc->activeRecord->type )
-                        {
-                            unset( $arrTypes[ $objPayments->type ] );
-                        }
-                    }
-                }
-            }
-        }
-
-        return $arrTypes;
-    }
-
-
-
-    public function getPaymentName( $varValue, \DataContainer $dc)
-    {
-        if( !$varValue )
-        {
-            if( !$dc->activeRecord )
-            {
-                $arrTypes   = PaymentHelper::getAllTypes();
-                $strType    = key( $arrTypes );
-            }
-            else
-            {
-                $strType = $dc->activeRecord->type;
-
-                if( !$strType )
-                {
-                    $arrTypes   = PaymentHelper::getAllTypes();
-                    $strType    = key( $arrTypes );
-                }
-            }
-
-            $varValue = PaymentHelper::get($strType, "name");
-        }
-
-        return $varValue;
-    }
-
-
-
-    public function getPaymentAlias( $varValue, \DataContainer $dc)
-    {
-        if( !$varValue )
-        {
-            if( !$dc->activeRecord )
-            {
-                $arrTypes   = PaymentHelper::getAllTypes();
-                $strType    = key( $arrTypes );
-            }
-            else
-            {
-                $strType = $dc->activeRecord->type;
-
-                if( !$strType )
-                {
-                    $arrTypes   = PaymentHelper::getAllTypes();
-                    $strType    = key( $arrTypes );
-                }
-            }
-
-            $varValue = $strType;
-        }
-
-        return $varValue;
-    }
-
-
-
-    /**
-     * Add an image to each record
-     * @param array          $row
-     * @param string         $label
-     * @param \DataContainer $dc
-     * @param array          $args
-     *
-     * @return array
-     */
-	public function renderLabel($row, $label, \DataContainer $dc, $args)
-    {
-        $args[0]    = PaymentHelper::getAllTypes()[ $row['type'] ];
-        $args[1]    = ($row['alias']?:$row['type']);
-
-//        if( $row['name'] )
-//        {
-//            $label = $label . ' - <span class="label-name">' . $row['name'] . ']</span>';
-//        }
-
-//        if( $row['alias'] || $row['type'] )
-//        {
-//            $label = $label . ' <span class="label-addon" style="color:#cfcfcf;">[' . ($row['alias']?:$row['type']) . ']</span>';
-//        }
-
-        return $args;
     }
 
 
@@ -339,80 +226,16 @@ class PaymentTable extends \Backend
 
 
 
-    public function loadPaymentTable()
+    public function groupCallback($group, $sortingMode, $firstOrderBy, $row, $dc)
     {
-        $arrAllTypes        = PaymentHelper::getAllTypes();
-        $objPayments        = $this->Database->prepare("SELECT * FROM " . $this->strTable)->execute();
+//        if( $firstOrderBy === "country" )
+//        {
+//            \Controller::loadLanguageFile("countries");
 
-        if( $objPayments && $objPayments->count() )
-        {
-            while( $objPayments->next() )
-            {
-                if( isset($arrAllTypes[ $objPayments->type ]) )
-                {
-                    unset( $arrAllTypes[ $objPayments->type ] );
-                }
-            }
-        }
+//            $group = substr($GLOBALS['TL_LANG']['CNT'][ $row['country'] ], 0, 1);
+//        }
 
-        if( !count($arrAllTypes) )
-        {
-            $GLOBALS['TL_DCA'][ $this->strTable ]['config']['closed'] = TRUE;
-        }
-    }
-
-
-
-    public function getPayments()
-    {
-        $arrOptions     = array();
-        $arrPayments    = PaymentHelper::getAllTypes();
-        $objPayments    = $this->Database->prepare("SELECT * FROM " . $this->strTable)->execute(); //IidoShopShippingModel::findAll();
-
-        if( $objPayments && $objPayments->count() )
-        {
-            while( $objPayments->next() )
-            {
-                $frontendTitle = '';
-
-                if( $objPayments->name )
-                {
-                    $strFeTitle = $objPayments->name;
-
-                    $strFeTitle = preg_replace('/\{\{iflng::de\}\}/', '', $strFeTitle);
-                    $strFeTitle = preg_replace('/\{\{iflng::en\}\}([A-Za-z0-9\s\-öäüÖÄÜß\{\},;.:_\+\(\)#&!?]{1,})/', '', $strFeTitle);
-
-
-                    $frontendTitle = ' <span class="grey">[' . $strFeTitle. ']</span>';
-                }
-
-                $arrOptions[ $objPayments->id ] = $arrPayments[ $objPayments->type ] . ' (' . $objPayments->type . ') ' . $frontendTitle;
-            }
-        }
-
-        return $arrOptions;
-    }
-
-
-
-    public function getApiMethods()
-    {
-        $arrMethods = array();
-
-        $objApi         = ApiHelper::getApiObject();
-        $arrApiMethods  = $objApi->runApiUrl("/paymentMethod");
-
-        if( $arrApiMethods && is_array($arrApiMethods) && count($arrApiMethods) )
-        {
-            $arrMethods[] = '-';
-
-            foreach($arrApiMethods as $arrMethod)
-            {
-                $arrMethods[ $arrMethod['id'] ] = $arrMethod['name'];
-            }
-        }
-
-        return $arrMethods;
+        return $group;
     }
 
 
