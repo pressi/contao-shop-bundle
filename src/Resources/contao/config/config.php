@@ -33,6 +33,14 @@ elseif( 'FE' === TL_MODE )
     $GLOBALS['TL_JAVASCRIPT']['cookie']     = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true, false ) . '/javascript/cookie.min.js|static';
 }
 
+$rootDir    = \IIDO\BasicBundle\Helper\BasicHelper::getRootDir();
+$tmpFolder  = '/assets/shop_tmp';
+
+if( !is_dir($rootDir . $tmpFolder) )
+{
+    mkdir( $rootDir . $tmpFolder );
+}
+
 
 
 /**
@@ -76,7 +84,7 @@ $arrBackendMods = array
 
         $prefix . $modPrefix . 'Settings' => array
         (
-            'tables'        => array($tablePrefix . 'payment', $tablePrefix . 'shipping', $tablePrefix . 'configuration'),
+            'tables'        => array($tablePrefix . 'voucher', $tablePrefix . 'payment', $tablePrefix . 'shipping', $tablePrefix . 'shipping_country_option', $tablePrefix . 'configuration'),
             'callback'      => $ns . '\BackendModule\ShopSettingsModule'
         ),
 
@@ -106,7 +114,11 @@ array_insert($GLOBALS['BE_MOD'], 3, $arrBackendMods);
 if( !\Config::get( $strTableFieldPrefix . 'enableShopLight') )
 {
     $GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator']       = 'IIDO\ShopBundle\ContentElement\ConfiguratorElement';
+    $GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator_v2']    = 'IIDO\ShopBundle\ContentElement\ConfiguratorV2Element';
+    $GLOBALS['TL_CTE']['iido_shop']['iido_shop_configurator_v3']    = 'IIDO\ShopBundle\ContentElement\ConfiguratorV3Element';
+
     $GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList']        = 'IIDO\ShopBundle\ContentElement\ProductListElement';
+    $GLOBALS['TL_CTE']['iido_shop']['iido_shop_productList_v2']     = 'IIDO\ShopBundle\ContentElement\ProductListV2Element';
 }
 else
 {
@@ -119,6 +131,9 @@ $GLOBALS['TL_CTE']['iido_shop']['iido_shop_watchlist']          = 'IIDO\ShopBund
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_checkout']           = 'IIDO\ShopBundle\ContentElement\ShopCheckOutElement';
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_orderOverview']      = 'IIDO\ShopBundle\ContentElement\OrderOverviewElement';
 $GLOBALS['TL_CTE']['iido_shop']['iido_shop_orderComplete']      = 'IIDO\ShopBundle\ContentElement\OrderCompleteElement';
+
+$GLOBALS['TL_CTE']['html_wrapper']['htmlOpen']                  = 'IIDO\ShopBundle\ContentElement\HTMLWrapperOpenElement';
+$GLOBALS['TL_CTE']['html_wrapper']['htmlClose']                 = 'IIDO\ShopBundle\ContentElement\HTMLWrapperCloseElement';
 
 
 
@@ -141,6 +156,12 @@ $GLOBALS['TL_PERMISSIONS'][] = 'iidoShopArchivep';
 $GLOBALS['TL_PERMISSIONS'][] = 'iidoShopProductCategories';
 $GLOBALS['TL_PERMISSIONS'][] = 'iidoShopProductCategories_default';
 
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopSettings';
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopStatistic';
+
+//$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopProductCountryOptions';
+//$GLOBALS['TL_PERMISSIONS'][] = 'iidoShopProductCountryOptions_default';
+
 
 
 /**
@@ -152,6 +173,11 @@ $GLOBALS['TL_MODELS']['tl_iido_shop_product_category']  = 'IIDO\ShopBundle\Model
 $GLOBALS['TL_MODELS']['tl_iido_shop_archive']           = 'IIDO\ShopBundle\Model\IidoShopArchiveModel';
 $GLOBALS['TL_MODELS']['tl_iido_shop_payment']           = 'IIDO\ShopBundle\Model\IidoShopPaymentModel';
 $GLOBALS['TL_MODELS']['tl_iido_shop_shipping']          = 'IIDO\ShopBundle\Model\IidoShopShippingModel';
+$GLOBALS['TL_MODELS']['tl_iido_shop_voucher']           = 'IIDO\ShopBundle\Model\IidoShopVoucherModel';
+$GLOBALS['TL_MODELS']['tl_iido_shop_statistic_order']   = 'IIDO\ShopBundle\Model\IidoShopStatisticOrderModel';
+$GLOBALS['TL_MODELS']['tl_iido_shop_statistic_questionnaire']   = 'IIDO\ShopBundle\Model\IidoShopStatisticQuestionnaireModel';
+
+$GLOBALS['TL_MODELS']['tl_iido_shop_shipping_country_option'] = 'IIDO\ShopBundle\Model\IidoShopShippingCountryOptionModel';
 
 
 
@@ -198,3 +224,16 @@ $GLOBALS['AJAX']['iidoShop'] = array
         )
     ),
 );
+
+
+
+/**
+ * Wrapper elements
+ */
+
+// START
+$GLOBALS['TL_WRAPPERS']['start'][]      = 'htmlOpen';
+
+
+// STOP
+$GLOBALS['TL_WRAPPERS']['stop'][]       = 'htmlClose';
