@@ -147,13 +147,18 @@ class PaymentHelper
 
 
 
-    public static function getMethod( $objPayment )
+    public static function getMethod( $objPayment, $arrParams = array() )
     {
         $method = '\\IIDO\ShopBundle\\Payment\\' . $objPayment->title;
 
+        if( !class_exists($method) )
+        {
+            $method = $method = '\\IIDO\ShopBundle\\Payment\\' . ucfirst($objPayment->type);
+        }
+
         if( class_exists($method) )
         {
-            return new $method();
+            return (count($arrParams) ? new $method(...$arrParams) : new $method());
         }
 
         return false;

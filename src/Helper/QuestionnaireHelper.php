@@ -10,6 +10,7 @@
 namespace IIDO\ShopBundle\Helper;
 
 
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
 use IIDO\ShopBundle\API\DefaultApi;
 use IIDO\ShopBundle\Config\BundleConfig;
@@ -163,7 +164,8 @@ class QuestionnaireHelper
             'tstamp'            => time(),
             'questionnaire'     => $questionnaireID,
             'userID'            => $userID,
-            'questionnaireData' => json_encode( $arrSet )
+            'questionnaireData' => json_encode( $arrSet ),
+            'language'          => BasicHelper::getLanguage()
         );
 
 //        echo "<pre>";

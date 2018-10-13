@@ -24,11 +24,11 @@ class ShopCheckOutHelper
                     'type'      => 'box',
                     'fields'    => array
                     (
-                        'firstname_name',
+                        'firstname_name' => 'widget-fullname',
                         'street',
                         'city',
                         'postal',
-                        'country'
+                        'country' => array('type' => 'country')
                     )
                 ),
 
@@ -51,7 +51,7 @@ class ShopCheckOutHelper
                         'shipping_street',
                         'shipping_city',
                         'shipping_postal',
-                        'shipping_country'
+                        'shipping_country' => array('type' => 'country')
                     ),
                     'wrapper'   => 'shipping-address-fields',
                     'dependent' => array
@@ -201,6 +201,11 @@ class ShopCheckOutHelper
                                     {
                                         $config         = $strFieldConfig;
                                         $strFieldConfig = $strKey;
+
+                                        if( is_array($config) )
+                                        {
+                                            $config = $strKey;
+                                        }
                                     }
 
                                     if( $includePosts )
@@ -281,7 +286,7 @@ class ShopCheckOutHelper
                 }
             }
         }
-
+//echo "<pre>"; print_r( $arrFields ); exit;
         return $arrFields;
     }
 
@@ -339,7 +344,7 @@ class ShopCheckOutHelper
                 $error = true;
 
                 $arrMessage['fields'][]     = $strField;
-                $arrMessage['message'][]    = $langError[ $strField ];
+                $arrMessage['message'][]    = array('class'=>$strField,'text'=>$langError[ $strField ]);
             }
             else
             {
@@ -353,7 +358,8 @@ class ShopCheckOutHelper
                             $error = true;
 
                             $arrMessage['fields'][]     = $strField;
-                            $arrMessage['message'][]    = $langError[ $strField ];
+//                            $arrMessage['message'][]    = $langError[ $strField ];
+                            $arrMessage['message'][]    = array('class'=>$strField,'text'=>$langError[ $strField ]);
                         }
                         break;
 
@@ -363,8 +369,22 @@ class ShopCheckOutHelper
                             $error = true;
 
                             $arrMessage['fields'][]     = $strField;
-                            $arrMessage['message'][]    = $langError[ $strField ];
+//                            $arrMessage['message'][]    = $langError[ $strField ];
+                            $arrMessage['message'][]    = array('class'=>$strField,'text'=>$langError[ $strField ]);
                         }
+                        break;
+
+                    case "fullname":
+                        $arrName = explode(" ", $fieldValue);
+
+                        if( count($arrName) === 1 )
+                        {
+                            $error = true;
+                            $arrMessage['fields'][]     = $strField;
+//                            $arrMessage['message'][]    = $langError['fullname'];
+                            $arrMessage['message'][]    = array('class'=>'fullname','text'=>$langError[ 'fullname' ]);
+                        }
+
                         break;
                 }
             }
@@ -394,6 +414,9 @@ class ShopCheckOutHelper
 
 
 
+    /**
+     * @param $error
+     */
     public static function setFormError( $error )
     {
         \Session::getInstance()->set("hasCheckOutFormError", $error);
@@ -401,6 +424,9 @@ class ShopCheckOutHelper
 
 
 
+    /**
+     * @param $errorMessage
+     */
     public static function setFormErrorMessage( $errorMessage )
     {
         \Session::getInstance()->set("checkOutFormErrorMessage", $errorMessage);
@@ -408,9 +434,21 @@ class ShopCheckOutHelper
 
 
 
-    public static function setFormFields()
+    /**
+     * @param boolean $setFieldsEmpty
+     */
+    public static function setFormFields( $setFieldsEmpty = false )
     {
-        \Session::getInstance()->set("checkOutFormFields", self::getFormInputs( true ));
+        \Session::getInstance()->set("checkOutFormFields", ($setFieldsEmpty ? array() : self::getFormInputs( true )) );
+    }
+
+
+
+    public static function removeSessions()
+    {
+        self::setFormError( false );
+        self::setFormErrorMessage( array() );
+        self::setFormFields( true );
     }
 
 
@@ -435,5 +473,95 @@ class ShopCheckOutHelper
         }
 
         return trim($strName);
+    }
+
+
+
+    public static function getShippingCountries( $arrShippings )
+    {
+        $arrCountries = array();
+        $allCountries = false;
+
+        \Controller::loadLanguageFile("countries");
+
+        foreach($arrShippings as $objShipping)
+        {
+            if( $objShipping->enablePricePerCountry )
+            {
+                $allCountries = false;
+                $arrShippCountries = \StringUtil::deserialize($objShipping->pricePerCountry, TRUE);
+
+                foreach($arrShippCountries as $arrShippCountry)
+                {
+                    $country    = $arrShippCountry['country'];
+                    $strLabel   = $arrShippCountry['label'] ?:$GLOBALS['TL_LANG']['CNT'][ $country ];
+
+                    if( $country === "eu" )
+                    {
+                        foreach($GLOBALS['TL_LANG']['SHOP']['countries']['eu'] as $key => $countryName)
+                        {
+                            $arrCountries[ $key ] = $GLOBALS['TL_LANG']['CNT'][ $key ];
+                        }
+                    }
+                    elseif( $country === "world" )
+                    {
+                        foreach($GLOBALS['TL_LANG']['CNT'] as $key => $countryName)
+                        {
+                            if( !array_key_exists($key, $arrCountries) )
+                            {
+                                $arrCountries[ $key ] = $countryName;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $arrCountries[ $country ] = $strLabel;
+                    }
+                }
+            }
+            else
+            {
+                $allCountries = true;
+            }
+        }
+
+        if( $allCountries && !count($arrCountries) )
+        {
+            $arrCountries = $GLOBALS['TL_LANG']['CNT'];
+        }
+
+//        ksort( $arrCountries );
+        asort( $arrCountries );
+
+        if( key_exists('at', $arrCountries) )
+        {
+            $countryAustria = $arrCountries['at'];
+
+            unset( $arrCountries['at'] );
+
+            array_insert($arrCountries, 0, array
+            (
+                'at' => $countryAustria
+            ));
+        }
+
+
+        return $arrCountries;
+    }
+
+
+
+    public static function getCountry( $countryCode )
+    {
+        $strCountry = '';
+
+        if( $countryCode )
+        {
+            \Controller::loadLanguageFile("countries");
+
+            $strCountry = $GLOBALS['TL_LANG']['CNT'][ $countryCode ];
+        }
+
+        return $strCountry;
     }
 }
