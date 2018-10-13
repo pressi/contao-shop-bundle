@@ -28,9 +28,13 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
     $fieldNames = ['design', 'binding', 'length', 'flex'],
     $formFields = ['name', 'ARTICLE_NUMBER[range]', 'ARTICLE_NUMBER[design]', 'ARTICLE_NUMBER[binding]', 'ARTICLE_NUMBER[length]', 'ARTICLE_NUMBER[flex]', 'tuning'],
 
-    $itemNumber = '##RANGE##.##DESIGN##.##LENGTH##.##FLEX##.##BINDING##',
+    $itemNumber = '##RANGE##.##DESIGN##.##LENGTH##.##WOODCORE##.##FLEX##.##KEIL##.##BINDING##',
 
-        $flexSoft = 35, $flexStiff = 75;
+        $flexSoft = 35, $flexStiff = 75,
+
+        $woodCoreDefault    = ['PP', 'EP'],
+
+    $version = 'v1';
 
 
     configurator.initContainer = function( contID )
@@ -83,36 +87,39 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
     configurator.initCatHover = function()
     {
-        var catCont     = $shopConfigurator.querySelector(".category-container"),
-            catItems    = catCont.querySelectorAll(".category-item");
-
-        if( catItems.length )
+        if( $shopConfigurator )
         {
-            for(var i=0; i<catItems.length; i++)
+            var catCont     = $shopConfigurator.querySelector(".category-container"),
+                catItems    = catCont.querySelectorAll(".category-item");
+
+            if( catItems.length )
             {
-                catItems[ i ].addEventListener("mouseenter", function()
+                for(var i=0; i<catItems.length; i++)
                 {
-                    var catID           = this.getAttribute("data-id"),
-                        catHoverCont    = document.getElementById("catHoverCont_" + catID),
-                        catHoverConts   = IIDO.Base.getSiblings( catHoverCont );
-
-                    for(var num=0; num<catHoverConts.length; num++)
+                    catItems[ i ].addEventListener("mouseenter", function()
                     {
-                        catHoverConts[ num ].classList.remove("shown");
-                    }
+                        var catID           = this.getAttribute("data-id"),
+                            catHoverCont    = document.getElementById("catHoverCont_" + catID),
+                            catHoverConts   = IIDO.Base.getSiblings( catHoverCont );
 
-                    catHoverCont.classList.add("shown");
-                    catCont.classList.add("is-shown");
-                });
+                        for(var num=0; num<catHoverConts.length; num++)
+                        {
+                            catHoverConts[ num ].classList.remove("shown");
+                        }
 
-                catItems[ i ].addEventListener("mouseleave", function()
-                {
-                    var catID           = this.getAttribute("data-id"),
-                        catHoverCont    = document.getElementById("catHoverCont_" + catID);
+                        catHoverCont.classList.add("shown");
+                        catCont.classList.add("is-shown");
+                    });
 
-                    catHoverCont.classList.remove("shown");
-                    catCont.classList.remove("is-shown");
-                })
+                    catItems[ i ].addEventListener("mouseleave", function()
+                    {
+                        var catID           = this.getAttribute("data-id"),
+                            catHoverCont    = document.getElementById("catHoverCont_" + catID);
+
+                        catHoverCont.classList.remove("shown");
+                        catCont.classList.remove("is-shown");
+                    })
+                }
             }
         }
     };
@@ -202,46 +209,378 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
             itemTag.parentNode.nextElementSibling.innerHTML = itemTag.querySelector(".name").innerHTML;
         }
 
-        var dataImage   = itemTag.getAttribute( "data-image" ),
-            imageCont   = document.getElementById("productImage_" + $configID);
+        var imageCont   = document.getElementById("productImage_" + $configID),
+            dataImage   = itemTag.getAttribute( "data-image" ),
 
-        if( dataImage !== null && dataImage !== undefined && dataImage !== "undefined" && dataImage.length )
+            skiImage    = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+
+        if( dataImage !== null && dataImage !== undefined && dataImage !== "undefined" && !dataImage.length )
         {
-            if( mode === "binding" )
+            dataImage = '';
+        }
+
+        if( mode === "color" || mode === "design" )
+        {
+            var bindingInput = document.querySelector('input[name="ARTICLE_NUMBER[binding]"]:checked'),
+                bindingValue = $config.default.binding;
+
+            if( bindingInput )
             {
-                var imageTag = document.createElement("img");
-
-                imageTag.src = dataImage;
-
-                imageCont.querySelector(".binding-image").innerHTML = "";
-                imageCont.querySelector(".binding-image").append( imageTag );
+                bindingValue = bindingInput.value;
             }
-            else if( mode === "color" )
-            {
-                var imageTagColor = imageCont.querySelector(".image_container > img");
 
-                imageTagColor.src = dataImage;
+            if( bindingValue !== "none" )
+            {
+                var bindingItem = document.querySelector(".choose-item.binding-picker.is-checked");
+
+                if( bindingItem )
+                {
+                    var bindingDataImage    = bindingItem.getAttribute("data-image"),
+                        currentDesign       = itemTag.getAttribute("data-number");
+
+                    if( currentDesign === undefined || currentDesign === "undefined" || currentDesign === null )
+                    {
+                        currentDesign = $config.default.design;
+                    }
+
+                    if( bindingDataImage === null || bindingDataImage === undefined && bindingDataImage === "undefined" )
+                    {
+                        bindingDataImage = '';
+                    }
+
+                    if( currentDesign && bindingDataImage )
+                    {
+                        var arrBindingDataImages    = JSON.parse(bindingDataImage),
+                            imageSRC                = arrBindingDataImages[ currentDesign ];
+
+                        if( imageSRC )
+                        {
+                            skiImage = imageSRC;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if( dataImage )
+                {
+                    skiImage = dataImage;
+                }
             }
         }
-        else
+        else if( mode === "binding" )
         {
-            if( mode === "binding" )
+            if( dataImage )
             {
-                imageCont.querySelector(".binding-image").innerHTML = "";
+                var designInput = document.querySelector('input[name="ARTICLE_NUMBER[design]"]:checked'),
+                    designValue = $config.default.design;
+
+                if( designInput )
+                {
+                    designValue = designInput.value;
+                }
+
+                if( designValue )
+                {
+                    var arrDataImages   = JSON.parse(dataImage),
+                        imageSRC        = arrDataImages[ designValue ];
+
+                    if( imageSRC )
+                    {
+                        skiImage = imageSRC;
+                    }
+                }
             }
-            else if( mode === "color" )
+            else
             {
-                imageCont.querySelector(".image_container > img").src = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+                var designItem = document.querySelector(".choose-item.color-picker.is-checked");
+
+                if( designItem )
+                {
+                    imageSRC = designItem.getAttribute("data-image");
+
+                    if( imageSRC )
+                    {
+                        skiImage = imageSRC;
+                    }
+                }
             }
-            // else if( mode === "tuning" )
-            // {
-            //     calculatePrice = false;
-            // }
         }
+
+        if( mode === "length" || mode === "flex" || mode === "tuning" || mode === "default" )
+        {
+            skiImage = '';
+        }
+
+        if( skiImage )
+        {
+            var imageTag = imageCont.querySelector(".image_container > img");
+
+            imageTag.src = skiImage;
+        }
+
+        this.calculateNewPrice( mode );
+
+        return;
+
+
+
+
+        // var dataImage   = itemTag.getAttribute( "data-image" ),
+        //     imageCont   = document.getElementById("productImage_" + $configID),
+        //
+        //     useStartImage = false,
+        //     useDefaultDesignImage = false,
+        //
+        //     changedImage = false;
+        //
+        // if( dataImage !== null && dataImage !== undefined && dataImage !== "undefined" && !dataImage.length )
+        // {
+        //     dataImage = '';
+        // }
+        //
+        // if( mode === "binding" )
+        // {
+        //     useStartImage = true;
+        //     useDefaultDesignImage = true;
+        //
+        //     if( dataImage )
+        //     {
+        //         var designInput = document.querySelector('input[name="ARTICLE_NUMBER[design]"]:checked'),
+        //             designValue = $config.default.design;
+        //
+        //         if( designInput )
+        //         {
+        //             designValue = designInput.value;
+        //         }
+        //
+        //         var dataImages  = JSON.parse(dataImage),
+        //             imageSRC    = '';
+        //
+        //         if( designValue )
+        //         {
+        //             imageSRC = dataImages[ designValue ];
+        //         }
+        //
+        //         if( imageSRC )
+        //         {
+        //             useStartImage = false;
+        //             useDefaultDesignImage = false;
+        //
+        //             var imageTag = imageCont.querySelector(".image_container > img");
+        //
+        //             imageTag.src = imageSRC;
+        //         }
+        //     }
+        // }
+        // else if( mode === "color" )
+        // {
+        //     useStartImage = true;
+        //     useDefaultDesignImage = true;
+        //
+        //     var bindingInput = document.querySelector('input[name="ARTICLE_NUMBER[binding]"]:checked'),
+        //         bindingValue = 'none';
+        //
+        //     if( bindingInput )
+        //     {
+        //         bindingValue = bindingInput.value;
+        //     }
+        //
+        //     var imageTagColor = imageCont.querySelector(".image_container > img");
+        //
+        //     if( bindingValue && bindingValue !== 'none' )
+        //     {
+        //         var designCode  = itemTag.getAttribute("data-number"),
+        //             bindingTag  = bindingInput.parentNode.parentNode;
+        //
+        //         if( bindingTag )
+        //         {
+        //             var bindingImages = bindingTag.getAttribute("data-image");
+        //
+        //             if( bindingImages )
+        //             {
+        //                 var dataImages  = JSON.parse(bindingImages),
+        //                     imageSRC    = dataImages[ designCode ];
+        //
+        //                 if( imageSRC )
+        //                 {
+        //                     useStartImage = false;
+        //
+        //                     imageTagColor.src = imageSRC;
+        //                 }
+        //                 else if( dataImage )
+        //                 {
+        //                     useStartImage = false;
+        //
+        //                     imageTagColor.src = dataImage;
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         if( dataImage )
+        //         {
+        //             useStartImage = false;
+        //             useDefaultDesignImage = false;
+        //
+        //             imageTagColor.src = dataImage;
+        //         }
+        //     }
+        // }
+        //
+        // if( useStartImage )
+        // {
+        //     var designImage = '';
+        //
+        //     if( useDefaultDesignImage )
+        //     {
+        //         var designInput = document.querySelector('input[name="ARTICLE_NUMBER[design]"]:checked');
+        //
+        //         if( designInput )
+        //         {
+        //             var designChooser = document.querySelector(".choose-item.color-picker.is-checked");
+        //
+        //             if( designChooser )
+        //             {
+        //                 designImage = designChooser.getAttribute("data-image");
+        //             }
+        //         }
+        //     }
+        //
+        //     if( !designImage )
+        //     {
+        //         designImage = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+        //     }
+        //
+        //     imageCont.querySelector(".image_container > img").src = designImage;
+        // }
+
+
+
+
+
+
+        // if( dataImage !== null && dataImage !== undefined && dataImage !== "undefined" && dataImage.length )
+        // {
+        //     if( mode === "binding" )
+        //     {
+        //         // var imageTag = document.createElement("img");
+        //
+        //         // imageTag.src = dataImage;
+        //
+        //         // imageCont.querySelector(".binding-image").innerHTML = "";
+        //         // imageCont.querySelector(".binding-image").append( imageTag );
+        //
+        //         if( dataImage )
+        //         {
+        //             var designInput = document.querySelector('input[name="ARTICLE_NUMBER[design]"]:checked'),
+        //                 designValue = $config.default.design;
+        //
+        //             if( designInput )
+        //             {
+        //                 designValue = designInput.value;
+        //             }
+        //
+        //             var dataImages  = JSON.parse(dataImage),
+        //                 imageSRC    = '';
+        //
+        //             if( designValue )
+        //             {
+        //                 imageSRC = dataImages[ designValue ];
+        //             }
+        //             // console.log( designValue );
+        //             // console.log( imageSRC );
+        //             if( imageSRC )
+        //             {
+        //                 changedImage = true;
+        //
+        //                 var imageTag = imageCont.querySelector(".image_container > img");
+        //
+        //                 imageTag.src = imageSRC;
+        //             }
+        //         }
+        //     }
+        //     else if( mode === "color" )
+        //     {
+        //         var bindingInput = document.querySelector('input[name="ARTICLE_NUMBER[binding]"]:checked'),
+        //             bindingValue = 'none';
+        //
+        //         if( bindingInput )
+        //         {
+        //             bindingValue = bindingInput.value;
+        //         }
+        //
+        //         var imageTagColor = imageCont.querySelector(".image_container > img");
+        //
+        //         if( bindingValue && bindingValue !== 'none' )
+        //         {
+        //             var designCode  = itemTag.getAttribute("data-number"),
+        //                 bindingTag  = bindingInput.parentNode.parentNode;
+        //
+        //             if( bindingTag )
+        //             {
+        //                 var bindingImages = bindingTag.getAttribute("data-image");
+        //
+        //                 if( bindingImages )
+        //                 {
+        //                     var dataImages  = JSON.parse(bindingImages),
+        //                         imageSRC    = dataImages[ designCode ];
+        //
+        //                     if( imageSRC )
+        //                     {
+        //                         changedImage = true;
+        //
+        //                         imageTagColor.src = imageSRC;
+        //                     }
+        //                     else if( dataImage )
+        //                     {
+        //                         changedImage = true;
+        //
+        //                         imageTagColor.src = dataImage;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         else
+        //         {
+        //             if( dataImage )
+        //             {
+        //                 changedImage = true;
+        //
+        //                 imageTagColor.src = dataImage;
+        //             }
+        //         }
+        //     }
+        // }
+        // else
+        // {
+
+        // if( !changedImage )
+        // {
+        //     if( mode === "color" || mode === "binding" )
+        //     {
+        //         imageCont.querySelector(".image_container > img").src = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+        //     }
+        //
+        //     // if( mode === "binding" )
+        //     // {
+        //         // imageCont.querySelector(".binding-image").innerHTML = "";
+        //         // imageCont.querySelector(".image_container > img").src = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+        //     // }
+        //     // else if( mode === "color" )
+        //     // {
+        //     //     imageCont.querySelector(".image_container > img").src = imageCont.querySelector(".image_container > img").getAttribute("data-default");
+        //     // }
+        //     // else if( mode === "tuning" )
+        //     // {
+        //     //     calculatePrice = false;
+        //     // }
+        // }
 
         // if( calculatePrice )
         // {
-            this.calculateNewPrice();
+        //     this.calculateNewPrice( mode );
         // }
     };
 
@@ -249,13 +588,28 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
     configurator.toggleChooser = function( contTag )
     {
-        if( contTag.classList.contains("open") )
+        if( !contTag.classList.contains("saved") )
         {
-            contTag.classList.remove("open");
-        }
-        else
-        {
-            contTag.classList.add("open");
+            if( contTag.classList.contains("open") )
+            {
+                contTag.classList.remove("open");
+            }
+            else
+            {
+                contTag.classList.add("open");
+
+                var siblings = IIDO.Base.getSiblings( contTag );
+
+                if( siblings.length )
+                {
+                    for(var i=0; i<siblings.length; i++)
+                    {
+                        var sibling = siblings[ i ];
+
+                        sibling.classList.remove("open");
+                    }
+                }
+            }
         }
     };
 
@@ -278,9 +632,10 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
 
 
 
-    configurator.calculateNewPrice = function()
+    configurator.calculateNewPrice = function( mode )
     {
-        var price       = 0,
+        var priceNumTag = document.querySelector(".configurator-container .price-cart .price .num > .price-num"),
+            price       = 0, /*parseFloat( priceNumTag.innerHTML ),*/
             itemNumber  = $itemNumber,
             inputs      = document.querySelector(".configurator-container").querySelectorAll("input"),
 
@@ -301,9 +656,12 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                 }
                 else if( inputName === "design" )
                 {
-                    useDesign = true;
+                    if( inputTag.value )
+                    {
+                        useDesign = true;
 
-                    itemNumber = itemNumber.replace('##DESIGN##', inputTag.value);
+                        itemNumber = itemNumber.replace('##DESIGN##', inputTag.value);
+                    }
                 }
                 else if( inputName === "binding" )
                 {
@@ -327,8 +685,8 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                     useFlex = true;
 
                     var flexConfig      = JSON.parse( inputTag.parentNode.parentNode.getAttribute("data-config") ),
-                        flexInputValue  = parseInt( inputTag.value ),
-                        flexValue       = 'YYY';
+                        flexInputValue  = parseInt( inputTag.value );
+                        // flexValue       = 'YYY';
 
                     // if( flexInputValue < $flexSoft )
                     // {
@@ -343,7 +701,7 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                     //     flexValue = IIDO.Shop.Configurator.getFlex('YYY', flexConfig).articleNumber;
                     // }
 
-                    itemNumber = itemNumber.replace('##FLEX##', flexValue);
+                    itemNumber = itemNumber.replace('##FLEX##', flexInputValue);
                 }
                 else if( inputName === "tuning" )
                 {
@@ -389,24 +747,313 @@ IIDO.Shop.Configurator = IIDO.Shop.Configurator || {};
                 itemNumber = itemNumber.replace(/^C./, '');
             }
         }
-console.log( itemNumber );
+
+        itemNumber = itemNumber.replace('##WOODCORE##', $config.default.woodCore);
+        itemNumber = itemNumber.replace('##KEIL##', $config.default.keil);
+        // console.log( $config );
+// console.log( itemNumber );
+// console.log( $config.products );
+// console.log( $config.default );
+// console.log("........");
+        var skiPrice = 0;
         for(var intConfig in $config.products)
         {
-            var configLine = $config.products[ intConfig ];
+            var configLine      = $config.products[ intConfig ],
+                woodCore        = (($version === 'v3') ? $config.config.woodCores[0] : $config.woodCores[0] ),
+                checkItemNumber = itemNumber.replace('.' + $config.default.woodCore + '.', '.' + woodCore + '.');
+            // console.log( $config.config );
+            // console.log( configLine );
+            // console.log( ( configLine.articleNumber === checkItemNumber || configLine.articleNumber === itemNumber ) );
+            // console.log("--------------");
+            var itemArticleNumber = configLine.articleNumber;
 
-            if( configLine.articleNumber === itemNumber )
+            if( itemArticleNumber )
             {
-                price = (price + parseInt(configLine.price));
+                if( itemArticleNumber.match(/^C./) && itemArticleNumber.match(/.none$/) === null )
+                {
+                    itemArticleNumber = itemArticleNumber + '.none';
+                    // console.log( itemArticleNumber );
+                }
+
+                if( itemArticleNumber === checkItemNumber || itemArticleNumber === itemNumber )
+                {
+                    skiPrice = parseFloat(configLine.price);
+                    // console.log( skiPrice );
+                    price = (price + skiPrice);
+                    break;
+                }
             }
         }
-console.log( price );
+// console.log( price );
 
         if( isNaN(price) )
         {
             price = 0;
         }
 
-        document.querySelector(".configurator-container .price-cart .price .num > .price-num").innerHTML = price;
+        if( skiPrice === 0 )
+        {
+            // var mode = inputName;
+
+            // if( inputName === "flex" )
+            // {
+            //     mode = 'flex';
+            // }
+
+            price = this.getPriceFromProductNumber(itemNumber, price, mode);
+        }
+        else
+        {
+            document.getElementById("realItemNumber").value = itemNumber;
+        }
+
+        var tuningInput = document.querySelector('input[name="tuning"]:checked');
+
+        if( tuningInput )
+        {
+            if( tuningInput.value !== "Standardtuning" )
+            {
+                var tuningPrice = parseFloat( $config.tunings[ tuningInput.value ].price );
+
+                if( tuningPrice && tuningPrice > 0)
+                {
+                    price = (price + tuningPrice);
+                }
+            }
+        }
+
+        priceNumTag.innerHTML = IIDO.Shop.renderPrice(price, true);
+    };
+
+
+
+    configurator.getPriceFromProductNumber = function( itemNumber, price, mode )
+    {
+        if( mode === undefined || mode === "undefined" || mode === null )
+        {
+            mode = 'default';
+        }
+// console.log( $config.products );
+        var skiPrice = 0, defaultItemNumber = itemNumber,
+            arrKeils = (($version === "v3") ? $config.config.keils : $config.keils);
+// console.log( defaultItemNumber );
+        for(var keilKey=0; keilKey<arrKeils.length; keilKey++)
+        {
+            var keil = arrKeils[ keilKey ];
+
+            itemNumber = defaultItemNumber.replace('.' + $config.default.keil + '.', '.' + keil + '.');
+// console.log( itemNumber );
+//             console.log( $config.products );
+            for(var intConfig=0; intConfig<$config.products.length; intConfig++)
+            {
+                var configLine          = $config.products[ intConfig ],
+                    itemArticleNumber   = configLine.articleNumber;
+
+                if( itemArticleNumber.match(/^C./) === null && itemArticleNumber.match(/.none$/) === null )
+                {
+                    itemArticleNumber = itemArticleNumber + '.none';
+                    // console.log( itemArticleNumber );
+                }
+
+                if( itemArticleNumber === itemNumber )
+                {
+                    skiPrice = parseInt(configLine.price);
+
+                    price = (price + skiPrice);
+
+                    if( skiPrice > 0 )
+                    {
+                        document.getElementById("realItemNumber").value = configLine.articleNumber;
+                    }
+                    break;
+                }
+            }
+
+            if( skiPrice > 0 )
+            {
+                break;
+            }
+        }
+// console.log( skiPrice );
+//         console.log( mode );
+//         if( mode === 'flex' && skiPrice === 0 )
+        if( skiPrice === 0 )
+        {
+            var flexNum = this.getFlexNumFromArticleNumber( defaultItemNumber ),
+                flexMax = this.getDefaultFlexMax(),
+                flexMin = this.getDefaultFlexMin(),
+
+                flexRangeTop    = (flexMax - flexNum),
+                flexRangeBottom = (flexNum - flexMin);
+
+            if( flexRangeTop < flexRangeBottom )
+            {
+                if( flexRangeTop > 0 )
+                {
+                    for(var numTop=1;numTop<flexRangeTop; numTop++)
+                    {
+                        var newFlexNum      = (flexNum + numTop),
+                            newItemNumber   = defaultItemNumber.replace('.' + flexNum + '.', '.' + newFlexNum + '.');
+
+                        skiPrice = this.getSkiPrice( newItemNumber );
+
+                        if( skiPrice > 0 )
+                        {
+                            document.getElementById("realItemNumber").value = newItemNumber;
+                            break;
+                        }
+                    }
+                }
+
+                if( skiPrice === 0 && flexRangeBottom > 0 )
+                {
+                    for(var numBottom=1;numBottom<flexRangeBottom; numBottom++)
+                    {
+                        var newFlexNum      = (flexNum - numBottom),
+                            newItemNumber   = defaultItemNumber.replace('.' + flexNum + '.', '.' + newFlexNum + '.');
+
+                        skiPrice = this.getSkiPrice( newItemNumber );
+
+                        if( skiPrice > 0 )
+                        {
+                            document.getElementById("realItemNumber").value = newItemNumber;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if( flexRangeBottom > 0 )
+                {
+                    for(var numBottom=1;numBottom<flexRangeBottom; numBottom++)
+                    {
+                        var newFlexNum      = (flexNum - numBottom),
+                            newItemNumber   = defaultItemNumber.replace('.' + flexNum + '.', '.' + newFlexNum + '.');
+
+                        skiPrice = this.getSkiPrice( newItemNumber );
+
+                        if( skiPrice > 0 )
+                        {
+                            document.getElementById("realItemNumber").value = newItemNumber;
+                            break;
+                        }
+                    }
+                }
+
+                if( skiPrice === 0 && flexRangeTop > 0 )
+                {
+                    for(var numTop=1;numTop<flexRangeTop; numTop++)
+                    {
+                        var newFlexNum      = (flexNum + numTop),
+                            newItemNumber   = defaultItemNumber.replace('.' + flexNum + '.', '.' + newFlexNum + '.');
+
+                        skiPrice = this.getSkiPrice( newItemNumber );
+
+                        if( skiPrice > 0 )
+                        {
+                            document.getElementById("realItemNumber").value = newItemNumber;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if( skiPrice > 0 )
+            {
+                price = (skiPrice + price);
+            }
+        }
+
+        return price;
+    };
+
+
+
+    configurator.getSkiPrice = function( defaultItemNumber )
+    {
+        var skiPrice = 0,
+            arrKeils = (($version === "v3") ? $config.config.keils : $config.keils);
+
+        for(var keilKey=0; keilKey<arrKeils.length; keilKey++)
+        {
+            var keil = arrKeils[ keilKey ],
+
+                itemNumber = defaultItemNumber.replace( '.' + $config.default.keil + '.', '.' + keil + '.' );
+
+            for(var intConfig=0; intConfig<$config.products.length; intConfig++)
+            {
+                var configLine = $config.products[ intConfig ];
+
+                if( configLine.articleNumber === itemNumber )
+                {
+                    skiPrice = parseInt(configLine.price);
+                    break;
+                }
+            }
+
+            if( skiPrice > 0 )
+            {
+                break;
+            }
+        }
+
+        return skiPrice;
+    };
+
+
+
+    configurator.getFlexNumFromArticleNumber = function( itemNumber )
+    {
+        var flexIndex           = 4,
+            arrItemNumerParts   = itemNumber.split(".");
+
+        if( arrItemNumerParts[0] === 'C' )
+        {
+            flexIndex = 5;
+        }
+
+        return arrItemNumerParts[ flexIndex ];
+    };
+
+
+
+    configurator.getDefaultFlexMin = function()
+    {
+        var minFlex = 60,
+            arrFlexs = (($version === "v3") ? $config.config.flexs : $config.flexs);
+
+        for(var flexKey=0; flexKey<arrFlexs.length; flexKey++)
+        {
+            var flex = parseInt( arrFlexs[ flexKey ] );
+
+            if( flex < minFlex )
+            {
+                minFlex = flex;
+            }
+        }
+
+        return minFlex;
+    };
+
+
+
+    configurator.getDefaultFlexMax = function()
+    {
+        var maxFlex = 50,
+            arrFlexs = (($version === "v3") ? $config.config.flexs : $config.flexs);
+
+        for(var flexKey=0; flexKey<arrFlexs.length; flexKey++)
+        {
+            var flex = parseInt( arrFlexs[ flexKey ] );
+
+            if( flex > maxFlex )
+            {
+                maxFlex = flex;
+            }
+        }
+
+        return maxFlex;
     };
 
 
@@ -422,6 +1069,8 @@ console.log( price );
                 inputs[ i ].checked = true;
             }
         }
+
+        document.getElementById("fakeLoader").style.display = "block";
 
         this.submitForm( formID );
     };
@@ -447,9 +1096,21 @@ console.log( price );
 
 
 
+    configurator.initNewConfig = function( skiNumber )
+    {
+        jQuery.getJSON('assets/shop_tmp/v3-shop-configurator-config-' + skiNumber + '.json', function(responseText)
+        {
+            $config = responseText;
+        });
+
+        $version = 'v3';
+    };
+
+
+
     configurator.getProduct = function()
     {
-        var itemNumber = $itemNumber, product = {};
+        var itemNumber = $itemNumber, product = {}, tuningNumber = $config.default.tuning;
 
         for(var i=0; i<$formFields.length; i++)
         {
@@ -478,8 +1139,20 @@ console.log( price );
             }
         }
 
+        itemNumber = itemNumber.replace("##WOODCORE##", $woodCoreDefault[0]);
+        itemNumber = itemNumber.replace("##KEIL##", '__');
+
+        var tuningInput = document.querySelector('input[name="tuning"]:checked');
+
+        if( tuningInput )
+        {
+            tuningNumber = tuningInput.value;
+        }
+
         product.itemNumber  = itemNumber;
+        product.realItemNumber = document.getElementById("realItemNumber").value;
         product.quantity    = 1;
+        product.tuning      = tuningNumber;
 
         return product;
     };
@@ -547,7 +1220,7 @@ console.log( price );
                         IIDO.Shop.showMessage("confirm", "addToWatchlistMessage", "center");
                     }
 
-                    IIDO.Shop.Cart.addProductToWatchlist( product );
+                    IIDO.Shop.Watchlist.addProductToWatchlist( product );
                     IIDO.Shop.Configurator.updateWatchlistNum();
                 }
             });
@@ -574,8 +1247,14 @@ console.log( price );
 
     configurator.updateWatchlistNum = function()
     {
-        var numTag      = $configurator.querySelector(".price-cart .cart .watchlist-num"),
-            numValue    = parseInt(numTag.innerHTML);
+        var numTag = $configurator.querySelector(".price-cart .cart .watchlist-num");
+
+        if( numTag.classList.contains("has-link") )
+        {
+            numTag = numTag.querySelector("a");
+        }
+
+        var numValue = parseInt(numTag.innerHTML);
 
         numTag.innerHTML = (numValue + 1);
 
@@ -730,7 +1409,7 @@ console.log( price );
     configurator.getFlex = function( flexNum, flexConfig )
     {
         var flex = {};
-console.log( flexConfig );
+// console.log( flexConfig );
         for(var i=0; i<flexConfig.length; i++)
         {
             if( flexConfig[ i ].articleNumber === flexNum )
@@ -765,6 +1444,8 @@ console.log( flexConfig );
                     {
                         cartlist[ ci ].itemNumber  = product.itemNumber;
                         cartlist[ ci ].tuning      = product.tuning;
+
+                        cartlist[ ci ].realItemNumber = product.realItemNumber;
                     }
                 }
 
@@ -782,6 +1463,8 @@ console.log( flexConfig );
                     {
                         watchlist[ wi ].itemNumber  = product.itemNumber;
                         watchlist[ wi ].tuning      = product.tuning;
+
+                        watchlist[ wi ].realItemNumber = product.realItemNumber;
                     }
                 }
 
