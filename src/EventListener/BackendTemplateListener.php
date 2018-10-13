@@ -60,6 +60,70 @@ class BackendTemplateListener extends DefaultListener
                         }
                     }
                 }
+                elseif( \Input::get("do") === "iidoShopSettings" )
+                {
+                    $strTable = \Input::get("table");
+
+                    if( $strTable )
+                    {
+                        $strMode            = \Input::get("mode");
+                        $strHeadline        = $GLOBALS['TL_LANG']['MOD'][ \Input::get("do") ][0];
+                        $strSubHeadline     = $GLOBALS['TL_LANG']['iido_shop_backend']['settings'][ $strMode ];
+                        $strSubModeHeadline = '';
+
+                        $arrTable           = explode("_", $strTable);
+
+                        if( $strSubHeadline )
+                        {
+                            $strSubHeadline = ' › <span>' . $strSubHeadline . '</span>';
+                        }
+
+                        foreach($arrTable as $key => $tablePart)
+                        {
+                            if( $tablePart === $strMode )
+                            {
+                                unset( $arrTable[ $key ] );
+                                break;
+                            }
+                            else
+                            {
+                                unset( $arrTable[ $key ] );
+                            }
+                        }
+
+                        $strSubMode = implode("_", $arrTable);
+
+                        if( $strSubMode )
+                        {
+                            $strSubModeHeadline = $GLOBALS['TL_LANG']['iido_shop_backend']['settings']['sub'][ $strMode . '_' .  $strSubMode ];
+
+                            if( $strSubModeHeadline )
+                            {
+                                $strSubModeHeadline = ' › <span>' . $strSubModeHeadline . '</span>';
+                            }
+                        }
+
+
+                        $strContent = preg_replace('/<span>' . $strHeadline . '<\/span>/', '<span>' . $strHeadline . '</span>' . $strSubHeadline . $strSubModeHeadline, $strContent);
+                    }
+                }
+                elseif( \Input::get("do") === "iidoShopStatistic" )
+                {
+                    $strMode = \Input::get("mode");
+
+                    if( $strMode )
+                    {
+                        $strHeadline        = $GLOBALS['TL_LANG']['MOD'][ \Input::get("do") ][0];
+                        $strSubHeadline     = $GLOBALS['TL_LANG']['iido_shop_backend']['statistic'][ $strMode ];
+
+                        if( $strSubHeadline )
+                        {
+                            $strSubHeadline = ' › <span>' . $strSubHeadline . '</span>';
+                        }
+
+                        $strContent = preg_replace('/<span>' . $strHeadline . '<\/span>/', '<span>' . $strHeadline . '</span>' . $strSubHeadline, $strContent);
+                    }
+                }
             }
         }
 
