@@ -44,6 +44,9 @@ class ConfiguratorElement extends \ContentElement
      */
     protected $strItemNumberRange = 'C';
 
+    
+    
+    protected $arrWoodCore = ['PP', 'EP'];
 
 
     protected $objApi;
@@ -97,6 +100,11 @@ class ConfiguratorElement extends \ContentElement
         $nextStepNum        = 2;
         $stepNum            = (int) \Input::post("NEXT_STEP");
         $actionUrl          = \Environment::get('request');
+
+        if( \Session::getInstance()->get("FORM_SUBMIT") === "questionnaire" )
+        {
+            $stepNum = 2;
+        }
 
         if( $stepNum <= 0 || $stepNum === "" )
         {
@@ -176,9 +184,12 @@ class ConfiguratorElement extends \ContentElement
 
                 $arrRow['itemNumberRange'] = $itemNumber;
 
-                $arrConfigCategories[] = $arrRow;
+                $arrConfigCategories[ $objCategory->sorting ] = $arrRow;
             }
         }
+
+        ksort($arrConfigCategories);
+        $arrConfigCategories = array_values($arrConfigCategories);
 
         $objTemplate->arrCategories = $arrConfigCategories;
     }
@@ -200,25 +211,63 @@ class ConfiguratorElement extends \ContentElement
         $strName            = '';
         $intPrice           = 0;
         $strMode            = '';
+        $strSubMode         = '';
         $currentItemNumber  = '';
+
         $editMode           = false;
+        $questionnaireMode  = false;
+
         $arrItemNumber      = array();
-        $arrLangLabels      = $GLOBALS['TL_LANG']['iido_shop_configurator']['label'];
+        $arrLabels          = $GLOBALS['TL_LANG']['iido_shop_configurator']['label'];
 
         $arrValue = $arrInputValue = array
         (
             'design'    => '',
-            'binding'   => '',
             'length'    => '',
+            'woodCore'  => '',
+            'gurt'      => '',
+
+            'binding'   => '',
             'flex'      => '',
+
             'tuning'    => ''
         );
 
-        $arrLabels = $arrLangLabels;
         $arrLabels['extraLink'] = $this->iidoShopExtraLinkLabel;
 
-        if( \Input::post("EDIT_FORM") === "questionnaire" )
+        $objSession = \Session::getInstance();
+
+        if( $objSession->get("FORM_SUBMIT") === "questionnaire" || \Input::post("FORM_SUBMIT") === "questionnaire" )
         {
+            if( $objSession->get("FORM_SUBMIT") === "questionnaire" )
+            {
+                \Input::setPost("FORM_SUBMIT", "questionnaire");
+                \Input::setPost("itemNumber", $objSession->get("itemNumber"));
+
+                $objSession->remove("FORM_SUBMIT");
+                $objSession->remove("itemNumber");
+            }
+
+            $questionnaireMode = true;
+
+            $currentItemNumber  = $objSession->get("itemNumber")?:\Input::post("itemNumber");
+            $arrItemNumber      = explode(".", $currentItemNumber);
+
+            $flexIndex          = 4;
+            $skiIndex           = 0;
+
+            if( $arrItemNumber[0] === "C" )
+            {
+                $flexIndex  = 5;
+                $skiIndex   = 1;
+            }
+
+            $flex               = $arrItemNumber[ $flexIndex ];
+            $skiNumber          = $arrItemNumber[ $skiIndex ];
+
+            \Input::setPost("category", $this->getCategoryId($skiNumber));
+
+//            echo "<pre>"; print_r( $currentItemNumber ); exit;
         }
         elseif( \Input::post("EDIT_FORM") === "edit_item" )
         {
@@ -232,7 +281,7 @@ class ConfiguratorElement extends \ContentElement
             $strSubMode         = \Input::post("SUBMODE");
 
             $arrItemNumber      = explode(".", $currentItemNumber);
-
+//echo "<pre>"; print_r( ShopHelper::getRealItemNumber($currentItemNumber, $objApi) ); exit;
             $skiNumber          = array_shift(explode(".", preg_replace('/^C./', '', $currentItemNumber)));
             $currentItem        = $objApi->runApiUrl('article/?articleNumber-eq=' . ShopHelper::getRealItemNumber($currentItemNumber, $objApi));
             //TODO: run articlePrice/ID
@@ -240,7 +289,7 @@ class ConfiguratorElement extends \ContentElement
             $arrValue['tuning']         = ($tuning ? 'Standardtuning (Gratis)' : '');
             $arrInputValue['tuning']    = $tuning;
 
-            $intPrice           = $currentItem['articlePrices'][0]['price'];
+            $intPrice           = ShopHelper::getCurrentPrice( $currentItem );
 
             \Input::setPost("category", $this->getCategoryId($skiNumber));
         }
@@ -283,7 +332,17 @@ class ConfiguratorElement extends \ContentElement
 //        $designs = $lengths = $flexs = $bindings = $arrDesigns = $arrLengths = $arrFlexs = $arrBindings = $arrTunings = $arrConfig = array();
 
         $flexs = $arrDesigns = $arrLengths = $arrFlexs = $arrBindings = $arrTunings = array();
-        list($arrConfig, $designs, $lengths, $bindings) = $this->getConfigFromFile( $skiNumberRange, $skiNumber );
+        list($arrConfig, $designs, $lengths, $woodCores, $flexs, $keils, $bindings) = $this->getConfigFromFile( $skiNumberRange, $skiNumber );
+
+        if( !count($arrItemNumber) )
+        {
+            $arrItemNumber[0] = $skiNumber;
+            $arrItemNumber[1] = $designs[0];
+            $arrItemNumber[2] = ShopHelper::getShortestSize($lengths);
+            $arrItemNumber[3] = 'PP';
+            $arrItemNumber[4] = ShopHelper::getMaxMinFlexNum($flexs, 'min');
+            $arrItemNumber[5] = '__';
+        }
 
 //echo "<pre>"; print_r( $arrConfig ); exit;
 //        foreach($arrSkis as $arrSki)
@@ -315,7 +374,7 @@ class ConfiguratorElement extends \ContentElement
                 $arrConfig['default']['length'] = $length;
             }
 
-            if( $editMode && $length === $arrItemNumber[3])
+            if( ($editMode && $length === $arrItemNumber[3]) || ($questionnaireMode && $length === $arrItemNumber[2]))
             {
                 $arrValue['length']         = $length;
                 $arrInputValue['length']    = $length;
@@ -349,29 +408,53 @@ class ConfiguratorElement extends \ContentElement
 //                }
 //            }
 //        }
+
+//        echo "<pre>"; print_r( $flexs );
+//echo "<br>";
+//        print_r( $objApi->getFlex() );
+//        exit;
+//        echo "<pre>";
         foreach($objApi->getFlex() as $flexAlias => $arrCurrFlex)
         {
-            $currFlex = $arrCurrFlex;
+            $flexNum = trim($arrCurrFlex['range']['num']);
 
-            $currFlex['title'] = $arrCurrFlex['label'];
-            $currFlex['alias'] = $flexAlias;
+            if( in_array($flexNum, $flexs) )
+            {
+                $currFlex = $arrCurrFlex;
 
-            $arrFlexs[] = $currFlex;
+                $currFlex['title'] = $arrCurrFlex['label'];
+                $currFlex['alias'] = $flexNum; //$flexAlias;
+
+                $arrFlexs[] = $currFlex;
+            }
 
             if( !isset($arrConfig['default']['flex']) )
             {
-                $arrConfig['default']['flex'] = "XXX"; //$flexAlias;
+                $arrConfig['default']['flex'] = "56"; //$flexAlias;
             }
 
-            if( $editMode )
+//            if( $editMode )
+//            {
+//                if( $flexAlias === $flex )
+//                {
+//                    $arrValue['flex']       = $flexAlias;
+//                    $arrInputValue['flex']  = $flexAlias;
+//                }
+//            }
+            if( $questionnaireMode )
             {
-                if( $flexAlias === $flex )
+                if( $flexNum === $arrItemNumber[4] )
                 {
-                    $arrValue['flex']       = $flexAlias;
-                    $arrInputValue['flex']  = $flexAlias;
+                    $arrValue['flex']       = $objApi->getFlexName( $flexNum );
+                    $arrInputValue['flex']  = $flexNum;
                 }
             }
         }
+//        print_r( $arrValue );
+//        print_r( $arrInputValue );
+//        exit;
+
+        $productStartImage = $this->getDesignStartImage($skiNumber);
 
         foreach($bindings as $binding)
         {
@@ -379,22 +462,53 @@ class ConfiguratorElement extends \ContentElement
 
             if( $productBinding['active'] === "1" || $productBinding['active'] === 1 || $productBinding['active'] )
             {
-                $strImage = $objApi->getItemImage( $productBinding );
+//                $strImage = $objApi->getItemImage( $productBinding );
+//                echo "<pre>";
+//                print_r( $currentItemNumber );
+//                echo "<br>";
+//                print_r( $arrItemNumber);
+//                exit;
+                $skiBefore = 'C.';
 
-                if( !$strImage )
+                if( $arrItemNumber[0] === 'C' )
                 {
-                    $bindingImageSRC    = IidoShopProductModel::findBy("itemNumber", $binding)->overviewSRC;
-                    $objImage           = \FilesModel::findByPk( $bindingImageSRC );
-
-                    $strImage           = ($objImage ? $objImage->path : '');
+                    $skiBefore = '';
                 }
+//echo "<pre>"; print_r( $productBinding ); exit;
+//                echo "<pre>"; print_r( $skiBefore . implode(".", $arrItemNumber) . '.' . $productBinding['articleNumber'] ); exit;
+//                $strImage = $objApi->getItemImage( array('articleNumber'=>$skiBefore . implode(".", $arrItemNumber) . '.' . $productBinding['articleNumber']) );
+                $arrImage = array();
+
+                foreach($designs as $design)
+                {
+                    $arrImageItemNumber = $arrItemNumber;
+
+                    $arrImageItemNumber[1] = $design;
+//echo "<pre>"; print_r( $skiBefore . implode(".", $arrImageItemNumber) . '.' . $productBinding['articleNumber'] ); exit;
+                    $strDesignImage = $objApi->getItemImage( array('articleNumber'=>$skiBefore . implode(".", $arrImageItemNumber) . '.' . $productBinding['articleNumber']) );
+
+                    $arrImage[ $design ] = $strDesignImage;
+                }
+
+
+//                echo "<pre>";
+//                print_R( $strImage );
+//                exit;
+
+//                if( !$strImage )
+//                {
+//                    $bindingImageSRC    = IidoShopProductModel::findBy("itemNumber", $binding)->overviewSRC;
+//                    $objImage           = \FilesModel::findByPk( $bindingImageSRC );
+
+//                    $strImage           = ($objImage ? $objImage->path : '');
+//                }
 
                 $arrBindings[] = array
                 (
                     'title'         => $productBinding['name'],
                     'description'   => $productBinding['description'],
                     'articleNumber' => $binding,
-                    'image'         => $strImage
+                    'image'         => htmlspecialchars( json_encode($arrImage), ENT_QUOTES, 'UTF-8')
                 );
 
                 if( !isset($arrConfig['default']['binding']) )
@@ -407,11 +521,18 @@ class ConfiguratorElement extends \ContentElement
                     $arrValue['binding']        = $productBinding['name'];
                     $arrInputValue['binding']   = $binding;
 
-                    $bindingImage = ImageHelper::getImageTag($bindingImageSRC, array(), true);
+//                    $bindingImage = ImageHelper::getImageTag($bindingImageSRC, array(), true);
+                }
+                elseif( $questionnaireMode )
+                {
+                    $arrValue['binding']        = $arrLabels['noBinding'];
+                    $arrInputValue['binding']   = 'none';
+
+//                    $productStartImage          = $arrImage[ $designs[0] ];
                 }
             }
         }
-        $productStartImage = $this->getDesignStartImage($skiNumber);
+//        echo "<pre>"; print_r( $arrBindings ); exit;
 
         foreach($designs as $design)
         {
@@ -432,17 +553,23 @@ class ConfiguratorElement extends \ContentElement
                 $arrConfig['default']['design'] = $design;
             }
 
-            if( $editMode && $arrItemNumber[2] === $design )
+            if( ($editMode && $arrItemNumber[2] === $design) || ($questionnaireMode && $arrItemNumber[1] === $design) )
             {
                 $arrValue['design']         = '<div class="color_circle cc-' . $designAlias . '"><span class="title">' . $designLabel . '</span></div>';
                 $arrInputValue['design']    = $design;
 
 //                $productStartImage = $this->getDesignImage( $design, $skiNumber, $arrLengths, $arrFlexs,true );
-                if( !$productStartImage )
-                {
+//                if( !$productStartImage )
+//                {
                     $productStartImage = $designImage;
-                }
+//                }
             }
+        }
+//        echo "<pre>"; print_r( $arrDesigns ); exit;
+        if( $questionnaireMode )
+        {
+            $arrValue['tuning'] = 'Standardtuning (Gratis)';
+            $arrInputValue['tuning'] = 'Standardtuning';
         }
 
         if( !$editMode && !$productStartImage )
@@ -451,6 +578,13 @@ class ConfiguratorElement extends \ContentElement
 
             $productStartImage = $arrDesigns[0]['image'];
         }
+//echo "<pre>"; print_r( $arrConfig ); exit;
+        $arrConfig['woodCores'] = $woodCores;
+        $arrConfig['flexs']     = $flexs;
+        $arrConfig['keils']     = $keils;
+
+        $arrConfig['default']['woodCore']   = $woodCores[0];
+        $arrConfig['default']['keil']       = $keils[0];
 
         $objTemplate->designs       = $arrDesigns;
         $objTemplate->lengths       = $arrLengths;
@@ -461,7 +595,7 @@ class ConfiguratorElement extends \ContentElement
 
         $objTemplate->arrConfig     = $arrConfig;
 
-        $objTemplate->priceUnit     = ShopConfig::getCurrency(); //'€'; //ShopConfig; TODO: get from shop config!! TODO: add the config module!!
+        $objTemplate->priceUnit     = ShopConfig::getCurrency();
         $objTemplate->productPrice  = ($intPrice ?: $objSki['articlePrices'][0]['price']);
         $objTemplate->productName   = ($strName ?: $objSki['name']);
         $objTemplate->productDesc   = $objSki['shortDescription1'];
@@ -481,6 +615,7 @@ class ConfiguratorElement extends \ContentElement
         $objTemplate->mode              = $strMode;
         $objTemplate->subMode           = $strSubMode;
         $objTemplate->currentItemNumber = $currentItemNumber;
+        $objTemplate->questionnaireMode = $questionnaireMode;
 
         $objTemplate->extraLink         = $this->iidoShopExtraLink;
 //        $objTemplate->extraLinkLabel    = $this->iidoShopExtraLinkLabel;
@@ -581,30 +716,46 @@ class ConfiguratorElement extends \ContentElement
 //echo "<pre>";
         $arrImages      = array();
 //        $arrProducts    = array();
-        $arrFlexs = array('XXX'=>array('articleNumber'=>'XXX'),'YYY'=>array('articleNumber'=>'YYY'),'ZZZ'=>array('articleNumber'=>'ZZZ'));
+//        $arrFlexs = array('XXX'=>array('articleNumber'=>'XXX'),'YYY'=>array('articleNumber'=>'YYY'),'ZZZ'=>array('articleNumber'=>'ZZZ'));
+//echo "<pre>"; print_r( $arrLengths );
+//echo "<br>";
+//print_r( $arrFlexs );
+//exit;
+        $size = ShopHelper::getShortestSize( $arrLengths );
+        $flex = ShopHelper::getMinFlex( $arrFlexs );
 
-        foreach( $arrLengths as $arrLength )
+//        echo "<pre>";
+//        print_R( $design );
+//        echo "<br>";
+//        print_r( $size );
+//        echo "<br>";
+//        print_r( $flex );
+//        exit;
+        $itemNumber     = $skiNumber . '.' . $design . '.' . $size . '.PP.' . $flex . '.__';
+        $arrProducts    = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $itemNumber);
+
+//        if( $design === "BA" )
+//        {
+//            echo "<pre>";
+//            print_r( $itemNumber );
+//            echo "<br>";
+//            print_r( $arrProducts );
+//            exit;
+//        }
+
+        if( count($arrProducts) )
         {
-            $lengthNum = $arrLength['articleNumber'];
-
-            foreach( $arrFlexs as $arrFlex )
+            foreach($arrProducts as $arrProduct)
             {
-                $flexNum = $arrFlex['articleNumber'];
+                $objProduct = ShopHelper::getProductObject( $arrProduct );
 
-                $designItemNumber   = $skiNumber . '.' . $design . '.' . $lengthNum . '.' . $flexNum;
-
-                $arrProduct = $this->objApi->runApiUrl('article/?articleNumber-eq=' . $designItemNumber);
-
-//                $arrProducts[ $designItemNumber ] = $arrProduct;
-//print_r( $designItemNumber ); echo "<br>";
-                if( is_array($arrProduct['articleImages']) && count($arrProduct['articleImages']) )
+                if( $objProduct && is_array($objProduct->articleImages) && count($objProduct->articleImages) )
                 {
                     $strFirstPath   = '';
                     $mainImagePath  = '';
 
                     foreach( $arrProduct['articleImages'] as $artImage )
                     {
-//                        echo "<pre>"; print_r( $arrProduct ); exit;
                         $strPath = $this->objApi->downloadArticleImage( $arrProduct['id'], $artImage['id'], $artImage['fileName'] );
 
                         if( !$strFirstPath )
@@ -639,26 +790,116 @@ class ConfiguratorElement extends \ContentElement
 
                         $imagePath = $mainImagePath;
                     }
+
+                    if( $imagePath )
+                    {
+                        break;
+                    }
                 }
-
-//                $imageSRC           = IidoShopProductModel::findBy("itemNumber", $designItemNumber)->overviewSRC;
-//
-//                $objImage           = \FilesModel::findByPk( $imageSRC );
-//
-//                if( $objImage )
-//                {
-//                    if( $getSource )
-//                    {
-//                        return $imageSRC;
-//                    }
-//
-//                    return $objImage->path;
-//                }
-
-
             }
         }
+
+        if( $imagePath )
+        {
+            return $imagePath;
+        }
+
+        return '';
+
+//        foreach( $arrLengths as $arrLength )
+//        {
+//            $lengthNum = $arrLength['articleNumber'];
+//
+//            foreach( $arrFlexs as $arrFlex )
+//            {
+//                $flexNum = $arrFlex['alias'];
+//
+//                $designItemNumber   = $skiNumber . '.' . $design . '.' . $lengthNum . '.' . $this->arrWoodCore[0] . '.' . $flexNum . '.__';
+////                echo "<pre>"; print_r( $designItemNumber ); echo "</pre>";
+//                $arrProducts = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $designItemNumber);
+//
+////                $arrProducts[ $designItemNumber ] = $arrProduct;
+////print_r( $designItemNumber ); echo "<br>";
+//
+//                if( count($arrProducts) )
+//                {
+//                    foreach($arrProducts as $arrProduct)
+//                    {
+//                        if( is_array($arrProduct['articleImages']) && count($arrProduct['articleImages']) )
+//                        {
+////                            echo "<pre>";
+////                            print_r( $arrProduct );
+////                            exit;
+//                            $strFirstPath   = '';
+//                            $mainImagePath  = '';
+//
+//                            foreach( $arrProduct['articleImages'] as $artImage )
+//                            {
+////                        echo "<pre>"; print_r( $arrProduct ); exit;
+//                                $strPath = $this->objApi->downloadArticleImage( $arrProduct['id'], $artImage['id'], $artImage['fileName'] );
+//
+//                                if( !$strFirstPath )
+//                                {
+//                                    $strFirstPath = $strPath;
+//                                    break;
+//                                }
+//
+//                                if( $artImage['mainImage'] )
+//                                {
+////                            $imageTag   = $this->objApi->getImageTag( $strPath );
+//                                    $imagePath  = ImageHelper::renderImagePath( $strPath );
+//
+//                                    $mainImagePath  = ImageHelper::renderImagePath( $strPath );
+//                                    break;
+//                                }
+//                                else
+//                                {
+//                                    $arrImages[] = ImageHelper::renderImagePath( $strPath );
+//                                }
+//                            }
+//
+//                            if( !$imagePath && $strFirstPath )
+//                            {
+////                        $imageTag   = $this->objApi->getImageTag( $strFirstPath );
+//                                $imagePath  = ImageHelper::renderImagePath( $strFirstPath );
+//                            }
+//
+//                            if( $mainImagePath )
+//                            {
+//                                $arrImages[] = $mainImagePath;
+//
+//                                $imagePath = $mainImagePath;
+//                            }
+//                        }
+//
+//                        if( $imagePath )
+//                        {
+//                            break;
+//                        }
+//                    }
+//                }
+//
+////                $imageSRC           = IidoShopProductModel::findBy("itemNumber", $designItemNumber)->overviewSRC;
+////
+////                $objImage           = \FilesModel::findByPk( $imageSRC );
+////
+////                if( $objImage )
+////                {
+////                    if( $getSource )
+////                    {
+////                        return $imageSRC;
+////                    }
+////
+////                    return $objImage->path;
+////                }
+//
+//
+//            }
+//        }
 //exit;
+//        echo "<pre>";
+//        print_r( $imagePath );
+//        exit;
         if( $imagePath )
         {
             return $imagePath;
@@ -671,22 +912,34 @@ class ConfiguratorElement extends \ContentElement
 
     protected function getCategoryId( $skiNumber )
     {
-        $objAllSkis = IidoShopProductModel::findByArchive( $this->iidoShopArchive );
+//        $objAllSkis = IidoShopProductModel::findByArchive( $this->iidoShopArchive );
+//
+//        if( $objAllSkis )
+//        {
+//            while( $objAllSkis->next() )
+//            {
+//                if( preg_match('/^C\.' . $skiNumber . '/', $objAllSkis->itemNumber) )
+//                {
+//                    $categories = \StringUtil::deserialize( $objAllSkis->categories, TRUE );
+//
+//                    if( count($categories) )
+//                    {
+//                        return $categories[0];
+//                    }
+//                }
+//            }
+//        }
 
-        if( $objAllSkis )
+        if( !preg_match('/^C/', $skiNumber) )
         {
-            while( $objAllSkis->next() )
-            {
-                if( preg_match('/^C\.' . $skiNumber . '/', $objAllSkis->itemNumber) )
-                {
-                    $categories = \StringUtil::deserialize( $objAllSkis->categories, TRUE );
+            $skiNumber = 'C.' . $skiNumber;
+        }
 
-                    if( count($categories) )
-                    {
-                        return $categories[0];
-                    }
-                }
-            }
+        $objCategory = IidoShopProductCategoryModel::findOneBy('itemNumbers', $skiNumber);
+
+        if( $objCategory )
+        {
+            return $objCategory->id;
         }
 
         return '';
@@ -722,11 +975,14 @@ class ConfiguratorElement extends \ContentElement
     {
         $writeToFile    = false;
         $fileName       = 'configurator-products-config-' . $skiNumberRange . '.json';
-        $objFile        = new \File( 'system/tmp/' . $fileName );
+        $objFile        = new \File( 'assets/shop_tmp/' . $fileName );
 
         $arrConfig      = array();
         $designs        = array();
         $lengths        = array();
+        $woodCores      = array();
+        $flexs          = array();
+        $keils          = array();
         $bindings       = array();
 
         if( !$objFile->exists() )
@@ -743,15 +999,20 @@ class ConfiguratorElement extends \ContentElement
             {
                 $arrData    = json_decode( $objFile->getContent() );
                 $arrConfig  = (array) $arrData->config;
-
+//echo "<pre>"; print_r( $arrConfig); exit;
                 $designs    = (array) $arrData->designs;
                 $lengths    = (array) $arrData->lengths;
+                $woodCores  = (array) $arrData->woodCores;
+                $flexs      = (array) $arrData->flexs;
+                $keils      = (array) $arrData->keils;
+
                 $bindings   = (array) $arrData->bindings;
             }
         }
 
         if( $writeToFile )
         {
+//            echo "<pre>"; print_r( $skiNumberRange ); echo "</pre>";
             $arrProducts = $this->getProductsFromFile( $skiNumberRange );
 
             $insertProducts = array();
@@ -772,15 +1033,12 @@ class ConfiguratorElement extends \ContentElement
 
                         $designs[]   = $arrArticleNumber[ 2 ];
                         $lengths[]   = $arrArticleNumber[ 3 ];
-//                    $flexs[]     = $arrArticleNumber[ 4 ];
-                        $bindings[]  = $arrArticleNumber[ 5 ];
+                        $woodCores[] = $arrArticleNumber[ 4 ];
+                        $flexs[]     = $arrArticleNumber[ 5 ];
+                        $keils[]     = $arrArticleNumber[ 6 ];
+                        $bindings[]  = $arrArticleNumber[ 7 ];
 
-                        $intProPrice = $product['articlePrices'][0]->price;
-
-                        if( !$intProPrice && is_array($product['articlePrices'][0]) )
-                        {
-                            $intProPrice = $product['articlePrices'][0]['price'];
-                        }
+                        $intProPrice = ShopHelper::getCurrentPrice($product);
 
                         $arrConfig['products'][] = array
                         (
@@ -788,8 +1046,9 @@ class ConfiguratorElement extends \ContentElement
                             'price'             => $intProPrice
                         );
 
-                        $proSkiNumber   = $skiNumber . '.' . $arrArticleNumber[ 2 ] . '.' . $arrArticleNumber[ 3 ];
-                        $arrSkiProducts = $this->getProductsFromFile( $proSkiNumber, '.___' );
+                        $proSkiNumber   = $skiNumber . '.' . $arrArticleNumber[ 2 ] . '.' . $arrArticleNumber[ 3 ]. '.' . $arrArticleNumber[ 4 ]. '.' . $arrArticleNumber[ 5 ]. '.' . $arrArticleNumber[ 6 ];
+//                        echo "<pre>"; print_r( $proSkiNumber ); echo "</pre>";
+                        $arrSkiProducts = $this->getProductsFromFile( $skiNumber, $proSkiNumber );
 
                         if( $arrSkiProducts )
                         {
@@ -803,12 +1062,7 @@ class ConfiguratorElement extends \ContentElement
                                     {
                                         $insertProducts[] = $skiProduct['articleNumber'];
 
-                                        $intPrice = $skiProduct['articlePrices'][0]->price;
-
-                                        if( !$intPrice && is_array($skiProduct['articlePrices'][0]) )
-                                        {
-                                            $intPrice = $skiProduct['articlePrices'][0]['price'];
-                                        }
+                                        $intPrice = ShopHelper::getCurrentPrice( $skiProduct );
 
                                         $arrConfig['products'][] = array
                                         (
@@ -824,28 +1078,46 @@ class ConfiguratorElement extends \ContentElement
                 }
             }
 
+            $designs    = array_values(array_unique($designs));
+            $lengths    = array_values(array_unique($lengths));
+            $woodCores  = array_values(array_unique($woodCores));
+            $flexs      = array_values(array_unique($flexs));
+            $keils      = array_values(array_unique($keils));
+            $bindings   = array_values(array_unique($bindings));
+
             $arrData = array
             (
                 'config'        => $arrConfig,
                 'designs'       => $designs,
                 'lengths'       => $lengths,
-                'bindings'      => $bindings
+                'woodCores'     => $woodCores,
+                'flexs'         => $flexs,
+                'keils'         => $keils,
+                'bindings'      => $bindings,
             );
-
+//echo "<pre>"; print_r( $arrConfig ); exit;
             $objFile->write( json_encode($arrData) );
             $objFile->close();
         }
 
-        return [$arrConfig, $designs, $lengths, $bindings];
+        return [$arrConfig, $designs, $lengths, $woodCores, $flexs, $keils, $bindings];
     }
 
 
 
-    protected function getProductsFromFile( $skiNumberRange, $likeAddon = '' )
+    protected function getProductsFromFile( $skiNumberRange, $skiNumber = '', $likeAddon = '' )
     {
+        if( !preg_match('/^C./', $skiNumberRange) )
+        {
+            $arrParts       = explode(".", $skiNumberRange);
+            $skiNumberRange = $arrParts[0];
+        }
+
+        $arrProducts    = array();
         $writeToFile    = false;
         $fileName       = 'configurator-products-' . $skiNumberRange . '.json';
-        $objFile        = new \File( 'system/tmp/' . $fileName );
+        $objFile        = new \File( 'assets/shop_tmp/' . $fileName );
+        $readFile       = false;
 
         if( !$objFile->exists() )
         {
@@ -865,17 +1137,64 @@ class ConfiguratorElement extends \ContentElement
 
         if( $writeToFile )
         {
-            if( $likeAddon )
-            {
-                $arrProducts = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $skiNumberRange . $likeAddon);
-            }
-            else
-            {
-                $arrProducts = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $skiNumberRange . '%25&pageSize=1000');
-            }
+            $skiNumberRange = ShopHelper::getSearchSkiItemNumber($skiNumberRange, 'like');
+
+//            if( $skiNumber )
+//            {
+//                $arrProducts = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $skiNumberRange . '&pageSize=1000');
+//            }
+//            else
+//            {
+                $arrProducts = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $skiNumberRange . '&pageSize=1000');
+
+                if( count($arrProducts) === 1000 )
+                {
+                    $arrProducts2   = $this->objApi->runApiUrl('article/?articleNumber-ilike=' . $skiNumberRange . '&pageSize=1000&page=2');
+                    $arrProducts    = array_merge($arrProducts, $arrProducts2);
+                }
+//            }
 
             $objFile->write( json_encode($arrProducts) );
             $objFile->close();
+        }
+        else
+        {
+            $readFile = true;
+        }
+
+        if( ($skiNumber && $writeToFile) || $readFile )
+        {
+            if( $skiNumber )
+            {
+                $skiNumberRange = $skiNumber;
+            }
+
+            $objOpenFile    = new \File( 'system/tmp/' . $fileName );
+            $arrProducts    = array();
+            $arrAllProducts    = json_decode( $objOpenFile->getContent() );
+//echo "<pre>";
+//print_r( $skiNumberRange );
+//echo "<br>";
+//print_r( $arrAllProducts );
+//exit;
+            foreach( $arrAllProducts as $arrProduct)
+            {
+                if( is_array($arrProduct) )
+                {
+                    $itemNumber = $arrProduct['articleNumber'];
+                }
+                else
+                {
+                    $itemNumber = $arrProduct->articleNumber;
+                }
+
+                if( preg_match('/^' . $skiNumberRange . '/', $itemNumber) )
+                {
+                    $arrProducts[] = (array) $arrProduct;
+                }
+            }
+//            echo "<pre>"; print_r( $arrProducts );
+//            exit;
         }
 
         return $arrProducts;

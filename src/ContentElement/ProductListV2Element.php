@@ -16,7 +16,7 @@ use Contao\Model\Collection;
 use IIDO\ShopBundle\Model\IidoShopProductCategoryModel;
 
 
-class ProductListElement extends \ContentElement
+class ProductListV2Element extends \ContentElement
 {
     /**
      * Template
@@ -143,12 +143,12 @@ class ProductListElement extends \ContentElement
                 }
                 else
                 {
-//                    echo "<pre>"; print_r( $itemNumbers ); exit;
-                    $arrProducts = $api->getProductList( $itemNumbers, $this->iidoShopDetailPage, false, $this->iidoShopProductsShowMode );
+//                    $arrProducts = $api->getProductList( $itemNumbers, $this->iidoShopDetailPage, false, $this->iidoShopProductsShowMode );
+                    $arrProducts = $api->getProductListV2( $itemNumbers, $this->iidoShopDetailPage, false, $this->iidoShopProductsShowMode );
                 }
             }
         }
-
+        
         $this->Template->formApi    = $fromApi;
         $this->Template->products   = $arrProducts; //$objProducts;
     }

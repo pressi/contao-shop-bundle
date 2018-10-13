@@ -56,10 +56,47 @@ class OrderCompleteElement extends \ContentElement
      */
     protected function compile()
     {
-        $objPayment         = PaymentHelper::getObject( \Input::post("payment") );
-        $objPaymentMethod   = PaymentHelper::getMethod( $objPayment );
+        $payment            = \Input::post("payment")?:\Input::get("payment");
+        $objPayment         = PaymentHelper::getObject( $payment );
+        $arrVars            = array();
 
-        $objPaymentMethod->newPayment();
-//        echo "<pre>"; print_r( $objPaymentMethod ); exit;
+        if( $payment === "paypal" )
+        {
+            $arrVars = array($objPayment->clientID, $objPayment->clientSecret);
+        }
+
+        $objPaymentMethod   = PaymentHelper::getMethod( $objPayment, $arrVars );
+
+        $this->Template->orderComplete = FALSE;
+        $this->Template->noOrder = FALSE;
+
+        if( $objPaymentMethod )
+        {
+            if( $objPaymentMethod->success() )
+            {
+//            $objPaymentMethod->updateOrder();
+                $this->Template->orderComplete = TRUE;
+            }
+            elseif( $objPaymentMethod->error() )
+            {
+                if( $this->iidoShopCartJumpTo )
+                {
+                    $objBackPage = \PageModel::findByPk( $this->iidoShopCartJumpTo );
+
+                    if( $objBackPage )
+                    {
+                        \Controller::redirect( $objBackPage->getFrontendUrl() );
+                    }
+                }
+            }
+            else
+            {
+                $objPaymentMethod->newPayment();
+            }
+        }
+        else
+        {
+            $this->Template->noOrder = TRUE;
+        }
     }
 }

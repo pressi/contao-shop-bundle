@@ -12,6 +12,7 @@ namespace IIDO\ShopBundle\ContentElement;
 
 use Contao\Validator;
 use IIDO\BasicBundle\Helper\ContentHelper;
+use IIDO\ShopBundle\Config\ShopConfig;
 use IIDO\ShopBundle\Helper\PaymentHelper;
 use IIDO\ShopBundle\Helper\ShopCheckOutHelper;
 use IIDO\ShopBundle\Model\IidoShopShippingModel;
@@ -73,6 +74,7 @@ class ShopCheckOutElement extends \ContentElement
         $this->Template->error          = $error;
         $this->Template->errorMessage   = $errorMessage;
         $this->Template->value          = $arrValue;
+        $this->Template->cartNum        = ShopConfig::getCartNum();
 
         $this->Template->showErrorMessagesOnTop = $this->showErrorMessagesOnTop;
 
@@ -122,6 +124,7 @@ class ShopCheckOutElement extends \ContentElement
         $this->Template->formFields     = ShopCheckOutHelper::getFormFields();
         $this->Template->label          = $strLang['label'];
 
+        $this->Template->agbLink        = $this->iidoShopAGBLink;
         $this->Template->cartLink       = $cartLink;
         $this->Template->forwardLink    = $forwardLink;
 

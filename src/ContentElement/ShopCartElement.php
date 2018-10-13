@@ -11,6 +11,7 @@ namespace IIDO\ShopBundle\ContentElement;
 
 
 use HeimrichHannot\Ajax\Ajax;
+use HeimrichHannot\Ajax\AjaxAction;
 use IIDO\ShopBundle\Ajax\ShopAjax;
 use IIDO\ShopBundle\Config\BundleConfig;
 use IIDO\ShopBundle\Config\ShopConfig;
@@ -93,15 +94,14 @@ class ShopCartElement extends \ContentElement
         $intCartPrice   = 0;
 
         $this->Template->count = count($arrCartList);
-//echo "<pre>"; print_r( $arrCartList ); exit;
 
         if( count($arrCartList) )
         {
             $arrProducts = array();
-
+//echo "<pre>"; print_r( $arrCartList ); exit;
             foreach($arrCartList as $item)
             {
-//                echo "<pre>"; print_r( $item ); exit;
+
                 $arrShopProduct = ShopHelper::getProduct( $item, $strLang, $this );
                 $intPrice       = ($arrShopProduct['intPrice'] * $item['quantity']);
 
@@ -138,19 +138,26 @@ class ShopCartElement extends \ContentElement
             }
         }
 
-        if( $this->iidoShopCartCheckOutPage && count($arrCartList) )
+        $checkOutClass = 'check-out-link-tag';
+
+        if( $this->iidoShopCartCheckOutPage )
         {
+            if( !count($arrCartList) )
+            {
+                $checkOutClass .= ' hidden';
+            }
+
             $objCheckOutPage    = \PageModel::findByPk( $this->iidoShopCartCheckOutPage );
 
             $checkOutHref       = $objCheckOutPage->getFrontendUrl();
-            $checkOutLink       = '<a href="' . $checkOutHref . '">' . ($this->iidoShopCartCheckOutText?:$objCheckOutPage->title) . '</a>';
+            $checkOutLink       = '<span class="' . $checkOutClass . '" id="checkoutLink"><a href="' . $checkOutHref . '">' . ($this->iidoShopCartCheckOutText?:$objCheckOutPage->title) . '</a></span>';
         }
 
         $this->Template->links          = $arrLinks;
 
         $this->Template->priceText      = $this->iidoShopCartPriceText;
         $this->Template->priceUnit      = '&euro;';
-        $this->Template->price          = ShopHelper::renderPrice($intCartPrice);
+        $this->Template->price          = ShopHelper::renderPrice($intCartPrice, true);
         $this->Template->checkOutLink   = $checkOutLink;
 
         $this->Template->editLink       = \PageModel::findByPk( $this->iidoShopEditPage )->getFrontendUrl();
