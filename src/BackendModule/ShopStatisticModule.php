@@ -49,9 +49,12 @@ class ShopStatisticModule extends \BackendModule
             $this->Template->content = $this->$modeName();
 
             $overview = false;
+
+            $this->Template->removeButtons = TRUE;
         }
 
-        $this->Template->overview = $overview;
+        $this->Template->overview   = $overview;
+        $this->Template->User       = \BackendUser::getInstance();
     }
 
 
@@ -104,20 +107,41 @@ class ShopStatisticModule extends \BackendModule
 
         $arrQuestData = array();
 
-        if( \Input::post("FORM_SUBMIT") === "QUESTIONNAIRE_SELECTOR" )
+        if( \Input::get("questionnaire") )
         {
-            $objResult = QuestionnaireHelper::getQuestionnaireResult( \Input::post("selectQuestionnaire") );
+            $overview = false;
+            $objResult = QuestionnaireHelper::getQuestionnaireResult( \Input::get("questionnaire") );
 
             if( $objResult && $objResult->count() > 0 )
             {
                 $objQuest       = $questionnaires[ $objQuestionnaires->id ];
                 $arrQuestConfig = json_decode($objQuest->rsce_data, TRUE);
 
-//                foreach()
+                while( $objResult->next() )
+                {
+                    $arrQuestData[] = $objResult->row();
+                }
             }
         }
+        else
+        {
+            $overview = true;
+        }
 
-        $objTemplate->questionnaireData = $arrQuestData;
+        $objTemplate->questionnaireData     = $arrQuestData;
+        $objTemplate->addButtons            = TRUE;
+        $objTemplate->overview              = $overview;
+
+        return $objTemplate->parse();
+    }
+
+
+
+    protected function renderOrderMode()
+    {
+        $objTemplate = new \BackendTemplate( $this->strTemplate . '_order' );
+
+        $objTemplate->addButtons = TRUE;
 
         return $objTemplate->parse();
     }

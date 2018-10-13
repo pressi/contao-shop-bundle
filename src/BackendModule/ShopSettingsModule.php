@@ -42,7 +42,9 @@ class ShopSettingsModule extends \BackendModule
         {
             if( $strMode === "payment" || $strMode === "shipping" )
             {
-                $strTableClass = '\IIDO\ShopBundle\Model\IidoShop' . ucfirst( $strMode ) . 'Model';
+//                $strTableClass = '\IIDO\ShopBundle\Model\IidoShop' . ucfirst( $strMode ) . 'Model';
+                $strTableClass = \Model::getClassFromTable( $strTable );
+
                 $this->Template->content = $this->renderTableMode( $strTableClass::getTable() );
             }
             else
@@ -58,6 +60,7 @@ class ShopSettingsModule extends \BackendModule
 
         $this->Template->label      = $strLang;
         $this->Template->overview   = $overview;
+        $this->Template->User       = \BackendUser::getInstance();
     }
 
 
@@ -90,6 +93,20 @@ class ShopSettingsModule extends \BackendModule
     protected function renderConfigurationMode()
     {
         return $this->renderTableMode( \Input::get("table"), 'file' );
+    }
+
+
+
+    protected function renderAiMode()
+    {
+        return $this->renderTableMode( \Input::get("table"), 'file' );
+    }
+
+
+
+    protected function renderVoucherMode()
+    {
+        return $this->renderTableMode( \Input::get("table") );
     }
 
 }
