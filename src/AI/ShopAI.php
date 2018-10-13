@@ -34,7 +34,7 @@ class ShopAI
 
 
 
-    public static function submitQuestionnaireForm()
+    public static function submitQuestionnaireForm( $objQuestionnaire )
     {
         $itemNumber = 0;
         $arrProfile = json_decode(self::runAction( self::$getParam ), TRUE);
@@ -49,9 +49,17 @@ class ShopAI
                 {
                     case "anwendungsbereich":
                     case "skifahrertyp":
+                    case "speedcheck":
+                    case "technikanalyse":
+                    case "frequenzcheck":
                     case "radius":
                     case "geschlecht":
                     case "location":
+
+                        if( $arrQuestion['id'] === "geschlecht" )
+                        {
+                            $answer = (($answer === "female" || $answer === "weiblich") ? 'weiblich' : 'männlich');
+                        }
 
                         if( !is_array($answer) )
                         {
@@ -90,12 +98,31 @@ class ShopAI
             }
         }
 
-        $profile = json_encode( $arrProfile );
-        $arrResult = json_decode(self::runAction( self::$postParam, 'POST', $profile), TRUE);
+        $profile    = json_encode( $arrProfile );
+        $arrResult  = json_decode(self::runAction( self::$postParam, 'POST', $profile), TRUE);
 
-        echo "<pre>";
+        $objRedirectPage = \PageModel::findByPk( $objQuestionnaire->redirectPage );
+
+        if( $objRedirectPage && count($arrResult) )
+        {
+//            \Input::setPost('FORM_SUBMIT', 'questionnaire');
+//            \Input::setPost('itemNumber', $arrResult[0]);
+
+            \Session::getInstance()->set('FORM_SUBMIT', 'questionnaire');
+            \Session::getInstance()->set('itemNumber', $arrResult[0]);
+
+            \Controller::redirect( $objRedirectPage->getFrontendUrl() );
+        }
+        else
+        {
+            $itemNumber = $arrResult[0];
+        }
+
+//        echo "<pre>";
 //        print_r("TODO");
-        print_r( $arrResult );
+//        print_r( $arrResult );
+//        echo "<br>";
+//        print_r( $objQuestionnaire->redirectPage );
 //        print_r( self::runAction( self::$postParam, 'POST', $profile) );
 //        echo "<br>";
 //        print_r( $profile );
@@ -103,7 +130,7 @@ class ShopAI
 //        print_r( $arrProfile );
 //        echo "<br>";
 //        print_r( $arrResult );
-        exit;
+//        exit;
 
         return $itemNumber;
     }
@@ -143,29 +170,29 @@ class ShopAI
     {
         switch( $aiName )
         {
-            case "anwendungsbereich":
-                $return = 'gelaende';
-                break;
+//            case "anwendungsbereich":
+//                $return = 'gelaende';
+//                break;
 
             case "gewicht":
                 $return = 'weight';
                 break;
 
-            case "geschlecht":
-                $return = 'gender';
-                break;
+//            case "geschlecht":
+//                $return = 'gender';
+//                break;
 
             case "größe":
                 $return = 'size';
                 break;
 
-            case "skifahrertyp":
-                $return = 'gut';
-                break;
+//            case "skifahrertyp":
+//                $return = 'gut';
+//                break;
 
-            case "location":
-                $return = 'country';
-                break;
+//            case "location":
+//                $return = 'country';
+//                break;
 
             default:
                 $return = $aiName;

@@ -9,9 +9,12 @@
 
 namespace IIDO\ShopBundle\Ajax;
 
+
 use HeimrichHannot\Ajax\Response\ResponseData;
 use HeimrichHannot\Ajax\Response\ResponseSuccess;
 use HeimrichHannot\Ajax\Response\ResponseError;
+use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\ShopBundle\Config\BundleConfig;
 use IIDO\ShopBundle\Config\ShopConfig;
 use IIDO\ShopBundle\Helper\ShopHelper;
 
@@ -47,15 +50,16 @@ class ShopAjax
      */
     public function getPrice( $itemNumber, $productName, $quantity )
     {
-        $objProduct     = ShopConfig::getProduct( ShopHelper::getRealItemNumber($itemNumber) );
-        $intPrice       = (float) $objProduct->price;
+//        $objProduct     = ShopConfig::getSkiProduct( $itemNumber );
+//        $intPrice       = (float) $objProduct->price;
 
-        if( !$intPrice )
-        {
-            $intPrice = (float) $objProduct['price'];
-        }
+//        if( !$intPrice )
+//        {
+//            $intPrice = (float) $objProduct['price'];
+//        }
 
-        $strHtml        = array('price' => ($intPrice * (int) $quantity));
+//        $strHtml        = array('price' => ($intPrice * (int) $quantity));
+        $strHtml        = array('price' => ShopHelper::getCartPrice());
 
         $objResponse    = new ResponseSuccess();
         $objData        = new ResponseData( $strHtml );
@@ -93,10 +97,20 @@ class ShopAjax
 
     public function getAddToCartMessage( $prodcutName, $fieldAddon = '' )
     {
+        $strText            = '';
+        $strLang            = BasicHelper::getLanguage();
         $tableFieldPrefix   = \IIDO\ShopBundle\Config\BundleConfig::getTableFieldPrefix();
-        $strText            = \Config::get( $tableFieldPrefix . 'addToCartText' . $fieldAddon );
 
-        $strText            = preg_replace('/##name##/', $prodcutName, $strText);
+        if( $strLang === "de")
+        {
+            $strText            = \Config::get( $tableFieldPrefix . 'addToCartText' . $fieldAddon );
+            $strText            = preg_replace('/##name##/', $prodcutName, $strText);
+        }
+        elseif( $strLang === "en")
+        {
+            $strText            = \Config::get( $tableFieldPrefix . 'addToCartText' . $fieldAddon . 'EN' );
+            $strText            = preg_replace('/##name##/', $prodcutName, $strText);
+        }
 
         return $this->renderReturn( \Controller::replaceInsertTags($strText) );
     }
@@ -119,10 +133,20 @@ class ShopAjax
 
     public function getAddToWatchlistMessage( $prodcutName, $fieldAddon = '' )
     {
-        $tableFieldPrefix   = \IIDO\ShopBundle\Config\BundleConfig::getTableFieldPrefix();
-        $strText            = \Config::get( $tableFieldPrefix . 'addToWatchlistText' . $fieldAddon );
+        $strText            = '';
+        $strLang            = BasicHelper::getLanguage();
+        $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
 
-        $strText            = preg_replace('/##name##/', $prodcutName, $strText);
+        if( $strLang === "de" )
+        {
+            $strText            = \Config::get( $tableFieldPrefix . 'addToWatchlistText' . $fieldAddon );
+            $strText            = preg_replace('/##name##/', $prodcutName, $strText);
+        }
+        elseif( $strLang === "en" )
+        {
+            $strText            = \Config::get( $tableFieldPrefix . 'addToWatchlistText' . $fieldAddon . 'EN' );
+            $strText            = preg_replace('/##name##/', $prodcutName, $strText);
+        }
 
         return $this->renderReturn( \Controller::replaceInsertTags($strText) );
     }
