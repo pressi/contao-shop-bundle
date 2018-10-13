@@ -1,0 +1,178 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="en">
+        <body>
+
+<!-- ### CONTENT ELEMENTS ################################################################################################### -->
+
+
+            <trans-unit id="CTE.iido_shop.0">
+                <source>Shop</source>
+                <target>Shop</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_productList.0">
+                <source>Productlist</source>
+                <target>Shop: Productlist</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_productDetails.0">
+                <source>Productdetails</source>
+                <target>Shop: Productdetails</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_configurator.0">
+                <source>Configurator</source>
+                <target>Shop: Configurator</target>
+            </trans-unit>
+            <trans-unit id="CTE.iido_shop_configurator_v2.0">
+                <source>Configurator</source>
+                <target>Shop: Configurator (Version 2)</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_cart.0">
+                <source>Cart</source>
+                <target>Shop: Cart</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_watchlist.0">
+                <source>Watchlist</source>
+                <target>Shop: Watchlist</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_checkout.0">
+                <source>Check Out Form</source>
+                <target>Shop: Check Out (Form)</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_orderOverview.0">
+                <source>Order Overview</source>
+                <target>Shop: Order overview</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_orderComplete.0">
+                <source>Order Overview</source>
+                <target>Shop: Complete Order</target>
+            </trans-unit>
+
+
+
+<!-- ### EU Countries ####################################################################################################### -->
+
+            <trans-unit id="SHOP.countries.eu.at">
+                <source>Austria</source>
+                <target>Austria</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.be">
+                <source>Belgium</source>
+                <target>Belgium</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.bg">
+                <source>Bulgaria</source>
+                <target>Bulgaria</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.cz">
+                <source>Czech Republic</source>
+                <target>Czech Republic</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.dk">
+                <source>Denmark</source>
+                <target>Denmark</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.de">
+                <source>Germany</source>
+                <target>Germany</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.ee">
+                <source>Estonia</source>
+                <target>Estonia</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.ie">
+                <source>Ireland</source>
+                <target>Ireland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.gr">
+                <source>Greece</source>
+                <target>Greece</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.es">
+                <source>Spain</source>
+                <target>Spain</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.fr">
+                <source>France</source>
+                <target>France</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.hr">
+                <source>Croatia</source>
+                <target>Croatia</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.it">
+                <source>Italy</source>
+                <target>Italy</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.cy">
+                <source>Cyprus</source>
+                <target>Cyprus</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.lv">
+                <source>Latvia</source>
+                <target>Latvia</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.lt">
+                <source>Lithuania</source>
+                <target>Lithuania</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.lu">
+                <source>Luxembourg</source>
+                <target>Luxembourg</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.hu">
+                <source>Hungary</source>
+                <target>Hungary</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.mt">
+                <source>Malta</source>
+                <target>Malta</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.nl">
+                <source>The Netherlands</source>
+                <target>The Netherlands</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.pl">
+                <source>Poland</source>
+                <target>Poland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.pt">
+                <source>Portugal</source>
+                <target>Portugal</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.ro">
+                <source>Romania</source>
+                <target>Romania</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.si">
+                <source>Slovenia</source>
+                <target>Slovenia</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.sk">
+                <source>Slovakia</source>
+                <target>Slovakia</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.fi">
+                <source>Finland</source>
+                <target>Finland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.se">
+                <source>Sweden</source>
+                <target>Sweden</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.gb">
+                <source>United Kingdom</source>
+                <target>United Kingdom</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

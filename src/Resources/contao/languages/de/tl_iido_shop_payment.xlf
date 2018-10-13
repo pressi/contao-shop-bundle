@@ -90,17 +90,22 @@
 
 
             <trans-unit id="tl_iido_shop_payment.type_legend">
-                <source>Standard-Settings</source>
+                <source>Standard settings</source>
                 <target>Standard-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_payment.api_legend">
+                <source>API settings</source>
+                <target>API-Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_iido_shop_payment.info_legend">
-                <source>Info-Settings</source>
+                <source>Info settings</source>
                 <target>Info-Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_iido_shop_payment.config_legend">
-                <source>Config-Settings</source>
+                <source>Config settings</source>
                 <target>Zugangs-Einstellungen</target>
             </trans-unit>
 

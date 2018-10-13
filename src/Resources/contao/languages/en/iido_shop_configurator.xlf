@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_configurator.php" source-language="en" target-language="en">
+        <body>
+
+<!-- ### LABELS ############################################################################################################# -->
+
+            <trans-unit id="iido_shop_configurator.label.design">
+                <source>Design</source>
+                <target>Design</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.binding">
+                <source>Binding</source>
+                <target>Binding</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.length">
+                <source>Length</source>
+                <target>Length</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.size">
+                <source>Size</source>
+                <target>Size</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.flex">
+                <source>Flex</source>
+                <target>Flex</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.tuning">
+                <source>Tuning</source>
+                <target>Tuning</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.buy">
+                <source>Buy</source>
+                <target>Buy</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.watchlist">
+                <source>Notice</source>
+                <target>Notice</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.price">
+                <source>Your price</source>
+                <target>Your price</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.cart">
+                <source>Cart</source>
+                <target>Cart</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.detail">
+                <source>Detail</source>
+                <target>Detail</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.save">
+                <source>Save</source>
+                <target>Save</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.moreDetails">
+                <source>more Details</source>
+                <target>more Details</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_configurator.label.noBinding">
+                <source>no binding</source>
+                <target>no binding</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

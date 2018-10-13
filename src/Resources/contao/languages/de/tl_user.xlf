@@ -42,6 +42,26 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_user.iidoShopSettings.0">
+                <source>Shop-Konfigurationen verwalten</source>
+                <target>Shop-Konfigurationen verwalten</target>
+            </trans-unit>
+            <trans-unit id="tl_user.iidoShopSettings.1">
+                <source>Benutzer erlauben, Shop-Konfigurationen zu verwalten</source>
+                <target>Benutzer erlauben, Shop-Konfigurationen zu verwalten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_user.iidoShopStatistic.0">
+                <source>Shop-Statistiken verwalten</source>
+                <target>Shop-Statistiken verwalten</target>
+            </trans-unit>
+            <trans-unit id="tl_user.iidoShopStatistic.1">
+                <source>Benutzer erlauben, Shop-Statistiken zu verwalten</source>
+                <target>Benutzer erlauben, Shop-Statistiken zu verwalten</target>
+            </trans-unit>
+
+
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
@@ -58,7 +78,41 @@
 
             <trans-unit id="tl_user.options.iidoShopProductCategories.manage">
                 <source>manage</source>
-                <target>manage</target>
+                <target>Verwalten</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_user.options.iidoShopSettings.configuration">
+                <source>configuration</source>
+                <target>Shop-/ Konfigurator-Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="tl_user.options.iidoShopSettings.payment">
+                <source>payment methods</source>
+                <target>Bezahlmethoden</target>
+            </trans-unit>
+            <trans-unit id="tl_user.options.iidoShopSettings.voucher">
+                <source>voucher</source>
+                <target>Gutscheine</target>
+            </trans-unit>
+            <trans-unit id="tl_user.options.iidoShopSettings.shipping">
+                <source>shipping methods</source>
+                <target>Versandoptionen</target>
+            </trans-unit>
+            <trans-unit id="tl_user.options.iidoShopSettings.ai">
+                <source>shop ai (questionnaire)</source>
+                <target>Shop AI (Fragebogen)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_user.options.iidoShopStatistic.ai">
+                <source>shop ai (questionnaire)</source>
+                <target>Shop AI (Fragebogen) - Statistik</target>
+            </trans-unit>
+            <trans-unit id="tl_user.options.iidoShopStatistic.order">
+                <source>Shop Bestellungen - Statistik</source>
+                <target>Shop Bestellungen - Statistik</target>
             </trans-unit>
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop.php" source-language="en" target-language="de">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop.php" source-language="en" target-language="en">
         <body>
 
 <!-- ### CURRENCYS ########################################################################################################## -->
@@ -42,16 +42,16 @@
 
             <trans-unit id="iido_shop.label.color">
                 <source>color</source>
-                <target>Farbe</target>
+                <target>color</target>
             </trans-unit>
 
             <trans-unit id="iido_shop.label.gender.M">
                 <source>Men's</source>
-                <target>Herren</target>
+                <target><![CDATA[Men's]]></target>
             </trans-unit>
             <trans-unit id="iido_shop.label.gender.W">
                 <source>Ladies</source>
-                <target>Damen</target>
+                <target>Ladies</target>
             </trans-unit>
 
 
@@ -63,22 +63,22 @@
             </trans-unit>
             <trans-unit id="iido_shop.label.chooser.gender">
                 <source>Model</source>
-                <target>Ausführung</target>
+                <target>Model</target>
             </trans-unit>
             <trans-unit id="iido_shop.label.chooser.size">
                 <source>Size</source>
-                <target>Größe</target>
+                <target>Size</target>
             </trans-unit>
 
 
 
             <trans-unit id="iido_shop.noProductFound">
-                <source>no product found</source>
-                <target>Es wurde kein Produkt gefunden!</target>
+                <source>no product found.</source>
+                <target>no product found.</target>
             </trans-unit>
             <trans-unit id="iido_shop.noProductFoundName">
                 <source>An error has occurred.</source>
-                <target>Ein Fehler ist aufgetreten.</target>
+                <target>An error has occurred.</target>
             </trans-unit>
 
 

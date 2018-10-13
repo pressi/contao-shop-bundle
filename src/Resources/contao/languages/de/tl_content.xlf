@@ -85,6 +85,11 @@
                 <target>Produkte laden via</target>
             </trans-unit>
 
+            <trans-unit id="tl_content.iidoShopProductsShowMode.0">
+                <source>product show-mode</source>
+                <target>Produkte Anzeigen-Modus</target>
+            </trans-unit>
+
 
 
 
@@ -135,6 +140,21 @@
             <trans-unit id="tl_content.options.iidoShopShowProductsFrom.itemNumber">
                 <source>item numbers</source>
                 <target>Artikelnummer(n)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.iidoShopProductsShowMode.colorAndGender">
+                <source>article</source>
+                <target>pro Farbe und Geschlecht gruppieren</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.iidoShopProductsShowMode.article">
+                <source>article</source>
+                <target>pro Artikel gruppieren</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.iidoShopProductsShowMode.color">
+                <source>article</source>
+                <target>pro Farbe gruppieren</target>
             </trans-unit>
 
         </body>

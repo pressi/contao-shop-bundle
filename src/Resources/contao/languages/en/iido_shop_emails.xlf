@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_emails.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="iido_shop_emails.label.orderNumber">
+                <source>Order number</source>
+                <target>Order number</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.orderDate">
+                <source>Order date</source>
+                <target>Order date</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.paymentMethod">
+                <source>Payment method</source>
+                <target>Payment method</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.shippingMethod">
+                <source>Shipping method</source>
+                <target>Shipping method</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.shippingAddress">
+                <source>Ship-to address</source>
+                <target>Ship-to address</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.billingAddress">
+                <source>Invoice address</source>
+                <target>Invoice address</target>
+            </trans-unit>
+
+
+
+
+            <trans-unit id="iido_shop_emails.dummy.salutation">
+                <source><![CDATA[Hey ###SALUTATION###,<br>thanks a lot for your order with ORIGINAL+!]]></source>
+                <target><![CDATA[Hey ###SALUTATION###,<br>thanks a lot for your order with ORIGINAL+!]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.thanks">
+                <source><![CDATA[Kind regards<br>Your ORIGINAL+ team]]></source>
+                <target><![CDATA[Kind regards<br>Your ORIGINAL+ team]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.addText">
+                <source><![CDATA[This offer is subject to our general terms and conditions.]]></source>
+                <target><![CDATA[This offer is subject to our general terms and conditions.]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="iido_shop_emails.dummy.paypal">
+                <source><![CDATA[We have not received confirmation of your Paypal payment. This can take a few seconds to a few minutes. As soon as we have confirmation of your payment, and all items are on stock, we will ship your order as fast as possible. Attached you also find our general terms and conditions. You will shortly receive an order confirmation from our customer service.]]></source>
+                <target><![CDATA[We have not received confirmation of your Paypal payment. This can take a few seconds to a few minutes. As soon as we have confirmation of your payment, and all items are on stock, we will ship your order as fast as possible. Attached you also find our general terms and conditions. You will shortly receive an order confirmation from our customer service.]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.creditCard">
+                <source><![CDATA[We have not received confirmation of your credit card payment. This can take a few seconds to a few minutes. As soon as we have confirmation of your payment, and all items are on stock, we will ship your order as fast as possible. Attached you also find our general terms and conditions. You will shortly receive an order confirmation from our customer service.]]></source>
+                <target><![CDATA[We have not received confirmation of your credit card payment. This can take a few seconds to a few minutes. As soon as we have confirmation of your payment, and all items are on stock, we will ship your order as fast as possible. Attached you also find our general terms and conditions. You will shortly receive an order confirmation from our customer service.]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.prepaied">
+                <source><![CDATA[You chose „prepayment“ as your payment option. You will shortly receive an order confirmation and an advance invoice from our customer service. As soon as we have confirmation of your payment, and all items are on stock, we will ship your order as fast as possible. Attached you also find our general terms and conditions.]]></source>
+                <target><![CDATA[You chose „prepayment“ as your payment option. You will shortly receive an order confirmation and an advance invoice from our customer service. As soon as we have confirmation of your payment, and all items are on stock, we will ship your order as fast as possible. Attached you also find our general terms and conditions.]]></target>
+            </trans-unit>
+
+            <!--<trans-unit id="iido_shop_emails.dummy.cashOnDelivery">-->
+                <!--<source><![CDATA[ ]]></source>-->
+                <!--<target><![CDATA[Du hast als Bezahlmöglichkeit „Nachnahme“ gewählt. Du erhältst in Kürze eine Auftragsbestätigung aus unserem Customer Service! Wenn die Ware lagernd ist werden wir Dein Paket so schnell wie möglich versenden. Du bezahlst dann den Betrag bei Lieferung an unseren Lieferpartner. Hinweise zu Deinem Widerrufsrecht findest Du im Anhang in unseren AGB.]]></target>-->
+            <!--</trans-unit>-->
+
+            <trans-unit id="iido_shop_emails.dummy.shopAddress">
+                <source><![CDATA[ ]]></source>
+                <target><![CDATA[ORIGINAL+<br>Siezenheimer Strasse 41<br>5020 Salzburg<br>T +43 667 62323 797<br>M support@typs.gmbh<br><br>ORIGINAL+ & Kante Scharf<br>are brands of TYPS GMBH.<br><br>TYPS GMBH TAKE YOUR PLEASURE SERIOUSLY<br>Siezenheimer Str. 41, 5020 Salzburg, Austria<br><br>Managing Director: Mag. Siegfried Rumpfhuber<br>Registrar: Landesgericht Salzburg<br>Registration Nr.: 460604i<br>VAR Nr. ATU71573718]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.agb">
+                <source><![CDATA[Terms & Conditions are agreed.]]></source>
+                <target><![CDATA[Terms & Conditions are agreed.]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="iido_shop_emails.label.orderItemsIntro">
+                <source>Here are the products you orderered:</source>
+                <target>Here are the products you orderered:</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.articleDescription">
+                <source>Item Description</source>
+                <target>Item Description</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.quantity">
+                <source>Qty</source>
+                <target>Qty</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.singlePrice">
+                <source>Price</source>
+                <target>Price</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.totalPrice">
+                <source>Total price</source>
+                <target>Total price</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.shippingCosts">
+                <source>Shipment</source>
+                <target>Shipment</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.sum">
+                <source>TOTAL</source>
+                <target>TOTAL</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.incl_vat">
+                <source>incl. VAT.</source>
+                <target>incl. VAT.</target>
+            </trans-unit>
+
+
+
+        </body>
+    </file>
+</xliff>

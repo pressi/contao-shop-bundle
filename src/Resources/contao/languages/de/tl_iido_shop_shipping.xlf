@@ -21,9 +21,49 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_iido_shop_shipping.useShippingPerCountry.0">
+                <source>shipping costs for some countries</source>
+                <target>Versandoption für bestimmte Länder</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.shippingPerCountry.0">
+                <source>shipping countries</source>
+                <target>Versand Länder</target>
+            </trans-unit>
+
+
             <trans-unit id="tl_iido_shop_shipping.price.0">
                 <source>price</source>
                 <target>Preis</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.enablePricePerCountry.0">
+                <source>enable price per country</source>
+                <target>Preis für einzelne Länder aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.pricePerCountry.0">
+                <source>price per county</source>
+                <target>Preis pro Land</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.freeOnPriceLimit.0">
+                <source>enable free shipping on cart price</source>
+                <target>Versandkostenfrei nach bestimmer Warenkorb Summe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.freeOnCartPrice.0">
+                <source>free on cart price</source>
+                <target>Frei bei Warenkorb Summe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.freeOnlyPerCountry.0">
+                <source>free only per country</source>
+                <target>Frei bei Warenkorb Summe für bestimme Länder</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.freeOnlyPerCountry.1">
+                <source>free only per country</source>
+                <target>Wenn die Warenkob Länder Summe leer gelassen wird, wird die Haupt-Summe des Warenkorbs genommen.</target>
             </trans-unit>
 
 
@@ -73,28 +113,121 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_iido_shop_shipping.apiMethod.0">
+                <source>api method</source>
+                <target>API Methode</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.apiMethod.1">
+                <source>api method</source>
+                <target>Diese Methode wird bei den "Lieferbedingungen" eingetragen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.linkPaymentMethod.0">
+                <source>link payment method</source>
+                <target>Bezahlmethode Verknüpfen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_shipping.linkedPaymentMethod.0">
+                <source>payment method</source>
+                <target>Bezahlmethode</target>
+            </trans-unit>
+
+
+
+<!-- ### FIELDS ############################################################################################################# -->
+
+
+            <trans-unit id="tl_iido_shop_shipping.field.pricePerCountry.country">
+                <source>country</source>
+                <target>Land</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.field.pricePerCountry.price">
+                <source>price</source>
+                <target>Preis</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.field.pricePerCountry.label">
+                <source>label</source>
+                <target>Bezeichnung</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.field.freeOnlyPerCountry.country">
+                <source>country</source>
+                <target>Land</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.field.freeOnlyPerCountry.freeOnCartPrice">
+                <source>free on cart price</source>
+                <target>Frei bei Warenkorb Summe</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.field.shippingPerCountry.country">
+                <source>country</source>
+                <target>Land</target>
+            </trans-unit>
+
+
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
 
             <trans-unit id="tl_iido_shop_shipping.type_legend">
-                <source>Standard-Settings</source>
+                <source>Standard settings</source>
                 <target>Standard-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_shipping.api_legend">
+                <source>API settings</source>
+                <target>API-Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_iido_shop_shipping.info_legend">
-                <source>Info-Settings</source>
+                <source>Info settings</source>
                 <target>Info-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_shipping.add_legend">
+                <source>Additional settings</source>
+                <target>Zusatz-Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_iido_shop_shipping.price_legend">
-                <source>Price-Settings</source>
+                <source>Price settings</source>
                 <target>Preis-Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_iido_shop_shipping.publish_legend">
                 <source>Publish settings</source>
                 <target>Veröffentlichung</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_shipping.options.useShippingPerCountry.enable">
+                <source>enable</source>
+                <target>Aktivieren</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.options.useShippingPerCountry.disable">
+                <source>disable</source>
+                <target>Deaktivieren</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_shipping.options.linkedPaymentMethod.paypal">
+                <source>paypal (cred card)</source>
+                <target>PayPal (Kreditkarte)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.options.linkedPaymentMethod.prepaid">
+                <source>prepaid</source>
+                <target>Vorkasse</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_shipping.options.linkedPaymentMethod.cashOnDelivery">
+                <source>cash on delivery</source>
+                <target>Nachname</target>
             </trans-unit>
 
 
@@ -211,6 +344,11 @@
                 <target>Nach dieser Versandoption ID %s einfügen</target>
             </trans-unit>
 
+
+            <trans-unit id="tl_iido_shop_shipping.countryOptions.0">
+                <source>Country options</source>
+                <target>Länder Zusatz-Optionen</target>
+            </trans-unit>
 
         </body>
     </file>

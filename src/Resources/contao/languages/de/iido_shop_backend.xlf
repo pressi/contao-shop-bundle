@@ -21,6 +21,11 @@
                 <target>Shop-/ Konfigurator-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="iido_shop_backend.settings.voucher">
+                <source>Voucher</source>
+                <target>Gutscheine</target>
+            </trans-unit>
+
             <trans-unit id="iido_shop_backend.settings.ai">
                 <source>AI</source>
                 <target>Shop AI (Fragebogen)</target>
@@ -28,11 +33,26 @@
 
 
 
+<!-- ### SETTINGS SUB MODES ################################################################################################# -->
+
+            <trans-unit id="iido_shop_backend.settings.sub.shipping_country_option">
+                <source>Country option</source>
+                <target>Länder Zusatz-Optionen</target>
+            </trans-unit>
+
+
+
+<!-- ### STATISTIC ########################################################################################################## -->
+
             <trans-unit id="iido_shop_backend.statistic.ai">
                 <source>AI</source>
                 <target>Shop AI (Fragebogen) - Statistik</target>
             </trans-unit>
 
+            <trans-unit id="iido_shop_backend.statistic.order">
+                <source>AI</source>
+                <target>Shop Bestellungen - Statistik</target>
+            </trans-unit>
 
         </body>
     </file>

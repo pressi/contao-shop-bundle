@@ -4,66 +4,84 @@
         <body>
 
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_enableShopLight.0">
+            <trans-unit id="tl_iido_shop_configuration.enableShopLight.0">
                 <source>enable shop light</source>
                 <target>Shop Light aktivieren</target>
             </trans-unit>
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_enableShopLight.1">
+            <trans-unit id="tl_iido_shop_configuration.enableShopLight.1">
                 <source>enables shop light functions. deactivite some functions.</source>
                 <target>Aktiviert den Shop Light. Es werden einige Funktionen deaktiviert (API, AI, Produkt verwaltung). Die Produkt Inhalts-Elemente werden aktiviert.</target>
             </trans-unit>
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_noImageSRC.0">
+            <trans-unit id="tl_iido_shop_configuration.noImageSRC.0">
                 <source>no image source</source>
                 <target>"Kein Bild vorhanden" - Bild</target>
             </trans-unit>
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_currency.0">
+            <trans-unit id="tl_iido_shop_configuration.currency.0">
                 <source>currency</source>
                 <target>Währung</target>
             </trans-unit>
 
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartText.0">
+            <trans-unit id="tl_iido_shop_configuration.addToCartText.0">
                 <source>add to cart text</source>
                 <target>Text: Zum Warenkorb hinzugefügt</target>
             </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.addToCartTextEN.0">
+                <source>add to cart text</source>
+                <target><![CDATA[<img src="/bundles/iidoshop/images/backend/flag-en.png" width="22" height="14"> Text: Zum Warenkorb hinzugefügt]]></target>
+            </trans-unit>
 
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistText.0">
+            <trans-unit id="tl_iido_shop_configuration.addToWatchlistText.0">
                 <source>add to watchlist text</source>
                 <target>Text: Zur Merkliste hinzugefügt</target>
             </trans-unit>
+            <trans-unit id="tl_iido_shop_configuration.addToWatchlistTextEN.0">
+                <source>add to watchlist text</source>
+                <target><![CDATA[<img src="/bundles/iidoshop/images/backend/flag-en.png" width="22" height="14"> Text: Zur Merkliste hinzugefügt]]></target>
+            </trans-unit>
 
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartTextConfigurator.0">
+            <trans-unit id="tl_iido_shop_configuration.addToCartTextConfigurator.0">
                 <source>add to cart text configurator</source>
                 <target><![CDATA[<span style="color:red;">KONFIGURATOR</span> - Text: Zum Warenkorb hinzugefügt]]></target>
             </trans-unit>
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToCartTextConfigurator.1">
+            <trans-unit id="tl_iido_shop_configuration.addToCartTextConfigurator.1">
                 <source>add to cart text configurator description</source>
                 <target>Wenn der Text leer ist wird der Standardtext verwendet.</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_configuration.addToCartTextConfiguratorEN.0">
+                <source>add to cart text configurator</source>
+                <target><![CDATA[<img src="/bundles/iidoshop/images/backend/flag-en.png" width="22" height="14"> <span style="color:red;">KONFIGURATOR</span> - Text: Zum Warenkorb hinzugefügt]]></target>
+            </trans-unit>
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistTextConfigurator.0">
+
+            <trans-unit id="tl_iido_shop_configuration.addToWatchlistTextConfigurator.0">
                 <source>add to watchlist text configurator</source>
                 <target><![CDATA[<span style="color:red;">KONFIGURATOR</span> - Text: Zur Merkliste hinzugefügt]]></target>
             </trans-unit>
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_addToWatchlistTextConfigurator.1">
+            <trans-unit id="tl_iido_shop_configuration.addToWatchlistTextConfigurator.1">
                 <source>add to watchlist text configurator description</source>
                 <target>Wenn der Text leer ist wird der Standardtext verwendet.</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_configuration.addToWatchlistTextConfiguratorEN.0">
+                <source>add to watchlist text configurator</source>
+                <target><![CDATA[<img src="/bundles/iidoshop/images/backend/flag-en.png" width="22" height="14"> <span style="color:red;">KONFIGURATOR</span> - Text: Zur Merkliste hinzugefügt]]></target>
+            </trans-unit>
 
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_aiUsername.0">
+
+            <trans-unit id="tl_iido_shop_configuration.aiUsername.0">
                 <source>username</source>
                 <target>Benutzer</target>
             </trans-unit>
 
 
-            <trans-unit id="tl_iido_shop_configuration.iidoShop_aiPassword.0">
+            <trans-unit id="tl_iido_shop_configuration.aiPassword.0">
                 <source>password</source>
                 <target>Passwort</target>
             </trans-unit>
@@ -87,6 +105,15 @@
                 <target>Merkliste-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_shop_configuration.cartEN_legend">
+                <source>Cart</source>
+                <target><![CDATA[<img src="/bundles/iidoshop/images/backend/flag-en.png" width="22" height="14"> Warenkorb-Einstellungen]]></target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_configuration.watchlistEN_legend">
+                <source>Watchlist</source>
+                <target><![CDATA[<img src="/bundles/iidoshop/images/backend/flag-en.png" width="22" height="14"> Merkliste-Einstellungen]]></target>
+            </trans-unit>
 
             <trans-unit id="tl_iido_shop_configuration.access_legend">
                 <source>Access</source>
@@ -98,15 +125,15 @@
 <!-- ### OPTIONS ############################################################################################################ -->
 
 
-            <trans-unit id="tl_iido_shop_configuration.options.iidoShop_currency.euro">
+            <trans-unit id="tl_iido_shop_configuration.options.currency.euro">
                 <source>Euro</source>
                 <target><![CDATA[&euro; (Euro)]]></target>
             </trans-unit>
-            <trans-unit id="tl_iido_shop_configuration.options.iidoShop_currency.pfund">
+            <trans-unit id="tl_iido_shop_configuration.options.currency.pfund">
                 <source>Pfund</source>
                 <target><![CDATA[&pound; (Pfund)]]></target>
             </trans-unit>
-            <trans-unit id="tl_iido_shop_configuration.options.iidoShop_currency.dollar">
+            <trans-unit id="tl_iido_shop_configuration.options.currency.dollar">
                 <source>Dollar</source>
                 <target><![CDATA[$ (Dollar)]]></target>
             </trans-unit>

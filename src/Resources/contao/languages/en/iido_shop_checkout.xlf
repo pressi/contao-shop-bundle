@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_checkout.php" source-language="en" target-language="de">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_checkout.php" source-language="en" target-language="en">
         <body>
 
 <!-- ### LABELS ############################################################################################################# -->
@@ -8,12 +8,12 @@
 
             <trans-unit id="iido_shop_checkout.label.firstname">
                 <source>firstname</source>
-                <target>Vorname</target>
+                <target>Firstname</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.lastname">
                 <source>lastname</source>
-                <target>Nachname</target>
+                <target>Lastname</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.name">
@@ -23,138 +23,138 @@
 
             <trans-unit id="iido_shop_checkout.label.name_firstname">
                 <source>name, firstname</source>
-                <target>Name, Vorname</target>
+                <target>Name, Firstname</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.firstname_name">
                 <source>firstname, name</source>
-                <target>Vorname, Name</target>
+                <target>Firstname, Name</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.firstname_lastname">
                 <source>firstname, lastname</source>
-                <target>Vorname, Nachname</target>
+                <target>Firstname, Lastname</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.fn_ln">
                 <source>firstname, lastname</source>
-                <target>Vorname, Nachname</target>
+                <target>Firstname, Lastname</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.address">
                 <source>address</source>
-                <target>Anschrift</target>
+                <target>Address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.phone">
                 <source>phone</source>
-                <target>Telefonnummer</target>
+                <target>Phone</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.street">
                 <source>street</source>
-                <target>Straße, Hausnummer</target>
+                <target>Street, House number</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.city">
                 <source>city</source>
-                <target>Ort</target>
+                <target>City</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.country">
                 <source>country</source>
-                <target>Land</target>
+                <target>Country</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.postal">
                 <source>postal</source>
-                <target>Postleitzahl</target>
+                <target>Zip code</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.email">
                 <source>email</source>
-                <target>Email Adresse</target>
+                <target>Email</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.billing_address">
                 <source>billing address</source>
-                <target>Rechnungsadresse</target>
+                <target>Billing address</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.billingAddress">
                 <source>billing address</source>
-                <target>Rechnungsadresse</target>
+                <target>Billing address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.shipping_address">
                 <source>shipping address</source>
-                <target>Lieferadresse</target>
+                <target>Shipping address</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.shippingAddress">
                 <source>shipping address</source>
-                <target>Lieferadresse</target>
+                <target>Shipping address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.shipping_billing_address">
                 <source>shipping / billing address</source>
-                <target>Liefer-/Rechnungsadresse</target>
+                <target>Shipping / billing address</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.shippingBillingAddress">
                 <source>shipping / billing address</source>
-                <target>Liefer-/Rechnungsadresse</target>
+                <target>Shipping / billing address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.like_billing_address">
                 <source>like shipping address</source>
-                <target>Wie Rechnungsadresse</target>
+                <target>Like shipping address</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.like_billingAddress">
                 <source>like shipping address</source>
-                <target>Wie Rechnungsadresse</target>
+                <target>Like shipping address</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.likeBillingAddress">
                 <source>like shipping address</source>
-                <target>Wie Rechnungsadresse</target>
+                <target>Like shipping address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.contact_data">
                 <source>contact data</source>
-                <target>Kontaktdaten</target>
+                <target>Contact data</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.contactData">
                 <source>contact data</source>
-                <target>Kontaktdaten</target>
+                <target>Contact data</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.shippingLabel">
                 <source>shipping</source>
-                <target>Versand</target>
+                <target>Shipping</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.shippingTitle">
                 <source>shipping</source>
-                <target>Versand</target>
+                <target>Shipping</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.shipping.store">
                 <source>to our store</source>
-                <target>in unseren Store</target>
+                <target>To our store</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.shipping.address">
                 <source>to your address</source>
-                <target>an deine Adresse</target>
+                <target>To your address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.payment">
                 <source>payment</source>
-                <target>Bezahlung</target>
+                <target>Payment</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.payment_method">
                 <source>payment method</source>
-                <target>Bezahlmethode</target>
+                <target>Payment method</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.paymentMethod">
                 <source>payment method</source>
-                <target>Bezahlmethode</target>
+                <target>Payment method</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.agb">
@@ -163,36 +163,36 @@
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.agb_text">
-                <source>agb</source>
-                <target><![CDATA[Ja, ich habe die Allgemeinen Geschäftsbedingungen gelesen und bin damit einverstanden. ###LINK###]]></target>
+                <source>Yes, I have read the terms and conditions and I agree.</source>
+                <target><![CDATA[Yes, I have read the terms and conditions and I agree. ###LINK###]]></target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.agb_accept">
                 <source>AGB's accept</source>
-                <target>AGB's EINVERSTANDEN</target>
+                <target>AGB's accept</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.agbAccept">
                 <source>AGB's accept</source>
-                <target>AGB's EINVERSTANDEN</target>
+                <target>AGB's accept</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.other">
                 <source>other</source>
-                <target>Andere</target>
+                <target>other</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.otherAddress">
                 <source>other address</source>
-                <target>Andere Adresse</target>
+                <target>Other address</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.other_address">
                 <source>other address</source>
-                <target>Andere Adresse</target>
+                <target>Other address</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.back">
                 <source>back</source>
-                <target>Zurück</target>
+                <target>Back</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.forward">
@@ -202,57 +202,57 @@
 
             <trans-unit id="iido_shop_checkout.label.forwardBuy">
                 <source>Make a purchase binding</source>
-                <target>Kauf verbindlich abschließen</target>
+                <target>Make a purchase binding</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.shipping_costs">
                 <source>shipping price</source>
-                <target>Lieferkosten</target>
+                <target>Shipping price</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.shippingCosts">
                 <source>shipping price</source>
-                <target>Lieferkosten</target>
+                <target>Shipping price</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.total_price">
                 <source>totel price</source>
-                <target>Gesamtsumme</target>
+                <target>Total price</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.totalPrice">
                 <source>totel price</source>
-                <target>Gesamtsumme</target>
+                <target>Total price</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.vat">
                 <source>vat</source>
-                <target>MwSt.</target>
+                <target>Vat</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.vat_text">
                 <source>vat</source>
-                <target>Mehrwertsteuer</target>
+                <target>Vat</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.vatText">
                 <source>vat</source>
-                <target>Mehrwertsteuer</target>
+                <target>Vat</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.your_products">
                 <source>your products</source>
-                <target>Deine Produkte</target>
+                <target>Your products</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.label.yourProducts">
                 <source>your products</source>
-                <target>Deine Produkte</target>
+                <target>Your products</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.inclusive">
                 <source>inclusive</source>
-                <target>inklusive</target>
+                <target>inclusive</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.label.inclusive_short">
                 <source>incl.</source>
-                <target>inkl.</target>
+                <target>incl.</target>
             </trans-unit>
 
 
@@ -262,81 +262,81 @@
 
             <trans-unit id="iido_shop_checkout.error.name">
                 <source>name musst filled out.</source>
-                <target>Bitte geben Sie Ihren Namen ein.</target>
+                <target>name musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.fullname">
                 <source>name musst filled out.</source>
-                <target>Bitte geben Sie Ihren Vor- und Nachnamen ein.</target>
+                <target>firstname and lastname musst filled out.</target>
             </trans-unit>
             <trans-unit id="iido_shop_checkout.error.firstname_name">
                 <source>name musst filled out.</source>
-                <target>Bitte geben Sie Ihren Vor- und Nachnamen ein.</target>
+                <target>firstname and lastname musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.address">
                 <source>address musst filled out.</source>
-                <target>Bitte geben Sie Ihre Anschrift ein.</target>
+                <target>address musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.phone">
                 <source>phone musst filled out.</source>
-                <target>Bitte geben Sie Ihre Telefonnummer an.</target>
+                <target>phone musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.city">
                 <source>city musst filled out.</source>
-                <target>Bitte geben Sie Ihren Ort an.</target>
+                <target>city musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.postal">
                 <source>postal musst filled out.</source>
-                <target>Bitte geben Sie Ihre Postleitzahl an.</target>
+                <target>postal musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.street">
                 <source>street musst filled out.</source>
-                <target>Bitte geben Sie Ihre Straße an.</target>
+                <target>street musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.phone">
                 <source>phone musst filled out.</source>
-                <target>Bitte geben Sie Ihre Telefonnummer an.</target>
+                <target>phone musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.phone_valid">
                 <source>phone number musst be valid.</source>
-                <target><![CDATA[Bitte geben Sie eine <strong>gültige</strong> Telefonnummer ein.]]></target>
+                <target><![CDATA[phone number musst be <strong>valid</strong>.]]></target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.email">
                 <source>email musst filled out.</source>
-                <target>Bitte geben Sie Ihre Email-Adresse an.</target>
+                <target>email musst filled out.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.email_valid">
                 <source>email musst be valid.</source>
-                <target><![CDATA[Bitte geben Sie eine <strong>gültige</strong> Email-Adresse ein.]]></target>
+                <target><![CDATA[email musst be <strong>valid</strong>.]]></target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.shipping">
                 <source>please choose a shipping option.</source>
-                <target>Bitte wählen Sie eine Versand-Option.</target>
+                <target>please choose a shipping option.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.shipping_address">
                 <source>please choose a shipping option.</source>
-                <target>Bitte wählen Sie Ihre Lieferadress-Option aus.</target>
+                <target>please choose a shipping address option.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.payment">
                 <source>please choose a payment option.</source>
-                <target>Bitte wählen Sie eine Bezahlmethode.</target>
+                <target>please choose a payment option.</target>
             </trans-unit>
 
             <trans-unit id="iido_shop_checkout.error.agb">
                 <source>AGB musst be accept.</source>
-                <target>Sie müssen unsere AGB lesen und akzeptieren.</target>
+                <target><![CDATA[You musst read and accept our Terms and Conditions.]]></target>
             </trans-unit>
 
 

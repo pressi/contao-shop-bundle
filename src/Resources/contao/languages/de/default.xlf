@@ -26,6 +26,24 @@
                 <target>Shop: Konfigurator</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_shop_configurator_v2.0">
+                <source>Configurator</source>
+                <target>Shop: Konfigurator (Version 2)</target>
+            </trans-unit>
+            <trans-unit id="CTE.iido_shop_configurator_v2.1">
+                <source>Configurator</source>
+                <target>Neue Artikelnummern, Bilder optimiert, Ladezeiten optimiert (Produkte und Config in Dateien ausgelagert)</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_shop_configurator_v3.0">
+                <source>Configurator</source>
+                <target>Shop: Konfigurator (Version 3)</target>
+            </trans-unit>
+            <trans-unit id="CTE.iido_shop_configurator_v3.1">
+                <source>Configurator</source>
+                <target>Version 2 + Tuning Produkte</target>
+            </trans-unit>
+
             <trans-unit id="CTE.iido_shop_cart.0">
                 <source>Cart</source>
                 <target>Shop: Warenkorb</target>
@@ -49,6 +67,142 @@
             <trans-unit id="CTE.iido_shop_orderComplete.0">
                 <source>Order Overview</source>
                 <target>Shop: Bestellung abschließen</target>
+            </trans-unit>
+
+
+
+<!-- ### MSC ################################################################################################################ -->
+
+            <trans-unit id="MSC.backBTTitle_overview">
+                <source>Zur Übersicht</source>
+                <target>Zur Übersicht</target>
+            </trans-unit>
+
+            <trans-unit id="MSC.backBT_overview">
+                <source>Zur Übersicht</source>
+                <target>Zur Übersicht</target>
+            </trans-unit>
+
+            <trans-unit id="MSC.backBTTitle">
+                <source>Go back</source>
+                <target>Zurück</target>
+            </trans-unit>
+
+
+
+<!-- ### EU Countries ####################################################################################################### -->
+
+            <trans-unit id="SHOP.countries.eu.at">
+                <source>Austria</source>
+                <target>Österreich</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.be">
+                <source>Belgien</source>
+                <target>Belgien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.bg">
+                <source>Bulgarien</source>
+                <target>Bulgarien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.cz">
+                <source>Tschechien</source>
+                <target>Tschechien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.dk">
+                <source>Dänemark</source>
+                <target>Dänemark</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.de">
+                <source>Deutschland</source>
+                <target>Deutschland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.ee">
+                <source>Estland</source>
+                <target>Estland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.ie">
+                <source>Irland</source>
+                <target>Irland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.gr">
+                <source>Griechenland</source>
+                <target>Griechenland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.es">
+                <source>Spanien</source>
+                <target>Spanien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.fr">
+                <source>Frankreich</source>
+                <target>Frankreich</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.hr">
+                <source>Kroatien</source>
+                <target>Kroatien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.it">
+                <source>Italien</source>
+                <target>Italien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.cy">
+                <source>Zypern</source>
+                <target>Zypern</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.lv">
+                <source>Lettland</source>
+                <target>Lettland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.lt">
+                <source>Litauen</source>
+                <target>Litauen</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.lu">
+                <source>Luxemburg</source>
+                <target>Luxemburg</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.hu">
+                <source>Ungarn</source>
+                <target>Ungarn</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.mt">
+                <source>Malta</source>
+                <target>Malta</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.nl">
+                <source>Niederlande</source>
+                <target>Niederlande</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.pl">
+                <source>Polen</source>
+                <target>Polen</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.pt">
+                <source>Portugal</source>
+                <target>Portugal</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.ro">
+                <source>Rumänien</source>
+                <target>Rumänien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.si">
+                <source>Slowenien</source>
+                <target>Slowenien</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.sk">
+                <source>Slowakei</source>
+                <target>Slowakei</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.fi">
+                <source>Finnland</source>
+                <target>Finnland</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.se">
+                <source>Schweden</source>
+                <target>Schweden</target>
+            </trans-unit>
+            <trans-unit id="SHOP.countries.eu.gb">
+                <source>Vereinigtes Königreich</source>
+                <target>Vereinigtes Königreich</target>
             </trans-unit>
 
 

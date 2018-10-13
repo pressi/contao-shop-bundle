@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_shop_voucher.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_iido_shop_voucher.name.0">
+                <source>name</source>
+                <target>Name</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.alias.0">
+                <source>alias</source>
+                <target>Alias</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.published.0">
+                <source>Publish item</source>
+                <target>Gutschein veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.published.1">
+                <source>Make the product publicly visible on the website.</source>
+                <target>Den Gutschein auf der Webseite anzeigen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.start.0">
+                <source>Show from</source>
+                <target>Anzeigen ab</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.start.1">
+                <source>Do not show the product on the website before this day.</source>
+                <target>Den Gutschein erst ab diesem Tag auf der Webseite anzeigen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.stop.0">
+                <source>Show until</source>
+                <target>Anzeigen bis</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.stop.1">
+                <source>Do not show the product on the website on and after this day.</source>
+                <target>Den Gutschein nur bis zu diesem Tag auf der Webseite anzeigen.</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.tstamp.0">
+                <source>Revision date</source>
+                <target>Änderungsdatum</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.tstamp.1">
+                <source>Date and time of the latest revision</source>
+                <target>Datum und Uhrzeit der letzten Änderung</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.userEmail.0">
+                <source>username</source>
+                <target>Benutzer/Kunden Email-Adresse</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.mode.0">
+                <source>mode</source>
+                <target>Modus</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.percentDiscount.0">
+                <source>Prozentsatz</source>
+                <target>Prozentsatz</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.priceDiscount.0">
+                <source>Betrag</source>
+                <target>Betrag</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_voucher.code.0">
+                <source>code</source>
+                <target>Gutschein-Code</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.userEmails.0">
+                <source>user emails</source>
+                <target>Gutschein auf Benutzer/Kunden Email-Adressen beschränken</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_voucher.type_legend">
+                <source>Standard settings</source>
+                <target>Standard-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_voucher.rights_legend">
+                <source>rights settings</source>
+                <target>Rechte-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_voucher.code_legend">
+                <source>voucher code settings</source>
+                <target>Gutschein Code-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_voucher.mode_legend">
+                <source>discount settings</source>
+                <target>Rabatt-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_shop_voucher.publish_legend">
+                <source>Publish settings</source>
+                <target>Veröffentlichungs-Einstellungen</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_voucher.options.mode.percent">
+                <source>percent</source>
+                <target>Prozent</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.options.mode.amount">
+                <source>amount</source>
+                <target>Betrag</target>
+            </trans-unit>
+
+
+
+<!-- ### FIELDS ############################################################################################################# -->
+
+
+            <trans-unit id="tl_iido_shop_voucher.field.userEmails.email">
+                <source>Email-Adresse</source>
+                <target>Email-Adresse</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.field.userEmails.hidden">
+                <source>Verstecken</source>
+                <target>Verstecken</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.field.userEmails.used">
+                <source>Verwendet</source>
+                <target>Verwendet</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.field.userEmails.usedDate">
+                <source>Verwendet - Datum</source>
+                <target>Verwendet - Datum</target>
+            </trans-unit>
+
+
+
+<!-- ### BUTTONS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_iido_shop_voucher.new.0">
+                <source>New item</source>
+                <target>Neuer Gutschein</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.new.1">
+                <source>Create a new product</source>
+                <target>Einen neuen Gutschein erstellen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.show.0">
+                <source>Item details</source>
+                <target>Gutscheindetails</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.show.1">
+                <source>Show the details of product ID %s</source>
+                <target>Die Details des Gutscheins ID %s anzeigen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.edit.0">
+                <source>Edit item</source>
+                <target>Gutschein bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.edit.1">
+                <source>Edit product ID %s</source>
+                <target>Gutschein ID %s bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.copy.0">
+                <source>Duplicate item</source>
+                <target>Gutschein duplizieren</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.copy.1">
+                <source>Duplicate product ID %s</source>
+                <target>Gutschein ID %s duplizieren</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.cut.0">
+                <source>Move item</source>
+                <target>Gutschein verschieben</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.cut.1">
+                <source>Move product ID %s</source>
+                <target>Gutschein ID %s verschieben</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.delete.0">
+                <source>Delete item</source>
+                <target>Gutschein löschen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.delete.1">
+                <source>Delete product ID %s</source>
+                <target>Gutschein ID %s löschen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.toggle.0">
+                <source>Publish/unpublish item</source>
+                <target>Gutschein veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.toggle.1">
+                <source>Publish/unpublish product ID %s</source>
+                <target>Gutschein ID %s veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.feature.0">
+                <source>Feature/unfeature item</source>
+                <target>Gutschein hervorheben/zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.feature.1">
+                <source>Feature/unfeature product ID %s</source>
+                <target>Gutschein ID %s hervorheben/zurücksetzen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.editheader.0">
+                <source>Edit archive</source>
+                <target>Gutschein bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.editheader.1">
+                <source>Edit the product archive settings</source>
+                <target>Gutschein-Einstellungen bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.editmeta.0">
+                <source>Edit item settings</source>
+                <target>Gutschein-Einstellungen bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.editmeta.1">
+                <source>Edit the product settings</source>
+                <target>Die Gutschein-Einstellungen bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_shop_voucher.pasteafter.0">
+                <source>Paste into this product archive</source>
+                <target>In diesem Gutschein einfügen</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_shop_voucher.pasteafter.1">
+                <source>Paste after product ID %s</source>
+                <target>Nach diesem Gutschein ID %s einfügen</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

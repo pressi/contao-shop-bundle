@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_emails.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="iido_shop_emails.label.orderNumber">
+                <source>Order number</source>
+                <target>Bestellung Nr.</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.orderDate">
+                <source>Order date</source>
+                <target>Bestelludatum</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.paymentMethod">
+                <source>Payment method</source>
+                <target>Bezahlmethode</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.shippingMethod">
+                <source>shipping method</source>
+                <target>Versandmethode</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.shippingAddress">
+                <source>Shipping address</source>
+                <target>Lieferadresse</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.billingAddress">
+                <source>Billing address</source>
+                <target>Rechnungsadresse</target>
+            </trans-unit>
+
+
+
+
+            <trans-unit id="iido_shop_emails.dummy.salutation">
+                <source><![CDATA[Hello ###SALUTATION###,<br>]]></source>
+                <target><![CDATA[Hallo ###SALUTATION###,<br>vielen Dank für Deine Bestellung bei ORIGINAL+!]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.thanks">
+                <source><![CDATA[mit freundlichen Grüßen<br>Dein Team von ORIGINAL+]]></source>
+                <target><![CDATA[mit freundlichen Grüßen<br>Dein Team von ORIGINAL+]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.addText">
+                <source><![CDATA[Bitte Originaltext bei Antwort nicht löschen.<br>Es gelten unserer allgemeinen Geschäftsbedingungen.]]></source>
+                <target><![CDATA[Bitte Originaltext bei Antwort nicht löschen.<br>Es gelten unserer allgemeinen Geschäftsbedingungen.]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="iido_shop_emails.dummy.paypal">
+                <source><![CDATA[ ]]></source>
+                <target><![CDATA[Der Betrag Deiner Paypal Bezahlung wurde uns noch nicht bestätigt. Dieses kann einige Sekunden aber auch mehrere Minuten dauern. Sobald der Betrag bestätigt ist und die Ware lagernd ist werden wir Dein Paket so schnell wie möglich versenden. Hinweise zu Deinem Widerrufsrecht findest Du im Anhang in unseren AGB. Du erhältst in Kürze eine Auftragsbestätigung aus unserem Customer Service!]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.creditCard">
+                <source><![CDATA[ ]]></source>
+                <target><![CDATA[Der Betrag Deiner Kreditkartenbezahlung wurde uns noch nicht bestätigt. Dieses kann einige Sekunden aber auch mehrere Minuten dauern. Sobald der Betrag bestätigt ist und die Ware lagernd ist werden wir Dein Paket so schnell wie möglich versenden. Hinweise zu Deinem Widerrufsrecht findest Du im Anhang in unseren AGB. Du erhältst in Kürze eine Auftragsbestätigung aus unserem Customer Service!]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.prepaied">
+                <source><![CDATA[ ]]></source>
+                <target><![CDATA[Du hast als Bezahlmöglichkeit „Vorauskasse“ gewählt. Du erhältst in Kürze eine Auftragsbestätigung sowie eine Anzahlungsrechnung aus unserem Customer Service! Sobald der Betrag bestätigt ist und die Ware lagernd ist werden wir Dein Paket so schnell wie möglich versenden. Hinweise zu Deinem Widerrufsrecht findest Du im Anhang in unseren AGB.]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.cashOnDelivery">
+                <source><![CDATA[ ]]></source>
+                <target><![CDATA[Du hast als Bezahlmöglichkeit „Nachnahme“ gewählt. Du erhältst in Kürze eine Auftragsbestätigung aus unserem Customer Service! Wenn die Ware lagernd ist werden wir Dein Paket so schnell wie möglich versenden. Du bezahlst dann den Betrag bei Lieferung an unseren Lieferpartner. Hinweise zu Deinem Widerrufsrecht findest Du im Anhang in unseren AGB.]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.dummy.shopAddress">
+                <source><![CDATA[ ]]></source>
+                <target><![CDATA[ORIGINAL+<br>Siezenheimer Strasse 41<br>5020 Salzburg<br>T +43 667 62323 797<br>M support@typs.gmbh<br><br>ORIGINAL+ & Kante Scharf<br>sind Marken der / are brands of TYPS GMBH.<br><br>TYPS GMBH TAKE YOUR PLEASURE SERIOUSLY<br>Siezenheimer Str. 41, 5020 Salzburg, Österreich<br><br>Geschäftsführer: Mag. Siegfried Rumpfhuber<br>Handelsgericht: Landesgericht Salzburg<br>Firmenbuchnummer: 460604i<br>UST-IDNR: ATU71573718]]></target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.agb">
+                <source>AGB's akzeptiert</source>
+                <target>AGB's akzeptiert</target>
+            </trans-unit>
+
+
+            <trans-unit id="iido_shop_emails.label.orderItemsIntro">
+                <source>Deine bestellten Produkte nochmals zur Kontrolle:</source>
+                <target>Deine bestellten Produkte nochmals zur Kontrolle:</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.articleDescription">
+                <source>article description</source>
+                <target>Artikelbezeichnung</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.quantity">
+                <source>quantity</source>
+                <target>Menge</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.singlePrice">
+                <source>single price</source>
+                <target>Einzelpreis</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.totalPrice">
+                <source>total price</source>
+                <target>Geamtpreis</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.shippingCosts">
+                <source>shipping costs</source>
+                <target>Versandkosten</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.sum">
+                <source>total price</source>
+                <target>SUMME</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_emails.label.incl_vat">
+                <source>incl. Vat</source>
+                <target>inkl. MwSt.</target>
+            </trans-unit>
+
+
+
+        </body>
+    </file>
+</xliff>

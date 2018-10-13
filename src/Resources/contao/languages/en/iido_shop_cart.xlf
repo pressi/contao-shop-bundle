@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/iido_shop_cart.php" source-language="en" target-language="en">
+        <body>
+
+<!-- ### LABELS ############################################################################################################# -->
+
+
+            <trans-unit id="iido_shop_cart.label.edit">
+                <source>Edit</source>
+                <target>Edit</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.toWatchlist">
+                <source>Add to Watchlist</source>
+                <target>Add to Watchlist</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.buy">
+                <source>buy</source>
+                <target>Buy</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.remove">
+                <source>Remove</source>
+                <target>Remove</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.size">
+                <source>size</source>
+                <target>Size</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.flex">
+                <source>flex</source>
+                <target>Flex</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.binding">
+                <source>binding</source>
+                <target>Binding</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.label.tuning">
+                <source>tuning</source>
+                <target>Tuning</target>
+            </trans-unit>
+
+
+
+<!-- ### DEFAULTS ########################################################################################################### -->
+
+            <trans-unit id="iido_shop_cart.cartEmpty">
+                <source>At this time no products in the cart.</source>
+                <target>At this time no products in the cart.</target>
+            </trans-unit>
+
+            <trans-unit id="iido_shop_cart.watchlistEmpty">
+                <source>At this time no products in the watchlist.</source>
+                <target>At this time no products in the watchlist.</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>
