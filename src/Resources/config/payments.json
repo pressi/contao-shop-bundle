@@ -1,5 +1,5 @@
 {
-    "creditcard" :
+    "creditCard" :
     {
         "name"      : "Kreditkarte",
         "active"    : false
@@ -18,6 +18,12 @@
     "prepaied" :
     {
         "name"      : "Vorkasse",
+        "active"    : true
+    },
+
+    "cashOnDelivery" :
+    {
+        "name"      : "Nachname",
         "active"    : true
     }
 }
