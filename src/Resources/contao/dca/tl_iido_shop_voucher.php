@@ -20,10 +20,6 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         'dataContainer'               => 'Table',
         'switchToEdit'                => true,
         'enableVersioning'            => true,
-        'onload_callback'             => array
-        (
-            array( $tableClass, 'loadPaymentTable' )
-        ),
         'sql' => array
         (
             'keys' => array
@@ -42,16 +38,16 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         'sorting' => array
         (
             'mode'                    => 1,
-            'fields'                  => array('type', 'name'),
+            'fields'                  => array('name'),
             'flag'                    => 1,
             'panelLayout'             => 'filter;search,limit'
         ),
         'label' => array
         (
-            'fields'                  => array('type', 'alias', 'name'),
-            'showColumns'             => true,
-//            'format'                  => '%s %s',
-            'label_callback'          => array($tableClass, 'renderLabel')
+            'fields'                  => array('name', 'code'),
+//            'showColumns'             => true,
+            'format'                  => '%s <span class="gray">[%s]</span>',
+//            'label_callback'          => array($tableClass, 'renderLabel')
         ),
         'global_operations' => array
         (
@@ -103,7 +99,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'type'
         ),
 
-        'default'           => '{type_legend},type,name,alias;{config_legend},;{api_legend},;{info_legend},info;'
+        'default'           => 'isVoucherUsed;{type_legend},name,alias;{mode_legend},mode;{code_legend},code;{rights_legend},userEmails;'
     ),
 
 
@@ -128,22 +124,6 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'sql'                     => "int(10) unsigned NOT NULL default '0'"
         ),
 
-        'type' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['type'],
-            'exclude'                 => true,
-            'search'                  => true,
-            'inputType'               => 'select',
-            'options_callback'        => array($tableClass, 'getPaymentTypes'),
-            'eval'                    => array
-            (
-                'mandatory'         => true,
-                'maxlength'         => 255,
-                'tl_class'          => 'w50'
-            ),
-            'sql'                     => "varchar(255) NOT NULL default ''"
-        ),
-
         'name' => array
         (
             'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['name'],
@@ -155,10 +135,6 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
                 'maxlength'         => 255,
                 'tl_class'          => 'clr w50',
                 'doNotCopy'         => true,
-            ),
-            'load_callback' => array
-            (
-                array($tableClass, 'getPaymentName')
             ),
 
             'sql'                     => "varchar(255) NOT NULL default ''"
@@ -175,7 +151,6 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
                 'rgxp'              => 'alias',
                 'doNotCopy'         => true,
                 'unique'            => true,
-                'readonly'          => true,
 
                 'maxlength'         => 128,
                 'tl_class'          => 'w50'
@@ -184,48 +159,89 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             (
                 array($tableClass, 'generateAlias')
             ),
-            'load_callback' => array
-            (
-                array($tableClass, 'getPaymentAlias')
-            ),
             'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
         ),
     )
 );
 
+
+
+/**
+ * Subpalettes
+ */
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('mode_percent', 'percentDiscount', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('mode_amount', 'priceDiscount', $strTable);
+
+
+
+/**
+ * Fields
+ */
+
 \IIDO\BasicBundle\Helper\DcaHelper::addPublishedFieldsToTable($strTable, 'default', '', 'after', true);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('info', $strTable);
 
-$usedFields = array();
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('mode', $strTable, array('includeBlankOption'=>true,'mandatory'=>true), '', false, '', false, true);
+//\IIDO\BasicBundle\Helper\DcaHelper::addTextField('userEmails', $strTable);
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['userEmails'] = array
+(
+    'label'         => &$GLOBALS['TL_LANG'][ $strTable ]['userEmails'],
+    'exclude'       => true,
+    'inputType'     => 'multiColumnWizard',
+    'eval'          => array
+    (
+        'disableSorting' => true,
+        'generateTableless' => false,
+        'columnFields' => array
+        (
+            'email'   => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['userEmails']['email'],
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => array
+                (
+                    'mandatory'             => true,
+                    'rgxp'                  => 'email',
+                    'style'                 => 'width: 280px'
+                )
+            ),
 
-foreach(\IIDO\ShopBundle\Helper\PaymentHelper::getAll( true ) as $arrPayment)
-{
-    if( isset($arrPayment['fields']) )
-    {
-        foreach( $arrPayment['fields'] as $strField )
-        {
-            if( !in_array($strField, $usedFields) )
-            {
-                \IIDO\BasicBundle\Helper\DcaHelper::addTextField( $strField, $strTable );
+            'hidden' => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['userEmails']['hidden'],
+                'exclude'   => true,
+                'inputType' => 'checkbox',
+            ),
 
-                $usedFields[] = $strField;
-            }
-        }
+            'used' => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['userEmails']['used'],
+                'exclude'   => true,
+                'readonly'  => true,
+                'disabled'  => true,
+                'inputType' => 'checkbox',
+            ),
 
-        $strFields  = implode(",", $arrPayment['fields'] );
-        $strPalette = $arrPayment['alias'];
+            'usedDate' => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['userEmails']['usedDate'],
+                'exclude'   => true,
+                'readonly'  => true,
+                'disabled'  => true,
+                'inputType' => 'text',
+            )
+        )
+    ),
+    'sql'           => "blob NULL"
+);
 
-        \IIDO\BasicBundle\Helper\DcaHelper::copyPalette( $strPalette, "default", $strTable);
-        \IIDO\BasicBundle\Helper\DcaHelper::replacePaletteFields( $strPalette, 'config_legend},', 'config_legend},' . $strFields, $strTable);
-    }
-}
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('code', $strTable, array('mandatory'=>true,'doNotCopy'=>true,'unique'=>true));
 
+\IIDO\BasicBundle\Helper\DcaHelper::addAddonTextField('percentDiscount', $strTable, '%', array('rgxp'=>'prcnt','mandatory'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addAddonTextField('priceDiscount', $strTable, \IIDO\ShopBundle\Config\ShopConfig::getCurrency(), array('rgxp'=>'digit','mandatory'=>true));
 
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('used', $strTable, array('readonly'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('usedDate', $strTable, array('readonly'=>true));
 
-// API
-\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('apiMethod', $strTable, array(), '', false, '', false, false, '', array('options_callback'=>array($tableClass, 'getApiMethods')));
-
-if( \IIDO\ShopBundle\Helper\ApiHelper::enableApis() )
-{
-    \IIDO\BasicBundle\Helper\DcaHelper::replacePaletteFields('ALL', '{api_legend},', '{api_legend},apiMethod', $strTable);
-}
+\IIDO\BasicBundle\Helper\DcaHelper::addBlobField('isVoucherUsed', $strTable, '', array(), '', false, array('input_field_callback'=>array($tableClass, 'renderIsVoucherUsedField')), true);

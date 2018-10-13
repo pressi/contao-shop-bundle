@@ -16,7 +16,7 @@ $strTable = 'tl_user';
  */
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('iido_shopArchive_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addField(array('iidoShopArchives', 'iidoShopArchivep', 'iidoShopProducts', 'iidoShopProductCategories', 'iidoShopProductCategories_default'), 'iido_shopArchive_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+    ->addField(array('iidoShopArchives', 'iidoShopArchivep', 'iidoShopProducts', 'iidoShopProductCategories', 'iidoShopProductCategories_default', 'iidoShopSettings', 'iidoShopStatistic'), 'iido_shopArchive_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('extend', $strTable)
     ->applyToPalette('custom', $strTable)
 ;
@@ -68,4 +68,26 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['iidoShopProductCategories_default'] = a
     'foreignKey'              => 'tl_iido_shop_product_category.title',
     'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'foreignTable'=>'tl_iido_shop_product_category', 'titleField'=>'title', 'searchField'=>'title', 'managerHref'=>'do=iidoShopProducts&table=tl_iido_shop_product_category'),
     'sql'                     => "blob NULL"
+);
+
+
+
+$GLOBALS['TL_DCA']['tl_user']['fields']['iidoShopSettings'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_user']['iidoShopSettings'],
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'options'                 => $GLOBALS['TL_LANG']['tl_user']['options']['iidoShopSettings'],
+    'eval'                    => ['multiple' => true, 'tl_class' => 'clr'],
+    'sql'                     => "varchar(32) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_user']['fields']['iidoShopStatistic'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_user']['iidoShopStatistic'],
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'options'                 => $GLOBALS['TL_LANG']['tl_user']['options']['iidoShopStatistic'],
+    'eval'                    => ['multiple' => true, 'tl_class' => 'clr'],
+    'sql'                     => "varchar(32) NOT NULL default ''"
 );

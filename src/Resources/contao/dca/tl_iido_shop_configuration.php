@@ -34,7 +34,10 @@ $GLOBALS['TL_DCA'][ $strTableFileName ] = array
 
         'default'           =>  '{default_legend:hide},' . $tableFieldPrefix . 'enableShopLight,' . $tableFieldPrefix . 'noImageSRC,' . $tableFieldPrefix . 'currency'
                                 . ';{cart_legend:hide},' . $tableFieldPrefix . 'addToCartText,' . $tableFieldPrefix . 'addToCartTextConfigurator'
-                                . ';{watchlist_legend:hide},' . $tableFieldPrefix . 'addToWatchlistText,' . $tableFieldPrefix . 'addToWatchlistTextConfigurator',
+                                . ';{watchlist_legend:hide},' . $tableFieldPrefix . 'addToWatchlistText,' . $tableFieldPrefix . 'addToWatchlistTextConfigurator'
+
+                                . ';{cartEN_legend:hide},' . $tableFieldPrefix . 'addToCartTextEN,' . $tableFieldPrefix . 'addToCartTextConfiguratorEN'
+                                . ';{watchlistEN_legend:hide},' . $tableFieldPrefix . 'addToWatchlistTextEN,' . $tableFieldPrefix . 'addToWatchlistTextConfiguratorEN',
 
 
         'ai'                => '{access_legend},' . $tableFieldPrefix . 'aiUsername,' . $tableFieldPrefix . 'aiPassword;'
@@ -77,6 +80,16 @@ $GLOBALS['TL_DCA'][ $strTableFileName ] = array
 // DEFAULT - Watchlist
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToWatchlistText', $strTableFileName, array(), '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToWatchlistTextConfigurator', $strTableFileName, array(), '', false, true);
+
+
+// EN - Cart
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToCartTextEN', $strTableFileName, array(), '', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToCartTextConfiguratorEN', $strTableFileName, array(), '', false, true);
+
+
+// EN - Watchlist
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToWatchlistTextEN', $strTableFileName, array(), '', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField($tableFieldPrefix . 'addToWatchlistTextConfiguratorEN', $strTableFileName, array(), '', false, true);
 
 
 

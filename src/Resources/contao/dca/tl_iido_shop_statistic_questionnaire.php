@@ -36,6 +36,11 @@ $arrDefaultFields = array
     'data_legend' => array
     (
         'questionnaireData'
+    ),
+
+    'additional_legend' => array
+    (
+        'language'
     )
 );
 
@@ -50,3 +55,4 @@ $arrDefaultFields = array
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('questionnaire', $strTableFileName, array('rgxp'=>'digit'));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('userID', $strTableFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addBlobField('questionnaireData', $strTableFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('language', $strTableFileName);

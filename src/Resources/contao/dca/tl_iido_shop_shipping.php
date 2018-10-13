@@ -10,6 +10,9 @@
 $strTable       = \IIDO\ShopBundle\Config\BundleConfig::getTableName( __FILE__ );
 $tableClass     = \IIDO\ShopBundle\Config\BundleConfig::getTableClass( $strTable );
 
+$bundlePath     = \IIDO\ShopBundle\Config\BundleConfig::getBundlePath( true, false );
+
+$countryOptionsTable = $strTable . '_country_option';
 
 $GLOBALS['TL_DCA'][ $strTable ] = array
 (
@@ -20,6 +23,13 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         'dataContainer'               => 'Table',
         'switchToEdit'                => true,
         'enableVersioning'            => true,
+        'onload_callback' => array
+        (
+//            array($tableClass, 'checkPermission'),
+
+//            array($tableClass, 'checkCountryOptionPermission'),
+//            array($tableClass, 'adjustPalette')
+        ),
         'sql' => array
         (
             'keys' => array
@@ -47,10 +57,19 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
             'fields'                  => array('name', 'frontendTitle', 'price'),
 //            'format'                  => '%s <span class="gray">[%s]</span>',
             'showColumns'             => true,
-//            'label_callback'          => array($tableClass, 'renderLabel')
+            'label_callback'          => array($tableClass, 'renderLabel')
         ),
         'global_operations' => array
         (
+            'countryOptions' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['countryOptions'],
+                'href'                => 'table=' . $countryOptionsTable,
+                'icon'                => $bundlePath . '/images/icons/categories.png',
+                'class'               => 'header_shop_product_categories',
+                'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"'
+            ),
+
             'all' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
@@ -98,7 +117,7 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
         (
         ),
 
-        'default'           => '{type_legend},name,alias,frontendTitle;{info_legend},info;{price_legend},price;'
+        'default'           => '{type_legend},name,alias,frontendTitle;{api_legend},;{info_legend},info;{add_legend},useShippingPerCountry,linkPaymentMethod;{price_legend},price,enablePricePerCountry,freeOnPriceLimit;'
     ),
 
 
@@ -106,6 +125,13 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
     // Subpalettes
     'subpalettes' => array
     (
+        'enablePricePerCountry'             => 'pricePerCountry',
+        'linkPaymentMethod'                 => 'linkedPaymentMethod',
+
+        'useShippingPerCountry_enable'      => 'shippingPerCountry',
+        'useShippingPerCountry_disable'     => 'shippingPerCountry',
+
+        'freeOnPriceLimit'                  => 'freeOnCartPrice,freeOnlyPerCountry'
     ),
 
 
@@ -154,3 +180,154 @@ $GLOBALS['TL_DCA'][ $strTable ] = array
 
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('name', $strTable, array('doNotCopy' => true), '', false, '', array('search' => true));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('frontendTitle', $strTable, array('doNotCopy' => true));
+
+
+
+// API
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('apiMethod', $strTable, array(), '', false, '', false, false, '', array('options_callback'=>array($tableClass, 'getApiMethods')));
+
+
+if( \IIDO\ShopBundle\Helper\ApiHelper::enableApis() )
+{
+    \IIDO\BasicBundle\Helper\DcaHelper::replacePaletteFields('default', '{api_legend},', '{api_legend},apiMethod', $strTable);
+}
+
+
+
+// ADD
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('useShippingPerCountry', $strTable, array('includeBlankOption'=>true), 'clr', false, '', false, true);
+
+
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['shippingPerCountry'] = array
+(
+    'label'         => &$GLOBALS['TL_LANG'][ $strTable ]['shippingPerCountry'],
+    'exclude'       => true,
+    'inputType'     => 'multiColumnWizard',
+    'eval'          => array
+    (
+        'columnFields' => array
+        (
+            'country'   => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['shippingPerCountry']['country'],
+                'exclude'   => true,
+                'inputType' => 'select',
+                'options_callback'   => array($tableClass, 'getShippingCountries'),
+                'eval'      => array
+                (
+                    'mandatory'             => true,
+                    'includeBlankOption'    => true,
+                    'chosen'                => true,
+                    'style'                 => 'width: 320px'
+                )
+            )
+        )
+    ),
+    'sql'           => "blob NULL"
+);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('linkPaymentMethod', $strTable, array(), 'clr', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('linkedPaymentMethod', $strTable, array('includeBlankOption'=>true,'mandatory'=>true), 'w50', false, '', false, false, '', array('foreignKey' => 'tl_iido_shop_payment.type', 'relation' => array('type'=>'hasOne', 'load'=>'lazy'),'reference'=>$GLOBALS['TL_LANG'][ $strTable ]['options']['linkedPaymentMethod']));
+
+
+
+// PRICE
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('enablePricePerCountry', $strTable, array(), 'clr', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('freeOnPriceLimit', $strTable, array(), 'clr', false, true);
+
+
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['pricePerCountry'] = array
+(
+    'label'         => &$GLOBALS['TL_LANG'][ $strTable ]['pricePerCountry'],
+    'exclude'       => true,
+    'inputType'     => 'multiColumnWizard',
+    'eval'          => array
+    (
+        'columnFields' => array
+        (
+            'country'   => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['pricePerCountry']['country'],
+                'exclude'   => true,
+                'inputType' => 'select',
+                'options_callback'   => array($tableClass, 'getShippingCountries'),
+                'eval'      => array
+                (
+                    'mandatory'             => true,
+                    'includeBlankOption'    => true,
+                    'chosen'                => true,
+                    'style'                 => 'width: 280px'
+                )
+            ),
+
+            'price'   => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['pricePerCountry']['price'],
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => array
+                (
+                    'rgxp'      => 'digit',
+                    'style'     => 'width: 70px'
+                )
+            ),
+
+            'label' => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['pricePerCountry']['label'],
+                'exclude'   => true,
+                'inputType' => 'text',
+            ),
+
+            'apiArticle' => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['pricePerCountry']['apiArticle'],
+                'exclude'   => true,
+                'inputType' => 'select',
+                'options_callback' => array($tableClass, 'getApiShippingArticles'),
+            )
+        )
+    ),
+    'sql'           => "blob NULL"
+);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('freeOnCartPrice', $strTable, array('rgxp'=>'digit'));
+
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['freeOnlyPerCountry'] = array
+(
+    'label'         => &$GLOBALS['TL_LANG'][ $strTable ]['freeOnlyPerCountry'],
+    'exclude'       => true,
+    'inputType'     => 'multiColumnWizard',
+    'eval'          => array
+    (
+        'columnFields' => array
+        (
+            'country'   => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['freeOnlyPerCountry']['country'],
+                'exclude'   => true,
+                'inputType' => 'select',
+                'options_callback'   => array($tableClass, 'getShippingCountries'),
+                'eval'      => array
+                (
+                    'mandatory'             => true,
+                    'includeBlankOption'    => true,
+                    'chosen'                => true,
+                    'style'                 => 'width: 320px'
+                )
+            ),
+
+            'freeOnCartPrice'   => array
+            (
+                'label'     => $GLOBALS['TL_LANG'][ $strTable ]['field']['freeOnlyPerCountry']['freeOnCartPrice'],
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => array
+                (
+                    'rgxp'      => 'digit'
+                )
+            )
+        )
+    ),
+    'sql'           => "blob NULL"
+);
