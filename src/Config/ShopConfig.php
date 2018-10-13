@@ -47,6 +47,13 @@ class ShopConfig
 
 
 
+    public static function removeCartList()
+    {
+        setcookie(self::$cartCookie,"",time() - 3600);
+    }
+
+
+
     public static function getWatchlistList()
     {
         $arrCookie  = array();
@@ -116,6 +123,28 @@ class ShopConfig
         if( $objApi )
         {
             $arrProduct = $objApi->runApiUrl('article/?articleNumber-eq=' . $itemNumber);
+            $objProduct = new \stdClass();
+
+            $objProduct->itemNumber     = $arrProduct['articleNumber'];
+            $objProduct->price          = $arrProduct['articlePrices'][0]['price'];
+            $objProduct->name           = $arrProduct['name'];
+        }
+
+        return $objProduct;
+    }
+
+
+
+    public static function getSkiProduct( $itemNumber )
+    {
+        $objProduct = false;
+        $objApi     = ApiHelper::getApiObject();
+
+        if( $objApi )
+        {
+            $arrProduct = $objApi->runApiUrl('article/?articleNumber-ilike=' . $itemNumber);
+            $arrProduct = (array) $arrProduct[0];
+
             $objProduct = new \stdClass();
 
             $objProduct->itemNumber     = $arrProduct['articleNumber'];
